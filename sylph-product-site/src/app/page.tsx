@@ -22,7 +22,7 @@ export default function LandingPage() {
       <ComparisonSection />
       <TractionMarquee />
       <FeatureGrid />
-      <StickyProductReveal />
+      {/* <StickyProductReveal /> */}
       <FeatureShowcase />
       <SystemOverview />
       <CtaSection />
