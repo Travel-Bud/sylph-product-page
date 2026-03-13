@@ -1,13 +1,14 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-
+import { motion, useScroll, useTransform } from "framer-motion";
 import { CinematicFlowLines } from "@/components/custom/sylph-identity/cinematic-flow-lines";
 import { AnimatedHeroDashboard } from "./animated-hero-dashboard";
 import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
-import { blurReveal, scaleUpFade } from "@/lib/animations";
+import { LampContainer } from "@/components/ui/lamp";
+import { blurReveal, scaleUpFade, sylphEase } from "@/lib/animations";
 
 /* ── Hero-specific stagger (needs delayChildren: 0.75) ─────────── */
 
@@ -64,8 +65,17 @@ function LetterRevealHeadline({ text }: { text: string }) {
 /* ── Hero section ────────────────────────────────────────────────── */
 
 export function HeroSection() {
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const rotateX = useTransform(scrollYProgress, [0, 0.5], [12, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], [0.95, 1]);
+  const translateY = useTransform(scrollYProgress, [0, 0.5], [20, 0]);
+
   return (
-    <section className="relative w-full overflow-hidden bg-[#0a0f1a] pt-24 md:pt-36 pb-16 md:pb-24">
+    <section ref={heroRef} className="relative w-full overflow-hidden bg-[#0a0f1a] pt-24 md:pt-36 pb-16 md:pb-24">
       {/* Animated grid pattern — breathing teal lines */}
       <div className="pointer-events-none absolute inset-x-0 top-0 hidden h-screen lg:block">
         <AnimatedGridPattern
@@ -91,14 +101,8 @@ export function HeroSection() {
         }}
       />
 
-      {/* tealGlow ambient light */}
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, rgba(13,148,136,0.15) 0%, transparent 70%)",
-        }}
-      />
+      {/* Lamp effect — conic cone fanning upward behind headline */}
+      <LampContainer className="pointer-events-none absolute inset-x-0 top-0 h-[55%]" />
 
       {/* Content */}
       <motion.div
@@ -124,7 +128,7 @@ export function HeroSection() {
           className="flex items-center gap-4"
           variants={blurReveal}
         >
-          <Link href="/launching-soon">
+          <Link href="/signup">
             <ShimmerButton
               shimmerColor="#2dd4bf"
               background="rgba(13, 148, 136, 1)"
@@ -172,39 +176,43 @@ export function HeroSection() {
         whileInView="visible"
         viewport={{ once: true }}
       >
-        {/* Outer frame — rounded-2xl, border, inset shadow, p-4 */}
-        <div
-          className="rounded-2xl border border-white/[0.08] p-4 inset-shadow-2xs"
-          style={{
-            maskImage:
-              "linear-gradient(to bottom, black 60%, transparent 100%)",
-            WebkitMaskImage:
-              "linear-gradient(to bottom, black 60%, transparent 100%)",
-          }}
-        >
-          {/* Browser chrome */}
-          <div className="overflow-hidden rounded-xl">
-            {/* Top bar */}
-            <div className="flex items-center border-b border-white/[0.06] bg-[#1a1c26] px-4 py-3">
-              {/* macOS dots */}
-              <div className="flex items-center gap-1.5">
-                <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
-                <div className="h-2.5 w-2.5 rounded-full bg-amber-400" />
-                <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-              </div>
-              {/* URL pill */}
-              <div className="mx-auto rounded-lg bg-white/[0.06] px-3 py-1">
-                <span className="font-mono text-xs text-white/40">
-                  app.sylph.ai/dashboard
-                </span>
-              </div>
-            </div>
+        <div style={{ perspective: "1200px" }}>
+          <motion.div style={{ rotateX, scale, y: translateY }}>
+            {/* Outer frame — rounded-2xl, border, inset shadow, p-4 */}
+            <div
+              className="rounded-2xl border border-white/[0.08] p-4 inset-shadow-2xs"
+              style={{
+                maskImage:
+                  "linear-gradient(to bottom, black 60%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, black 60%, transparent 100%)",
+              }}
+            >
+              {/* Browser chrome */}
+              <div className="overflow-hidden rounded-xl">
+                {/* Top bar */}
+                <div className="flex items-center border-b border-white/[0.06] bg-[#1a1c26] px-4 py-3">
+                  {/* macOS dots */}
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-2.5 w-2.5 rounded-full bg-red-400" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                  </div>
+                  {/* URL pill */}
+                  <div className="mx-auto rounded-lg bg-white/[0.06] px-3 py-1">
+                    <span className="font-mono text-xs text-white/40">
+                      app.sylph.ai/dashboard
+                    </span>
+                  </div>
+                </div>
 
-            {/* Dashboard content */}
-            <div className="bg-[#111318]">
-              <AnimatedHeroDashboard />
+                {/* Dashboard content */}
+                <div className="bg-[#111318]">
+                  <AnimatedHeroDashboard />
+                </div>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </motion.div>
     </section>

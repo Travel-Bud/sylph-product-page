@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import { BentoGrid, BentoCell } from "@/components/custom/sylph-identity/bento-grid";
+import { AnimatedGridPattern } from "@/components/ui/animated-grid-pattern";
 
 /* ── Visuals — self-contained card content components ────────────── */
 
@@ -271,10 +272,21 @@ export function FeatureGrid() {
   return (
     <section
       id="features"
-      className="relative bg-[#0a0f1a] py-16 md:py-24 lg:py-32"
+      className="relative bg-[#080c14] py-16 md:py-24 lg:py-32"
     >
-      {/* Section divider */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+      {/* Gradient bleed from warm indigo zone */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#090d17] to-transparent" />
+
+      {/* Breathing grid pattern — elliptical mask on bento area */}
+      <div className="pointer-events-none absolute inset-0 hidden lg:block">
+        <AnimatedGridPattern
+          numSquares={25}
+          maxOpacity={0.06}
+          duration={4}
+          repeatDelay={2}
+          className="fill-teal-500/[0.04] stroke-teal-500/[0.04] [mask-image:ellipse(50%_65%_at_50%_55%)]"
+        />
+      </div>
 
       <motion.div
         className="mx-auto max-w-7xl px-6"

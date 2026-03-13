@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import { Marquee } from "@/components/ui/marquee";
+import { CinematicFlowLines } from "@/components/custom/sylph-identity/cinematic-flow-lines";
 
 const companies = [
   { name: "Zoho", subtitle: "Enterprise Interest" },
@@ -38,9 +39,12 @@ function EventBadge() {
 
 export function TractionMarquee() {
   return (
-    <section className="relative bg-[#080c16] py-12 md:py-16">
-      {/* Section divider */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+    <section className="relative bg-[#090d17] py-12 md:py-16">
+
+      {/* Brand thread — faint flow lines continue below hero */}
+      <div className="pointer-events-none absolute inset-0 hidden lg:block opacity-40">
+        <CinematicFlowLines variant="teal" lines={3} intensity={0.4} />
+      </div>
 
       <motion.div
         className="mx-auto max-w-7xl px-6"
@@ -59,8 +63,8 @@ export function TractionMarquee() {
 
       <div className="relative overflow-hidden">
         {/* Fade edges */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-[#080c16] to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-[#080c16] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-[#090d17] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-[#090d17] to-transparent" />
 
         <Marquee pauseOnHover className="[--duration:30s]">
           {companies.map((c) => (

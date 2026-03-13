@@ -50,7 +50,7 @@ const statusStyles: Record<string, string> = {
   Blocked: "bg-red-50 text-red-500",
 };
 
-function StaticDashboard() {
+export function StaticDashboard() {
   return (
     <div className="flex h-full flex-col bg-white p-4 sm:p-6">
       {/* KPI row */}

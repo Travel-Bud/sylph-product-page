@@ -6,14 +6,22 @@ import { ArrowRight } from "lucide-react";
 import { fadeInUp, staggerContainer } from "@/lib/animations";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { DotPattern } from "@/components/ui/dot-pattern";
+import { Particles } from "@/components/ui/particles";
 
 /* ── Component ───────────────────────────────────────────────────── */
 
 export function CtaSection() {
   return (
-    <section className="relative bg-[#0a0f1a] py-20 md:py-28 lg:py-36">
-      {/* Section divider */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+    <section className="relative bg-[#070b12] py-20 md:py-28 lg:py-36">
+
+      {/* Ascending particles — creates upward energy before close */}
+      <Particles
+        quantity={40}
+        color="#2dd4bf"
+        speed={0.8}
+        size={1.5}
+        className="hidden lg:block"
+      />
 
       {/* Ambient teal glow */}
       <div
@@ -26,7 +34,7 @@ export function CtaSection() {
 
       {/* Dot pattern background */}
       <DotPattern
-        className="fill-teal-500/[0.07] [mask-image:radial-gradient(400px_circle_at_center,white,transparent)]"
+        className="fill-teal-500/[0.05] [mask-image:radial-gradient(280px_circle_at_center,white,transparent)]"
       />
 
       {/* Content */}
@@ -52,12 +60,12 @@ export function CtaSection() {
           spend.
         </motion.p>
 
-        {/* Premium CTA */}
+        {/* Premium CTA — gradient border wrapper per design_guidelines.json */}
         <motion.div
           variants={fadeInUp}
           className="mt-8 flex flex-col sm:flex-row items-center gap-4"
         >
-          <Link href="/launching-soon">
+          <Link href="/signup">
             <ShimmerButton
               shimmerColor="#2dd4bf"
               background="rgba(13, 148, 136, 1)"

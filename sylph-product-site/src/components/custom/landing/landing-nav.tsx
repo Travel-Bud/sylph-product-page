@@ -8,6 +8,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 const navLinks = [
   { label: "How It Works", href: "#how-it-works" },
   { label: "Features", href: "#features" },
+  { label: "Pricing", href: "/pricing" },
   { label: "Product", href: "#product" },
 ];
 
@@ -79,21 +80,21 @@ export function LandingNav() {
           {/* Desktop anchor links */}
           <div className="hidden items-center gap-8 lg:flex">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
                 className="text-sm text-gray-400 transition-colors duration-300 hover:text-white"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
 
-          {/* Desktop right-side CTAs */}
+          {/* Desktop right-side CTAs — collapses to single button on scroll */}
           <div className="hidden items-center gap-4 lg:flex">
             {scrolled ? (
               <Link
-                href="/launching-soon"
+                href="/login"
                 className="inline-flex items-center rounded-full bg-teal-600 px-4 py-1.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-teal-700"
               >
                 Get Started
@@ -101,13 +102,13 @@ export function LandingNav() {
             ) : (
               <>
                 <Link
-                  href="/launching-soon"
+                  href="/login"
                   className="text-sm font-medium text-gray-400 transition-colors duration-300 hover:text-white"
                 >
                   Sign in
                 </Link>
                 <Link
-                  href="/launching-soon"
+                  href="/login"
                   className="inline-flex items-center rounded-full bg-teal-600 px-4 py-1.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-teal-700"
                 >
                   Get Started
@@ -157,26 +158,26 @@ export function LandingNav() {
           >
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   className="rounded-xl px-3 py-3 text-sm font-medium text-gray-400 transition-colors hover:bg-white/[0.04] hover:text-white"
                   onClick={closeMobile}
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
               <div className="my-3 h-px bg-white/[0.06]" />
               <div className="flex flex-col gap-2">
                 <Link
-                  href="/launching-soon"
+                  href="/login"
                   className="inline-flex items-center justify-center rounded-full border border-white/[0.08] px-4 py-2.5 text-sm font-medium text-gray-400 transition-colors hover:border-white/[0.15] hover:text-white"
                   onClick={closeMobile}
                 >
                   Sign in
                 </Link>
                 <Link
-                  href="/launching-soon"
+                  href="/login"
                   className="inline-flex items-center justify-center rounded-full bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
                   onClick={closeMobile}
                 >

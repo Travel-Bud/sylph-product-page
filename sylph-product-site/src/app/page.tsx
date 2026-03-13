@@ -2,10 +2,11 @@ import {
   LandingNav,
   HeroSection,
   SystemOverview,
-  ProductShowcase,
+  StickyProductReveal,
   HowItWorks,
   FeatureGrid,
   FeatureShowcase,
+  ComparisonSection,
   CtaSection,
   LandingFooter,
 } from "@/components/custom/landing";
@@ -18,9 +19,10 @@ export default function LandingPage() {
       <LandingNav />
       <HeroSection />
       <HowItWorks />
+      <ComparisonSection />
       <TractionMarquee />
       <FeatureGrid />
-      <ProductShowcase />
+      <StickyProductReveal />
       <FeatureShowcase />
       <SystemOverview />
       <CtaSection />

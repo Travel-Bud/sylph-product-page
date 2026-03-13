@@ -14,6 +14,7 @@ const footerLinks = {
   Product: [
     { label: "How It Works", href: "#how-it-works" },
     { label: "Features", href: "#features" },
+    { label: "Pricing", href: "/pricing" },
     { label: "Product", href: "#product" },
   ],
   Legal: [
@@ -70,12 +71,12 @@ export function LandingFooter() {
     <footer
       className="relative w-full px-6 pb-0 pt-16 md:pt-24"
       style={{
-        background: `linear-gradient(180deg, #080c16, #060a12),
+        background: `linear-gradient(180deg, #070b12, #060a10),
                      radial-gradient(ellipse at 20% 0%, rgba(13,148,136,0.03), transparent 50%)`,
       }}
     >
       {/* Gradient transition from CTA section */}
-      <div className="pointer-events-none absolute inset-x-0 -top-24 h-24 bg-gradient-to-b from-[#080c16] to-[#080c16]" />
+      <div className="pointer-events-none absolute inset-x-0 -top-24 h-24 bg-gradient-to-b from-[#070b12] to-[#070b12]" />
 
       <motion.div
         className="mx-auto grid max-w-7xl gap-12 sm:grid-cols-2 lg:grid-cols-4"

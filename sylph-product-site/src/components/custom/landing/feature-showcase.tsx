@@ -6,6 +6,7 @@ import {
   SYLPH_BIRD_VIEWBOX,
   SYLPH_BIRD_PATH,
 } from "@/components/custom/sylph-identity/sylph-bird-path";
+import { CinematicFlowLines } from "@/components/custom/sylph-identity/cinematic-flow-lines";
 
 /* ── Animation variants from design_guidelines.json ──────────────── */
 
@@ -344,9 +345,11 @@ function PolicyDashboardMock() {
 
 export function FeatureShowcase() {
   return (
-    <section className="relative bg-[#0a0f1a] py-16 md:py-24 lg:py-32 space-y-16 md:space-y-24 lg:space-y-32">
-      {/* Section divider */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+    <section className="relative bg-[#080c14] py-16 md:py-24 lg:py-32 space-y-16 md:space-y-24 lg:space-y-32">
+      {/* Brand thread — flow lines echo from hero */}
+      <div className="pointer-events-none absolute inset-0 hidden lg:block opacity-50">
+        <CinematicFlowLines variant="teal" lines={3} intensity={0.5} />
+      </div>
 
       {/* Showcase 1: Chat interface (text left, visual right) */}
       <ShowcaseSection

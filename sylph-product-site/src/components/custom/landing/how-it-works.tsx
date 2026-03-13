@@ -39,10 +39,18 @@ export function HowItWorks() {
   return (
     <section
       id="how-it-works"
-      className="relative bg-[#080c16] py-16 md:py-20 lg:py-24"
+      className="relative bg-[#090d17] py-16 md:py-20 lg:py-24"
     >
-      {/* Section divider — gradient fade */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+      {/* Gradient bleed from hero zone */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#0a0f1a] to-transparent" />
+
+      {/* Teal radial glow anchored behind step cards */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse 60% 40% at 50% 70%, rgba(13, 148, 136, 0.05) 0%, transparent 70%)",
+        }}
+      />
 
       <motion.div
         className="max-w-7xl mx-auto px-6"

@@ -671,3 +671,103 @@ export const leafTurn: Variants = {
     transition: { type: "spring", stiffness: 300, damping: 20 },
   },
 };
+
+// ── Bill Upload Modal animations ────────────────────────────────
+
+/** Backdrop blur-in for the upload modal */
+export const modalBackdropReveal: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.3, ease: sylphEase },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.25, ease: sylphEase },
+  },
+};
+
+/** Content fade-in within the modal */
+export const modalContentEnter: Variants = {
+  hidden: { opacity: 0, scale: 0.97 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.3, ease: sylphEase, delay: 0.05 },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.97,
+    transition: { duration: 0.2, ease: sylphEase },
+  },
+};
+
+/** Phase crossfade — used when switching between drop/analyze/verdict */
+export const phaseCrossfade: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.2, ease: sylphEase },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.2, ease: sylphEase },
+  },
+};
+
+/** Breathing scale pulse for the analysis detail card */
+export const breathingPulse: Variants = {
+  idle: { scale: 1 },
+  breathe: {
+    scale: [1, 1.01, 1],
+    transition: { duration: 0.5, ease: "easeInOut" },
+  },
+};
+
+/** Analysis UI receding before verdict */
+export const analysisRecede: Variants = {
+  visible: { opacity: 1, scale: 1 },
+  exit: {
+    opacity: 0,
+    scale: 0.97,
+    transition: { duration: 0.3, ease: sylphEase },
+  },
+};
+
+/** Verdict card entrance with glow */
+export const verdictCardEntrance: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.25, ease: sylphEase },
+  },
+};
+
+/** Verdict text spring-in */
+export const verdictTextSpring: Variants = {
+  hidden: { opacity: 0, scale: 0.85, y: 8 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 180, damping: 22 },
+  },
+};
+
+/** Stagger container for verdict counter blocks */
+export const verdictCountersStagger: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.1, delayChildren: 0.7 },
+  },
+};
+
+/** Individual counter block entrance */
+export const verdictCounterItem: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: springSmooth,
+  },
+};

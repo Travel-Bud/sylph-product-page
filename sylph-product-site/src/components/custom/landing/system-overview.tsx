@@ -159,7 +159,7 @@ function SylphSystemVisual({ className }: { className?: string }) {
         {/* Traveling light orbs */}
         {paths.map((d, i) => (
           <g key={`light-${i}`} mask={`url(#sylph-mask-${i})`}>
-            <circle r="12" fill="url(#sylph-teal-grad)">
+            <circle r="16" fill="url(#sylph-teal-grad)">
               <animateMotion
                 dur="3s"
                 repeatCount="indefinite"
@@ -301,9 +301,17 @@ function SylphSystemVisual({ className }: { className?: string }) {
 
 export function SystemOverview() {
   return (
-    <section className="relative bg-[#080c16] py-16 md:py-20 lg:py-24">
-      {/* Section divider */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+    <section className="relative bg-[#070b12] py-16 md:py-20 lg:py-24">
+      {/* Gradient bleed from deep neutral zone */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#080c14] to-transparent" />
+
+      {/* Radial teal glow from center — reinforces Sylph Intelligence focal point */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: "radial-gradient(ellipse 55% 65% at 50% 65%, rgba(13, 148, 136, 0.10) 0%, transparent 70%)",
+        }}
+      />
 
       <motion.div
         className="mx-auto max-w-7xl px-6"
