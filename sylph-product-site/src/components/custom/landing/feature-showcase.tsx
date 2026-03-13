@@ -347,8 +347,8 @@ export function FeatureShowcase() {
   return (
     <section className="relative bg-[#080c14] py-16 md:py-24 lg:py-32 space-y-16 md:space-y-24 lg:space-y-32">
       {/* Brand thread — flow lines echo from hero */}
-      <div className="pointer-events-none absolute inset-0 hidden lg:block opacity-50">
-        <CinematicFlowLines variant="teal" lines={3} intensity={0.5} />
+      <div className="pointer-events-none absolute inset-0 hidden lg:block opacity-60">
+        <CinematicFlowLines variant="teal-amber" lines={4} intensity={0.6} />
       </div>
 
       {/* Showcase 1: Chat interface (text left, visual right) */}
