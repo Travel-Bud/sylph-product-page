@@ -19,12 +19,12 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sylph AI - Smart Corporate Travel & Expense Management",
+  title: "Sylph",
   description:
-    "AI-native corporate travel management with policy guardrails and smart insights. Expenses run on air.",
+    "Corporate travel and expense management with policy guardrails",
   other: {
-    "theme-color": "#0a0f1a",
-    "color-scheme": "dark",
+    "theme-color": "#ffffff",
+    "color-scheme": "light",
   },
 };
 
@@ -35,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${satoshi.variable} ${ibmPlexMono.variable}`}>
-      <body className="antialiased bg-[#0a0f1a] text-white">
+      <body className="antialiased">
         <div className="relative min-h-screen">{children}</div>
       </body>
     </html>

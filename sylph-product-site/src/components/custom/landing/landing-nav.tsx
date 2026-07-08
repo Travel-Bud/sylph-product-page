@@ -1,208 +1,122 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { SYLPH_BIRD_VIEWBOX, SYLPH_BIRD_PATH } from "@/components/custom/sylph-identity/sylph-bird-path";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { LandingBird } from "./landing-bird";
 
-const navLinks = [
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Features", href: "#features" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "Product", href: "#product" },
+/* one vocabulary — nav and footer agree */
+const ANCHORS = [
+  { href: "/#capture", label: "Receipts" },
+  { href: "/#booking", label: "Booking" },
+  { href: "/#setup", label: "Setup" },
+  { href: "/#record", label: "Record" },
 ];
 
-export function LandingNav() {
+/**
+ * Fixed nav with two themes. `overDark` means "this page has night zones —
+ * watch for them": the landing starts light over the white hero and flips to
+ * the night theme only while the close/footer sit under the bar. Lead pages
+ * render the light theme from the start.
+ */
+export function LandingNav({ overDark = false }: { overDark?: boolean }) {
+  const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
+  const [overNight, setOverNight] = useState(overDark);
+  const ticking = useRef(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
+    if (!overDark) return;
+    const zones = Array.from(document.querySelectorAll<HTMLElement>(".on-night"));
+    const onScroll = () => {
+      if (ticking.current) return;
+      ticking.current = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 24);
+        // night theme whenever a dark section sits under the nav bar
+        setOverNight(
+          zones.some((z) => {
+            const r = z.getBoundingClientRect();
+            return r.top <= 28 && r.bottom >= 30;
+          }),
+        );
+        ticking.current = false;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [overDark]);
+
+  useEffect(() => {
+    if (overDark) return;
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [overDark]);
 
-  useEffect(() => {
-    const onResize = () => {
-      if (window.innerWidth >= 1024) setMobileOpen(false);
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
-
-  const closeMobile = useCallback(() => setMobileOpen(false), []);
+  const theme = overDark && overNight ? "night" : "light";
+  const close = () => setOpen(false);
 
   return (
-    <>
-      {/* Outer fixed container */}
-      <nav className="fixed z-20 w-full px-2">
-        {/* Inner bar — shrinks max-width and gains visual treatment on scroll */}
-        <div
-          className={`mx-auto mt-2 flex h-14 items-center justify-between px-6 transition-all duration-300 lg:px-12 ${
-            scrolled || mobileOpen
-              ? "max-w-4xl rounded-2xl border border-white/[0.06] bg-[#0a0f1a]/50 backdrop-blur-lg lg:px-5"
-              : "max-w-6xl"
-          }`}
-        >
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <svg
-              width={28}
-              height={28}
-              viewBox={SYLPH_BIRD_VIEWBOX}
-              fill="white"
-              aria-hidden="true"
-            >
-              <path d={SYLPH_BIRD_PATH} />
-            </svg>
-            <span
-              className={`text-sm font-semibold tracking-[-0.01em] text-white transition-opacity duration-300 ${
-                scrolled ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              Sylph
-            </span>
+    <nav className={`nav${scrolled ? " is-scrolled" : ""}`} data-theme={theme}>
+      <div className="wrap nav-inner">
+        <Link href="/" className="brand" onClick={close}>
+          <span className="mark" aria-hidden="true">
+            <LandingBird />
+          </span>
+          <span>Sylph</span>
+        </Link>
+        <div className="nav-links">
+          {ANCHORS.map((l) => (
+            <a key={l.href} href={l.href}>
+              {l.label}
+            </a>
+          ))}
+          <Link href="/pricing">Pricing</Link>
+        </div>
+        <div className="nav-cta">
+          <Link href="https://app.sylph-product.com/login" className="btn btn-ghost nav-login">
+            Log in
           </Link>
-
-          {/* Desktop anchor links */}
-          <div className="hidden items-center gap-8 lg:flex">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-gray-400 transition-colors duration-300 hover:text-white"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          {/* Desktop right-side CTAs — collapses to single button on scroll */}
-          <div className="hidden items-center gap-4 lg:flex">
-            {scrolled ? (
-              <Link
-                href="/login"
-                className="inline-flex items-center rounded-full bg-teal-600 px-4 py-1.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-teal-700"
-              >
-                Get Started
-              </Link>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="text-sm font-medium text-gray-400 transition-colors duration-300 hover:text-white"
-                >
-                  Sign in
-                </Link>
-                <Link
-                  href="/login"
-                  className="inline-flex items-center rounded-full bg-teal-600 px-4 py-1.5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-teal-700"
-                >
-                  Get Started
-                </Link>
-              </>
-            )}
-          </div>
-
-          {/* Mobile hamburger button */}
+          <Link href="/demo" className="btn btn-primary">
+            Book a demo
+          </Link>
           <button
-            className="relative flex h-8 w-8 items-center justify-center lg:hidden"
-            onClick={() => setMobileOpen((prev) => !prev)}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            aria-expanded={mobileOpen}
+            type="button"
+            className="nav-burger"
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="nav-mobile"
+            onClick={() => setOpen((o) => !o)}
           >
-            <span className="sr-only">{mobileOpen ? "Close" : "Menu"}</span>
-            <div className="flex w-[18px] flex-col items-center gap-[5px]">
-              <span
-                className={`block h-[1.5px] w-full rounded-full bg-white transition-all duration-300 ${
-                  mobileOpen ? "translate-y-[6.5px] rotate-45" : ""
-                }`}
-              />
-              <span
-                className={`block h-[1.5px] w-full rounded-full bg-white transition-all duration-300 ${
-                  mobileOpen ? "opacity-0" : ""
-                }`}
-              />
-              <span
-                className={`block h-[1.5px] w-full rounded-full bg-white transition-all duration-300 ${
-                  mobileOpen ? "-translate-y-[6.5px] -rotate-45" : ""
-                }`}
-              />
-            </div>
+            <span className={open ? "x1" : ""} />
+            <span className={open ? "x2" : ""} />
+            <span className={open ? "x3" : ""} />
           </button>
         </div>
-      </nav>
+      </div>
 
-      {/* Mobile overlay menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            className="fixed inset-x-4 top-[4.5rem] z-40 rounded-3xl border border-white/[0.06] bg-[#0a0f1a]/95 p-6 shadow-2xl backdrop-blur-xl lg:hidden"
-            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
-            animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-            exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -8 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="rounded-xl px-3 py-3 text-sm font-medium text-gray-400 transition-colors hover:bg-white/[0.04] hover:text-white"
-                  onClick={closeMobile}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <div className="my-3 h-px bg-white/[0.06]" />
-              <div className="flex flex-col gap-2">
-                <Link
-                  href="/login"
-                  className="inline-flex items-center justify-center rounded-full border border-white/[0.08] px-4 py-2.5 text-sm font-medium text-gray-400 transition-colors hover:border-white/[0.15] hover:text-white"
-                  onClick={closeMobile}
-                >
-                  Sign in
-                </Link>
-                <Link
-                  href="/login"
-                  className="inline-flex items-center justify-center rounded-full bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
-                  onClick={closeMobile}
-                >
-                  Get Started
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Backdrop to close menu on tap outside */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            className="fixed inset-0 z-30 lg:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            onClick={closeMobile}
-            aria-hidden="true"
-          />
-        )}
-      </AnimatePresence>
-    </>
+      <div id="nav-mobile" className={`nav-mobile${open ? " is-open" : ""}`}>
+        {ANCHORS.map((l) => (
+          <a key={l.href} href={l.href} onClick={close}>
+            {l.label}
+          </a>
+        ))}
+        <Link href="/pricing" onClick={close}>
+          Pricing
+        </Link>
+        <Link href="https://app.sylph-product.com/login" className="btn btn-ghost btn-lg" onClick={close}>
+          Log in
+        </Link>
+        <Link href="/demo" className="btn btn-primary btn-lg" onClick={close}>
+          Book a demo
+        </Link>
+      </div>
+    </nav>
   );
 }
