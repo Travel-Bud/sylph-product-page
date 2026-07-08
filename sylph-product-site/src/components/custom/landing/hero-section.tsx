@@ -53,7 +53,6 @@ export function HeroSection() {
         gsap
           .timeline({ defaults: { ease: EASE_REVEAL } })
           .from(".wh-bg", { autoAlpha: 0, scale: 1.06, duration: 1.6, ease: "power2.out" }, 0)
-          .from(".ar-eyebrow", { y: 14, autoAlpha: 0, duration: 0.8 }, 0.15)
           .from(".wh-copy .ar-sub, .wh-ctas, .wh-note", { y: 18, autoAlpha: 0, duration: 0.9, stagger: 0.08 }, 0.55)
           .from(".wh-stage", { x: 36, autoAlpha: 0, duration: 1.15 }, 0.7)
           .from(".wh-foot", { autoAlpha: 0, duration: 0.9, ease: "power2.out" }, 1.0);
@@ -317,7 +316,6 @@ export function HeroSection() {
 
       <div className="wrap wh-inner">
         <div className="wh-copy">
-          <span className="ar-eyebrow">Corporate travel &amp; expense</span>
           <h1 className="ar-h1">
             Stop reviewing expenses.
             <br />
