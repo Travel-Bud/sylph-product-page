@@ -6,10 +6,27 @@ export function DemoForm() {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    const name = data.get("name") as string;
+    const email = data.get("email") as string;
+    const company = data.get("company") as string;
+    const teamSize = data.get("teamSize") as string;
+    const note = data.get("message") as string;
+
     submitDemoForm({
       to: ["atharva-sumant@januslabsinc.com"],
-      subject: "New demo request",
-      message: "A new demo request has been received.",
+      subject: `Demo request from ${name} (${company})`,
+      message: [
+        `New demo request via sylph-product.com`,
+        ``,
+        `Name:      ${name}`,
+        `Email:     ${email}`,
+        `Company:   ${company}`,
+        `Team size: ${teamSize || "Not specified"}`,
+        ``,
+        `What they want to see:`,
+        note ? note : "Nothing specified.",
+      ].join("\n"),
     });
   }
 
