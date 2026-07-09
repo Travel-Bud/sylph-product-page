@@ -7,10 +7,9 @@ export function DemoForm() {
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     submitDemoForm({
-      from: "Sylph <onboarding@sylph-product.com>",
       to: ["atharva-sumant@januslabsinc.com"],
       subject: "New demo request",
-      bodyText: "A new demo request has been received.",
+      message: "A new demo request has been received.",
     });
   }
 

@@ -4,12 +4,9 @@ import axios from "axios";
 import { useState } from "react";
 
 export interface SendEmailParams {
-  from: string;
   to: string[];
   subject: string;
-  bodyText: string;
-  bodyHtml?: string;
-  replyTo?: string[];
+  message: string;
 }
 
 const useServerActions = () => {
