@@ -1,35 +1,20 @@
 "use client";
-import { useState } from "react";
-
-type Status = "idle" | "submitting" | "done";
+import useServerActions from "../hooks/useServerActions";
 
 export function DemoForm() {
-  const [status, setStatus] = useState<Status>("idle");
-  const [error, setError] = useState<string | null>(null);
+  const { submitDemoForm, emailSent, error: serverError, loading } = useServerActions();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError(null);
-    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
-    setStatus("submitting");
-    try {
-      const res = await fetch("/api/demo", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) {
-        const j = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(j.error || "Something went wrong. Please try again.");
-      }
-      setStatus("done");
-    } catch (err) {
-      setStatus("idle");
-      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
-    }
+    submitDemoForm({
+      from: "Sylph <onboarding@sylph-product.com>",
+      to: ["atharva-sumant@januslabsinc.com"],
+      subject: "New demo request",
+      bodyText: "A new demo request has been received.",
+    });
   }
 
-  if (status === "done") {
+  if (emailSent) {
     return (
       <div className="demo-form">
         <div className="demo-success">
@@ -48,7 +33,6 @@ export function DemoForm() {
     );
   }
 
-  const submitting = status === "submitting";
 
   return (
     <form className="demo-form" onSubmit={onSubmit} noValidate>
@@ -95,10 +79,10 @@ export function DemoForm() {
         <textarea id="d-msg" name="message" placeholder="e.g. how policy-PDF → rules works, or reconciliation for multi-currency trips" />
       </div>
 
-      {error && <p className="form-err">{error}</p>}
+      {serverError && <p className="form-err">{serverError}</p>}
 
-      <button type="submit" className="btn btn-primary btn-lg" style={{ width: "100%" }} disabled={submitting}>
-        {submitting ? "Sending…" : "Book a demo"}
+      <button type="submit" className="btn btn-primary btn-lg" style={{ width: "100%" }} disabled={loading}>
+        {loading ? "Sending…" : "Book a demo"}
       </button>
 
       <p className="form-fine">
