@@ -268,7 +268,7 @@
   background: var(--ink-warm);
   color: #f2f7f4; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
-.sylph-lp .brand .mark svg { width: 16px; height: 16px; }
+.sylph-lp .brand .mark svg { width: 1.75rem; height: 1.75rem; display: block; }
 
 .sylph-lp .nav-links { display: flex; align-items: center; gap: 26px; margin-left: auto; }
 .sylph-lp .nav-links a {

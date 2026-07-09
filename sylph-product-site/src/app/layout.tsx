@@ -22,6 +22,10 @@ export const metadata: Metadata = {
   title: "Sylph",
   description:
     "Corporate travel and expense management with policy guardrails",
+  icons: {
+    icon: [{ url: "/sylph-bird.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/sylph-bird.svg", type: "image/svg+xml" }],
+  },
   other: {
     "theme-color": "#ffffff",
     "color-scheme": "light",

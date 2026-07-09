@@ -12,6 +12,7 @@ export function LandingBird({ className }: { className?: string }) {
     <svg
       className={className}
       viewBox={SYLPH_BIRD_VIEWBOX}
+      style={{ width: "1.4rem", height: "1.4rem", display: "block" }}
       fill="currentColor"
       aria-hidden="true"
       focusable="false"
