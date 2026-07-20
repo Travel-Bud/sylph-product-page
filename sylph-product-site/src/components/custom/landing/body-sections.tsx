@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { SectionEyebrow, RevealHeading, RiseGroup, gsap, useGSAP, EASE_REVEAL, MM_MOTION, START_GROUP, START_STAGE } from "./motion";
+import { RevealHeading, RiseGroup, gsap, useGSAP, EASE_REVEAL, MM_MOTION, START_GROUP, START_STAGE } from "./motion";
+import { RecordLanding } from "./current-seam";
 
 /**
  * Record: the trust band. Speed, security, and the next-generation claim are
@@ -59,7 +60,6 @@ export function RecordSection() {
     <section ref={ref} className="ar-sec ar-sec--band" id="record" aria-labelledby="record-h">
       <div className="wrap rec-grid">
         <div>
-          <SectionEyebrow station="record">The record</SectionEyebrow>
           <RevealHeading className="ar-h2">
             <span id="record-h">
               Fast to review, because it&rsquo;s <em className="em-ink">built to be checked.</em>
@@ -103,6 +103,8 @@ export function RecordSection() {
                 quality={80}
               />
             </div>
+            {/* the current's handoff: what the coil took comes back out here */}
+            <RecordLanding />
             <div
               className="ev-card rec-card"
               role="img"
@@ -140,6 +142,11 @@ export function RecordSection() {
                 </div>
               </div>
             </div>
+            {/* the hero's loop, closed: the wind was a spool, not a hole */}
+            <p className="rec-catch">
+              <span className="dot" aria-hidden="true" />
+              the 211 that cleared themselves land here, in order, cited
+            </p>
           </div>
         </RiseGroup>
       </div>

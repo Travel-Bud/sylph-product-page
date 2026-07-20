@@ -1,16 +1,24 @@
 "use client";
 
 /**
- * The ribbons respond — a small demand-rendered canvas nested inside `.wh-bg`
- * (so it inherits the hero's parallax scrub for free), sampling the already-
- * loaded aurora <img> as its texture. A gentle domain warp drifts the ribbons
- * and swells their brightness with the gust, luma-weighted so the BRIGHT
- * strands breathe, not the whole frame.
+ * The living vortex — a demand-rendered canvas nested inside `.wh-bg` (so it
+ * inherits the hero's parallax scrub for free), sampling the already-loaded
+ * aurora <img> as its texture.
  *
- * The DOM <Image> stays mounted beneath as the LCP/resting truth; the
- * orchestrator crossfades this canvas in before the gust (undistorted at
- * fade-in) and out after handback. Virtual time comes from the gust store —
- * never the wall clock.
+ * Three motions, one layer:
+ *  - the coil CHURNS: differential rotation around the artwork's eye, built
+ *    as a two-phase looping flow (each phase's wind-up resets while it is
+ *    fully crossfaded out) — perpetual apparent spin, bounded distortion;
+ *  - the ribbons breathe: the original seeded domain warp, always on;
+ *  - the gust swells: luma-weighted brightness lift while the flight plays.
+ *
+ * Two clocks, deliberately: the GUST warp reads virtual timeline time
+ * (deterministic, scrub-safe, owned by the orchestrator). The SPIN reads an
+ * ambient clock that only ever accrues — timeline advances feed it deltas
+ * during the flight, `ambient()` feeds it between flights — so the vortex
+ * turns from first paint and never spins backward, even under scrubbing.
+ * The determinism harness hashes the FLIGHT canvas, not this one; the
+ * product claim (same 214, same 3) lives entirely over there.
  */
 
 import { useEffect, useMemo, useRef } from "react";
@@ -28,7 +36,10 @@ import type { GustStore } from "./gust-store";
 import type { FlightParams } from "./params";
 
 export interface AuroraApi {
+  /** timeline-driven render (virtual ms — deterministic gust, spin accrues) */
   advance(virtualMs: number): void;
+  /** idle-driven render between flights (delta ms — spin only) */
+  ambient(deltaMs: number): void;
   updateParams(p: FlightParams): void;
   /** lab diagnostics only */
   _material?: ShaderMaterial;
@@ -48,11 +59,18 @@ const FRAGMENT = /* glsl */ `
   uniform sampler2D uMap;
   uniform vec2 uUvScale;
   uniform vec2 uUvOffset;
-  uniform float uTime;   // virtual — timeline progress scaled
-  uniform float uGust;   // gust envelope 0..1
+  uniform float uTime;      // virtual — timeline progress scaled
+  uniform float uSpinTime;  // ambient — only ever grows
+  uniform float uGust;      // gust envelope 0..1
   uniform float uDrift;
   uniform float uFlowGain;
   uniform float uSwell;
+  uniform vec2 uVortex;     // eye, image UV (v measured from bottom)
+  uniform float uAspect;    // image w/h — corrects UV space to circles
+  uniform float uSpinTheta; // max wind-up per phase, radians at the core
+  uniform float uSpinPeriod;
+  uniform float uCore;      // rigid-rotation plateau radius
+  uniform float uBand;      // decay band width (shear lives only here)
 
   varying vec2 vUv;
 
@@ -66,19 +84,49 @@ const FRAGMENT = /* glsl */ `
                mix(vhash(i + vec2(0.0, 1.0)), vhash(i + vec2(1.0, 1.0)), u.x), u.y);
   }
 
+  vec2 spun(vec2 uv, float ang) {
+    vec2 d = uv - uVortex;
+    d.x *= uAspect;
+    float ca = cos(ang), sa = sin(ang);
+    d = vec2(ca * d.x - sa * d.y, sa * d.x + ca * d.y);
+    d.x /= uAspect;
+    return uVortex + d;
+  }
+
   void main() {
     vec2 uv = vUv * uUvScale + uUvOffset;
+
+    /* the coil's reach: rigid inside the core, letting go across the band */
+    vec2 dv = uv - uVortex;
+    dv.x *= uAspect;
+    float r = length(dv);
+    float fall = 1.0 - smoothstep(uCore, uCore + uBand, r);
+
+    /* two-phase looping rotation — each phase winds up ±theta/2 and resets
+       while fully faded out; together they read as one endless turn */
+    float t1 = fract(uSpinTime / uSpinPeriod);
+    float t2 = fract(uSpinTime / uSpinPeriod + 0.5);
+    float wgt = abs(t1 * 2.0 - 1.0);
+    float th = uSpinTheta * fall;
+    vec2 uv1 = spun(uv, (t1 - 0.5) * th);
+    vec2 uv2 = spun(uv, (t2 - 0.5) * th);
+
+    /* the ribbons breathe: shared seeded warp (gust adds reach) */
     float w = uDrift + uGust * uFlowGain;
     vec2 warp = vec2(
-      vnoise(uv * 3.0 + vec2(uTime * 0.7, 0.0)),
-      vnoise(uv * 3.0 + vec2(7.3, uTime * 0.6))
+      vnoise(uv * 3.0 + vec2(uTime * 0.7 + uSpinTime * 0.03, 0.0)),
+      vnoise(uv * 3.0 + vec2(7.3, uTime * 0.6 + uSpinTime * 0.025))
     ) - 0.5;
     warp += 0.5 * (vec2(
-      vnoise(uv * 7.0 + vec2(-uTime * 0.9, 3.1)),
-      vnoise(uv * 7.0 + vec2(uTime * 0.8, 9.7))
+      vnoise(uv * 7.0 + vec2(-uTime * 0.9 - uSpinTime * 0.04, 3.1)),
+      vnoise(uv * 7.0 + vec2(uTime * 0.8 + uSpinTime * 0.035, 9.7))
     ) - 0.5);
-    vec2 suv = uv + warp * w * 0.045;
-    vec4 c = texture2D(uMap, suv);
+    vec2 off = warp * w * 0.045;
+
+    vec4 c1 = texture2D(uMap, uv1 + off);
+    vec4 c2 = texture2D(uMap, uv2 + off);
+    vec4 c = mix(c1, c2, wgt);
+
     float luma = dot(c.rgb, vec3(0.299, 0.587, 0.114));
     c.rgb *= 1.0 + uGust * uSwell * smoothstep(0.14, 0.55, luma);
     gl_FragColor = vec4(c.rgb, 1.0);
@@ -99,6 +147,8 @@ function RibbonQuad({
   const three = useThree();
   const size = useThree((s) => s.size);
   const paramsRef = useRef(params);
+  /* the ambient clock: seconds, only ever grows */
+  const spinRef = useRef({ t: 0, lastVirtual: 0 });
 
   const material = useMemo(() => {
     /* snapshot the live <img> at its NATURAL size — a next/image `fill` img
@@ -117,6 +167,8 @@ function RibbonQuad({
     tex.magFilter = LinearFilter;
     tex.generateMipmaps = false;
     tex.needsUpdate = true;
+    const p = paramsRef.current;
+    const aspect = (img.naturalWidth || 1) / (img.naturalHeight || 1);
     return new ShaderMaterial({
       vertexShader: VERTEX,
       fragmentShader: FRAGMENT,
@@ -125,15 +177,22 @@ function RibbonQuad({
         uUvScale: { value: new Vector2(1, 1) },
         uUvOffset: { value: new Vector2(0, 0) },
         uTime: { value: 0 },
+        uSpinTime: { value: 0 },
         uGust: { value: 0 },
-        uDrift: { value: params.bg.drift },
-        uFlowGain: { value: params.bg.flowGain },
-        uSwell: { value: params.bg.swell },
+        uDrift: { value: p.bg.drift },
+        uFlowGain: { value: p.bg.flowGain },
+        uSwell: { value: p.bg.swell },
+        uVortex: { value: new Vector2(p.vortex.xFrac, 1 - p.vortex.yFrac) },
+        uAspect: { value: aspect },
+        uSpinTheta: { value: p.bg.spinSpeed * p.bg.spinPeriod },
+        uSpinPeriod: { value: p.bg.spinPeriod },
+        uCore: { value: p.bg.coreRadius },
+        uBand: { value: p.bg.bandWidth },
       },
       depthWrite: false,
       depthTest: false,
     });
-  }, [img, params.bg.drift, params.bg.flowGain, params.bg.swell]);
+  }, [img]);
 
   useEffect(() => {
     const tex = material.uniforms.uMap.value as Texture;
@@ -160,6 +219,7 @@ function RibbonQuad({
   useFrame(() => {
     material.uniforms.uTime.value = gust.progress * 6.0;
     material.uniforms.uGust.value = gust.g;
+    material.uniforms.uSpinTime.value = spinRef.current.t;
   });
 
   const readyOnce = useRef(false);
@@ -167,12 +227,28 @@ function RibbonQuad({
     if (readyOnce.current) return;
     readyOnce.current = true;
     onReady({
-      advance: (ms) => three.advance(ms),
+      advance: (ms) => {
+        /* spin accrues through the flight but never rewinds under scrubbing */
+        const spin = spinRef.current;
+        spin.t += Math.max(0, ms - spin.lastVirtual) / 1000;
+        spin.lastVirtual = ms;
+        three.advance(ms);
+      },
+      ambient: (deltaMs) => {
+        const spin = spinRef.current;
+        spin.t += Math.max(0, deltaMs) / 1000;
+        three.advance(spin.t * 1000);
+      },
       updateParams: (p) => {
         paramsRef.current = p;
         material.uniforms.uDrift.value = p.bg.drift;
         material.uniforms.uFlowGain.value = p.bg.flowGain;
         material.uniforms.uSwell.value = p.bg.swell;
+        (material.uniforms.uVortex.value as Vector2).set(p.vortex.xFrac, 1 - p.vortex.yFrac);
+        material.uniforms.uSpinTheta.value = p.bg.spinSpeed * p.bg.spinPeriod;
+        material.uniforms.uSpinPeriod.value = p.bg.spinPeriod;
+        material.uniforms.uCore.value = p.bg.coreRadius;
+        material.uniforms.uBand.value = p.bg.bandWidth;
       },
       _material: material,
     });
@@ -188,7 +264,9 @@ function RibbonQuad({
 
 /**
  * Mount inside `.wh-bg`, as a sibling AFTER the aurora <Image>. The wrapper
- * carries `.wh-bg-canvas` (opacity 0 at rest); the orchestrator tweens it.
+ * carries `.wh-bg-canvas` (opacity 0 at rest); the owner fades it in once
+ * ready and LEAVES it — the vortex is a resting state of the page now, not
+ * a flight effect.
  */
 export function AuroraBgCanvas({
   img,
@@ -207,6 +285,7 @@ export function AuroraBgCanvas({
         frameloop="never"
         flat
         dpr={[1, 1.5]}
+        style={{ pointerEvents: "none" }}
         gl={{ alpha: true, antialias: false, premultipliedAlpha: true, powerPreference: "low-power" }}
       >
         <RibbonQuad img={img} gust={gust} params={params} onReady={onReady} />

@@ -31,7 +31,7 @@ import { AuroraBgCanvas, type AuroraApi } from "../aurora-bg";
 import { buildFlightTimeline, resetFlight, type FlightStage } from "../orchestrator";
 import { createGustStore } from "../gust-store";
 import { detectFlightTier, budgetFor, DESKTOP_BUDGET, type FlightCapabilities } from "../detect";
-import { DEFAULT_PARAMS, type FlightParams } from "../params";
+import { AURORA_ART, DEFAULT_PARAMS, type FlightParams } from "../params";
 
 /* fov 50 → z = (h/2)/tan(25°): 1 world unit = 1 CSS px on the z=0 plane */
 function PixelCamera() {
@@ -203,6 +203,21 @@ export default function HeroLab() {
   useEffect(() => {
     if (ready) buildRun();
   }, [ready, buildRun]);
+
+  /* ambient clock: the vortex churns whenever the timeline isn't driving
+     (~30fps — enough life to tune by, cheap enough to leave running) */
+  useEffect(() => {
+    let acc = 0;
+    const tick = (_t: number, dt: number) => {
+      if (!auroraRef.current || tlRef.current?.isActive()) return;
+      acc += dt;
+      if (acc < 33) return;
+      auroraRef.current.ambient(acc);
+      acc = 0;
+    };
+    gsap.ticker.add(tick);
+    return () => gsap.ticker.remove(tick);
+  }, []);
 
   /* ------------------------------ harnesses ------------------------------ */
 
@@ -401,7 +416,7 @@ export default function HeroLab() {
     peelAmp: num(P.paper.peelAmp, 0, 80, 1, set("paper", "peelAmp")),
     bendAmp: num(P.paper.bendAmp, 0, 3, 0.05, set("paper", "bendAmp")),
     foldSharp: num(P.paper.foldSharp, 0, 1, 0.02, set("paper", "foldSharp")),
-    foldAngle: num(P.paper.foldAngle, 0, 1.6, 0.02, set("paper", "foldAngle")),
+    foldAngle: num(P.paper.foldAngle, 0, 3.0, 0.02, set("paper", "foldAngle")),
     tumble: num(P.paper.tumble, 0, 2, 0.05, set("paper", "tumble")),
     waveAmp: num(P.paper.waveAmp, 0, 30, 0.5, set("paper", "waveAmp")),
     waveFreq: num(P.paper.waveFreq, 0.3, 4, 0.05, set("paper", "waveFreq")),
@@ -432,12 +447,26 @@ export default function HeroLab() {
     illum: num(P.dissolve.illum, 0, 0.8, 0.02, set("dissolve", "illum")),
     glowColor: { value: P.dissolve.glowColor, onChange: set("dissolve", "glowColor") },
   });
+  useControls("vortex+sink", {
+    vortexX: num(P.vortex.xFrac, 0.4, 0.95, 0.005, set("vortex", "xFrac")),
+    vortexY: num(P.vortex.yFrac, 0.05, 0.7, 0.005, set("vortex", "yFrac")),
+    bendStart: num(P.sink.bendStart, 0.25, 0.7, 0.01, set("sink", "bendStart")),
+    swirlTurns: num(P.sink.swirlTurns, 0.2, 2.5, 0.05, set("sink", "swirlTurns")),
+    spinDir: num(P.sink.spinDir, -1, 1, 2, set("sink", "spinDir")),
+    plunge: num(P.sink.plunge, 0.7, 2.5, 0.05, set("sink", "plunge")),
+    endScale: num(P.sink.endScale, 0.05, 0.7, 0.01, set("sink", "endScale")),
+    swirlRoll: num(P.sink.swirlRoll, 0, 2.5, 0.05, set("sink", "swirlRoll")),
+  });
   useControls("exceptions+bg", {
     shudderAmp: num(P.exceptions.shudderAmp, 0, 16, 0.5, set("exceptions", "shudderAmp")),
     shudderFreq: num(P.exceptions.shudderFreq, 1, 6, 1, set("exceptions", "shudderFreq")),
     bgDrift: num(P.bg.drift, 0, 0.3, 0.01, set("bg", "drift")),
     bgFlowGain: num(P.bg.flowGain, 0, 1.2, 0.02, set("bg", "flowGain")),
     bgSwell: num(P.bg.swell, 0, 0.8, 0.02, set("bg", "swell")),
+    spinSpeed: num(P.bg.spinSpeed, 0, 0.5, 0.005, set("bg", "spinSpeed")),
+    spinPeriod: num(P.bg.spinPeriod, 2, 16, 0.5, set("bg", "spinPeriod")),
+    coreRadius: num(P.bg.coreRadius, 0.03, 0.4, 0.005, set("bg", "coreRadius")),
+    bandWidth: num(P.bg.bandWidth, 0.05, 0.6, 0.005, set("bg", "bandWidth")),
   });
 
   /* ------------------------------ gl setup -------------------------------- */
@@ -482,7 +511,7 @@ export default function HeroLab() {
     <>
       <div className="wh-hero on-night" data-anim="1" data-tier="gl" ref={heroRef}>
         <div className="wh-bg" aria-hidden="true">
-          <Image src="/landing/aurora-hero.jpg" alt="" fill priority sizes="100vw" quality={82} />
+          <Image src={AURORA_ART.src} alt="" fill priority sizes="100vw" quality={86} />
           {bgImg && (
             <AuroraBgCanvas
               img={bgImg}
@@ -490,6 +519,8 @@ export default function HeroLab() {
               params={paramsRef.current}
               onReady={(api) => {
                 auroraRef.current = api;
+                /* the living vortex is a resting state — visible from ready */
+                gsap.set(".wh-bg-canvas", { opacity: 1 });
               }}
             />
           )}

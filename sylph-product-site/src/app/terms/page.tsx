@@ -17,7 +17,7 @@ export default function TermsPage() {
           Our terms of service are being prepared and will be available shortly.
         </p>
         <Link
-          href="https://app.sylph-product.com/login"
+          href="/login"
           className="flex items-center justify-center gap-1.5 text-sm font-medium text-[#0d9488] hover:underline"
         >
           <ArrowLeft className="h-3.5 w-3.5" />

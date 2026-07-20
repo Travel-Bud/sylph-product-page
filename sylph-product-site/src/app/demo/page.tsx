@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "@/components/custom/landing/landing.css";
 import { LandingNav, LandingFooter } from "@/components/custom/landing";
-import { landingFonts } from "@/components/custom/landing/fonts";
 import { DemoForm } from "./demo-form";
 
 export const metadata: Metadata = {
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function DemoPage() {
   return (
-    <main className={`sylph-lp ${landingFonts}`}>
+    <main className="sylph-lp">
       <LandingNav />
 
       <section className="band band--tight">

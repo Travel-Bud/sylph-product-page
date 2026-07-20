@@ -10,6 +10,7 @@ import {
   InterludeSection,
   BentoSection,
   RecordSection,
+  TheSpine,
   CloseSection,
   LandingFooter,
   SmoothScroll,
@@ -76,14 +77,22 @@ export default function LandingPage() {
         {/* Night: the aurora, the pillar, the wind doing its work. */}
         <HeroSection />
 
-        {/* Light body walks the claim: capture, booking, setup, one photographic
-            exhale (the traveler's viewport), the rest, record. */}
-        <CaptureSection />
-        <BookingSection />
-        <SetupSection />
-        <InterludeSection />
-        <BentoSection />
-        <RecordSection />
+        {/* The body walks the claim — capture, booking, setup, one photographic
+            exhale, the rest, record — and THE SPINE runs beneath all of it:
+            the hero's current made visible for the whole descent, threading
+            every chapter and spitting paper out at each station until it
+            flattens into the record. A spool, not a hole. (TheSpine mounts
+            last so its layer paints above the chapter backgrounds and below
+            every .wrap of content.) */}
+        <div className="lp-body">
+          <CaptureSection />
+          <BookingSection />
+          <SetupSection />
+          <InterludeSection />
+          <BentoSection />
+          <RecordSection />
+          <TheSpine />
+        </div>
 
         {/* The night returns: close + footer share one frame and ONE light —
             the planet's atmosphere below. */}

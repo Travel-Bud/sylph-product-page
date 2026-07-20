@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import Image from "next/image";
 import {
-  SectionEyebrow,
   RevealHeading,
   Wisp,
   drawWisp,
@@ -173,7 +172,6 @@ export function CaptureSection() {
     <section ref={ref} className="ar-sec ar-sec--wash" id="capture" aria-labelledby="capture-h">
       <div className="wrap">
         <div className="ar-head">
-          <SectionEyebrow station="capture">Receipt capture</SectionEyebrow>
           <RevealHeading className="ar-h2" delay={0}>
             <span id="capture-h">
               Receipts that arrive <em>on their own.</em>
@@ -189,8 +187,8 @@ export function CaptureSection() {
           <div className="cap-card">
             <div className="cap-vis">
               <Image
-                src="/landing/capture-terminal.jpg"
-                alt="A payment terminal on a café counter at dusk showing a $28.40 charge"
+                src="/landing/capture-tap.jpg"
+                alt="A traveler tapping a corporate card on a payment terminal at a café counter"
                 fill
                 sizes="(max-width: 980px) 100vw, 560px"
                 quality={82}
@@ -213,8 +211,8 @@ export function CaptureSection() {
           <div className="cap-card">
             <div className="cap-vis">
               <Image
-                src="/landing/capture-text.jpg"
-                alt="A paper receipt on a café table beside a phone, ready to be texted in"
+                src="/landing/capture-text-in.jpg"
+                alt="A traveler photographing a paper receipt with their phone to text it in"
                 fill
                 sizes="(max-width: 980px) 100vw, 560px"
                 quality={82}
@@ -277,7 +275,7 @@ export function CaptureSection() {
           <div className="cap-proof">
             <span className="dot" aria-hidden="true" />
             <span>
-              Either way, a receipt lands in Sylph once — <b>the last time anyone touches it.</b>{" "}
+              Either way, a receipt lands in Sylph once, <b>the last time anyone touches it.</b>{" "}
               The traveler&rsquo;s whole job: pay, and maybe text a photo.
             </span>
           </div>

@@ -96,7 +96,7 @@ export function CloseSection() {
               <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
             </svg>
           </Link>
-          <Link href="https://app.sylph-product.com/login" className="ar-link">
+          <Link href="/login" className="ar-link">
             or log in
           </Link>
         </div>

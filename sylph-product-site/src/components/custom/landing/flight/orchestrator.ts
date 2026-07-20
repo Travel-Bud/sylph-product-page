@@ -1,14 +1,13 @@
 /**
  * The conductor. Builds ONE paused GSAP timeline for the whole breath:
- * shiver → wave 1 lifts (rows convert to sheets, rows below backfill upward)
- * → waves 2/3 overlapping → counter plummets in wave landings → exceptions
- * shudder at each crest but hold → the tall panel collapses to the settled
- * card → handback to the truth layer.
+ * shiver → the VISIBLE cleared rows lift in staggered waves (rows convert to
+ * sheets and ride the current into the coil; their slots simply empty — no
+ * pile behind the fold, nothing feeds in from below) → counter plummets in
+ * wave landings → exceptions shudder at each crest but hold → the panel
+ * closes up around the three → handback to the truth layer.
  *
  * Determinism rules (the product claim):
- *  - every DOM read happens at BUILD time, against the rested layout; wave
- *    backfill shifts are ARITHMETIC (summed row heights), so replays and
- *    scrubs read identical geometry — no measurements inside the timeline;
+ *  - every DOM read happens at BUILD time, against the rested layout;
  *  - all variance is seeded(i, k); all sequencing is timeline time;
  *  - state changes are gsap .set()/tweens (scrub-reversible), never call()s;
  *  - the tick advances both canvases with the timeline's OWN clock.
@@ -20,7 +19,13 @@
 
 import { gsap, EASE_REVEAL } from "../gsap";
 import { seeded } from "../wind-sweep";
-import { gustEnvelope, precomputePath, type Room } from "./flight-field";
+import {
+  gustEnvelope,
+  precomputePath,
+  vortexWorldPoint,
+  type Room,
+  type SinkSpec,
+} from "./flight-field";
 import type { SheetsApi } from "./hero-flight";
 import type { GustStore } from "./gust-store";
 import type { FlightParams } from "./params";
@@ -54,7 +59,7 @@ export function buildFlightTimeline(stage: FlightStage, params: FlightParams): F
   const truth = q<HTMLElement>(root, ".wq")!;
   const list = q<HTMLElement>(before, ".wq-list")!;
   const listRows = Array.from(list.children) as HTMLElement[];
-  const crows = listRows.filter((el) => el.classList.contains("crow"));
+  const allCrows = listRows.filter((el) => el.classList.contains("crow"));
   const keeps = listRows.filter((el) => el.classList.contains("wq-row"));
   const foot = q<HTMLElement>(before, ".wq-foot")!;
   const truthKeeps = qa<HTMLElement>(truth, ".wq-row");
@@ -66,6 +71,12 @@ export function buildFlightTimeline(stage: FlightStage, params: FlightParams): F
   const truthH = truth.offsetHeight;
   const truthRects = truthKeeps.map((el) => el.getBoundingClientRect());
   const { width: W, height: H } = sheets.canvasSize();
+
+  /* the wind only takes what the reader can SEE: a row wholly inside the
+     pane's clip box flies; anything straddling or beyond the fold just goes
+     with the collapse (owner's call — no bills appearing from below) */
+  const clipBottom = list.getBoundingClientRect().bottom + 1;
+  const crows = allCrows.filter((el) => rectOf.get(el)!.bottom <= clipBottom);
 
   /* ---------------- waves ------------------------------------------------ */
   const p = params.pacing;
@@ -82,7 +93,7 @@ export function buildFlightTimeline(stage: FlightStage, params: FlightParams): F
       }
     }
   }
-  const waveCount = Math.max(...waveOf) + 1;
+  const waveCount = crows.length ? Math.max(...waveOf) + 1 : 1;
   const windStart = p.shiverDur + 0.2;
   const waveStartAt = (w: number) => windStart + w * p.waveGap;
 
@@ -101,33 +112,38 @@ export function buildFlightTimeline(stage: FlightStage, params: FlightParams): F
       liftAt[i] = Math.max(waveStartAt(waveOf[i]) + orderInWave[i] * p.liftSpacing + jitter, waveStartAt(waveOf[i]));
     }
   }
-  const windEnd = Math.max(...liftAt) + p.flightDuration;
-
-  /* ---------------- arithmetic backfill shifts --------------------------- */
-  /* shiftAfter[w].get(row) = how far row sits ABOVE its rest position once
-     every wave ≤ w has lifted (sum of lifted-crow heights above it) */
-  const shiftAfter: Map<HTMLElement, number>[] = [];
-  for (let w = 0; w < waveCount; w++) {
-    const m = new Map<HTMLElement, number>();
-    for (const row of listRows) {
-      let s = 0;
-      for (let i = 0; i < crows.length; i++) {
-        if (waveOf[i] <= w && listRows.indexOf(crows[i]) < listRows.indexOf(row)) {
-          s += rectOf.get(crows[i])!.height;
-        }
-      }
-      m.set(row, s);
-    }
-    shiftAfter.push(m);
-  }
+  const windEnd = (crows.length ? Math.max(...liftAt) : windStart) + p.flightDuration;
 
   /* ---------------- spawns + paths --------------------------------------- */
   /* ≥5% clear margin on every side, plus allowance for banked corners */
   const margin = 0.08 * Math.min(W, H) + 24;
-  for (let i = 0; i < crows.length && i < sheets.count; i++) {
+
+  /* the portal: one anchor shared with the background shader. The swirl's
+     safe radius keeps every wind-in arc inside the frame. */
+  const eye = vortexWorldPoint(W, H, params.vortex);
+  const sink: SinkSpec = {
+    x: eye.x,
+    y: eye.y,
+    room: Math.max(
+      Math.min(W / 2 - Math.abs(eye.x), H / 2 - Math.abs(eye.y)) - margin * 0.5,
+      60,
+    ),
+    bendStart: params.sink.bendStart,
+    swirlTurns: params.sink.swirlTurns,
+    spinDir: params.sink.spinDir,
+    plunge: params.sink.plunge,
+    swirlRoll: params.sink.swirlRoll,
+  };
+
+  /* sheet/atlas indices are keyed by CAPTURE order (all crows) — a flying
+     crow must fly with its OWN captured texture */
+  const flyIdx = crows.map((c) => allCrows.indexOf(c));
+
+  for (let i = 0; i < crows.length; i++) {
+    const g = flyIdx[i];
+    if (g < 0 || g >= sheets.count) continue;
     const rect = rectOf.get(crows[i])!;
-    const preShift = waveOf[i] > 0 ? shiftAfter[waveOf[i] - 1].get(crows[i])! : 0;
-    const spawn = sheets.spawnFor(i, { left: rect.left, top: rect.top - preShift });
+    const spawn = sheets.spawnFor(g, { left: rect.left, top: rect.top });
     const halfW = rect.width / 2;
     const halfH = rect.height / 2;
     const room: Room = {
@@ -136,9 +152,9 @@ export function buildFlightTimeline(stage: FlightStage, params: FlightParams): F
       up: Math.max(H / 2 - spawn.y - halfH - margin, 24),
       down: Math.min(Math.max(spawn.y + H / 2 - halfH - margin, 0), 50),
     };
-    const st = sheets.state[i];
+    const st = sheets.state[g];
     st.spawn = spawn;
-    st.path = precomputePath(i, spawn, room, {
+    st.path = precomputePath(g, spawn, room, {
       gust: params.gust,
       field: params.field,
       flutter: {
@@ -148,6 +164,7 @@ export function buildFlightTimeline(stage: FlightStage, params: FlightParams): F
         bankGain: params.paper.bankGain,
         tumble: params.paper.tumble,
       },
+      sink, // absolute world px — precomputePath makes it spawn-relative
     });
   }
 
@@ -200,47 +217,28 @@ export function buildFlightTimeline(stage: FlightStage, params: FlightParams): F
   }
 
   /* 2 · lifts, flights, stirs */
-  for (let i = 0; i < crows.length && i < sheets.count; i++) {
+  for (let i = 0; i < crows.length; i++) {
+    const g = flyIdx[i];
+    if (g < 0 || g >= sheets.count) continue;
     const crow = crows[i];
     /* a few rows stir before committing to flight (x-only, no rigid tilt) */
-    if (seeded(i, 42) > 0.82) {
+    if (seeded(g, 42) > 0.82) {
       tl.to(
         crow,
-        { x: 3 + seeded(i, 47) * 2, duration: 0.16, ease: "sine.inOut", yoyo: true, repeat: 1 },
+        { x: 3 + seeded(g, 47) * 2, duration: 0.16, ease: "sine.inOut", yoyo: true, repeat: 1 },
         Math.max(liftAt[i] - 0.45, 0.1),
       );
     }
     tl.set(crow, { visibility: "hidden" }, liftAt[i]);
-    tl.set(sheets.state[i], { active: 1 }, liftAt[i]);
-    tl.to(sheets.state[i], { phase: 1, duration: p.flightDuration, ease: "none" }, liftAt[i]);
+    tl.set(sheets.state[g], { active: 1 }, liftAt[i]);
+    tl.to(sheets.state[g], { phase: 1, duration: p.flightDuration, ease: "none" }, liftAt[i]);
   }
 
-  /* 3 · backfill: rows slide up into freed space — but never before the
-     rows ABOVE them have actually left (no double-printed slots) */
-  for (let w = 0; w < waveCount; w++) {
-    for (const row of listRows) {
-      const target = shiftAfter[w].get(row)!;
-      const prev = w > 0 ? shiftAfter[w - 1].get(row)! : 0;
-      if (target === prev) continue;
-      /* a row lifted in wave ≤ w is already airborne — no need to slide it */
-      const crowIdx = crows.indexOf(row);
-      if (crowIdx >= 0 && waveOf[crowIdx] <= w) continue;
-      /* wait for the last same-wave lift above this row */
-      let lastLiftAbove = waveStartAt(w);
-      for (let i = 0; i < crows.length; i++) {
-        if (waveOf[i] === w && listRows.indexOf(crows[i]) < listRows.indexOf(row)) {
-          lastLiftAbove = Math.max(lastLiftAbove, liftAt[i]);
-        }
-      }
-      tl.to(
-        row,
-        { y: -target, duration: p.backfillDur, ease: EASE_REVEAL },
-        lastLiftAbove + 0.08 + seeded(listRows.indexOf(row), 43) * 0.08,
-      );
-    }
-  }
+  /* 3 · (no backfill — a lifted row's slot simply empties; the gaps are the
+     evidence the wind was here, and the collapse closes them at the end) */
 
-  /* 4 · the tally falls in wave landings */
+  /* 4 · the tally falls in wave landings; the meter drains with it, leaving
+     only the amber sliver of exceptions */
   const nObj = { v: params.counter.splits[0] ?? 214 };
   const write = () => {
     if (countEl) countEl.textContent = String(Math.round(nObj.v));
@@ -257,6 +255,21 @@ export function buildFlightTimeline(stage: FlightStage, params: FlightParams): F
         onUpdate: write,
       },
       waveStartAt(w), // the tally moves the instant the wave's first row lifts
+    );
+  }
+  const meterFill = q<HTMLElement>(before, ".wq-meter .fill");
+  if (meterFill) {
+    /* the fill's CSS width already ends at the amber cap — scaleX(1) means
+       "every cleared charge accounted for", matching the settled truth */
+    tl.fromTo(
+      meterFill,
+      { scaleX: 0 },
+      {
+        scaleX: 1,
+        duration: waveStartAt(waveCount - 1) + Math.min(1.15, p.waveGap * 0.9) - windStart,
+        ease: "power2.inOut",
+      },
+      windStart,
     );
   }
 
@@ -280,9 +293,10 @@ export function buildFlightTimeline(stage: FlightStage, params: FlightParams): F
     });
   }
 
-  /* 6 · the ledger closes up while the last sheets melt — no empty-void
-     beat between the last lift and the settle */
-  const collapseAt = windEnd - p.flightDuration * 0.55;
+  /* 6 · the ledger closes up while the last sheets melt — but not before
+     they are well off the glass (a shrinking pane must never strand a
+     just-converted sheet outside its own border) */
+  const collapseAt = windEnd - p.flightDuration * 0.5;
   keeps.forEach((keep, k) => {
     const finalY = truthRects[k].top - rectOf.get(keep)!.top;
     tl.to(keep, { y: finalY, duration: 0.85, ease: EASE_REVEAL }, collapseAt + k * 0.05);
@@ -301,8 +315,9 @@ export function buildFlightTimeline(stage: FlightStage, params: FlightParams): F
       .to(countEl, { color: "#f4f7f5", duration: 0.45, ease: "power1.out" }, landAt + 0.29);
   }
 
-  /* 7 · ribbons settle; hand the frame back to the truth layer */
-  if (bgCanvas) tl.to(bgCanvas, { opacity: 0, duration: 0.6, ease: "power1.out" }, collapseAt + 0.6);
+  /* 7 · hand the frame back to the truth layer. The bg canvas STAYS — the
+     living vortex is the page's resting state now, churning on its ambient
+     clock long after the flight has settled. */
   tl.to(truth, { autoAlpha: 1, duration: 0.4, ease: "power1.out" }, "+=0.3");
   tl.to(before, { autoAlpha: 0, duration: 0.4, ease: "power1.out" }, "<");
 
@@ -334,8 +349,9 @@ export function resetFlight(stage: FlightStage): void {
     gsap.set(countEl, { clearProps: "all" });
     countEl.textContent = "214";
   }
-  const bgCanvas = q<HTMLElement>(root, ".wh-bg-canvas");
-  if (bgCanvas) gsap.set(bgCanvas, { clearProps: "opacity" });
+  const meterFill = q<HTMLElement>(before, ".wq-meter .fill");
+  if (meterFill) gsap.set(meterFill, { clearProps: "all" });
+  /* the bg canvas is NOT reset — the vortex keeps churning between takes */
   gsap.set(truth, { autoAlpha: 0 });
   for (const s of sheets.state) {
     s.active = 0;

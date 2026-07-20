@@ -88,7 +88,6 @@ export function LandingFooter() {
         </div>
         <div className="ar-footer-line">
           <span>© 2026 Sylph</span>
-          <span className="ar-pipeline" aria-hidden="true">book &gt; capture &gt; match &gt; enforce &gt; record</span>
         </div>
       </div>
     </footer>

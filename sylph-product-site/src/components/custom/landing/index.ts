@@ -6,6 +6,8 @@ export { SetupSection } from "./setup-section";
 export { InterludeSection } from "./interlude-section";
 export { BentoSection } from "./bento-section";
 export { RecordSection } from "./body-sections";
+export { TheSpine } from "./spine";
+export { RecordLanding } from "./current-seam";
 export { CloseSection } from "./close-section";
 export { LandingFooter } from "./landing-footer";
 export { LandingBird } from "./landing-bird";

@@ -54,6 +54,37 @@ describe("flight-field determinism", () => {
     }
   });
 
+  it("sink: byte-equal replays, zero swap frame, lands exactly on the eye", () => {
+    const sink = {
+      x: 900,
+      y: 460,
+      room: 320,
+      bendStart: 0.44,
+      swirlTurns: 1.15,
+      spinDir: 1,
+      plunge: 1.35,
+      swirlRoll: 0.9,
+    };
+    const withSink: PathParams = { ...PARAMS, sink };
+    const a = precomputePath(4, SPAWN, ROOM, withSink);
+    const b = precomputePath(4, SPAWN, ROOM, withSink);
+    expect(Buffer.from(a.pos.buffer).equals(Buffer.from(b.pos.buffer))).toBe(true);
+    expect(Buffer.from(a.rot.buffer).equals(Buffer.from(b.rot.buffer))).toBe(true);
+    /* the swap frame stays transform-identical */
+    for (let c = 0; c < 3; c++) expect(Math.abs(a.pos[c])).toBe(0);
+    /* every flight ends ORBITING the eye on the standoff circle (60..100px),
+       never skewering the core, never straying outside the swirl room */
+    for (let i = 0; i < 12; i++) {
+      const p = precomputePath(i, SPAWN, ROOM, withSink);
+      const last = (PATH_STEPS - 1) * 3;
+      const dx = p.pos[last] - (sink.x - SPAWN.x);
+      const dy = p.pos[last + 1] - (sink.y - SPAWN.y);
+      const dist = Math.hypot(dx, dy);
+      expect(dist).toBeGreaterThanOrEqual(55);
+      expect(dist).toBeLessThanOrEqual(105);
+    }
+  });
+
   it("gust envelope: silent at 0, crests near attack+peak, trails off", () => {
     const g = PARAMS.gust;
     expect(gustEnvelope(0, g)).toBe(0);

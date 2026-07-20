@@ -120,8 +120,17 @@ export default function PricingPage() {
               >
                 {tier.highlighted && (
                   <span
-                    className="badge b-enf b-dot"
-                    style={{ position: "absolute", top: 18, right: 18 }}
+                    className="badge b-dot"
+                    style={{
+                      position: "absolute",
+                      top: -12,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      whiteSpace: "nowrap",
+                      background: "var(--card)",
+                      borderColor: "var(--pine-mist)",
+                      boxShadow: "var(--shadow-sm)",
+                    }}
                   >
                     Most popular
                   </span>

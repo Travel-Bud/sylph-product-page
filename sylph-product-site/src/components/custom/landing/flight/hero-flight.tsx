@@ -53,9 +53,14 @@ const M = new Matrix4();
 const Q = new Quaternion();
 const E = new Euler();
 const V = new Vector3();
-const S1 = new Vector3(1, 1, 1);
+const SV = new Vector3(1, 1, 1);
 const S0 = new Vector3(0, 0, 0);
 const SAMPLE: PathSample = { x: 0, y: 0, z: 0, rx: 0, ry: 0, rz: 0 };
+
+const smooth01 = (t: number) => {
+  const c = Math.min(Math.max(t, 0), 1);
+  return c * c * (3 - 2 * c);
+};
 
 export function FlightSheets({
   atlas,
@@ -112,10 +117,16 @@ export function FlightSheets({
       }
       samplePath(s.path, s.phase, SAMPLE);
       E.set(SAMPLE.rx, SAMPLE.ry, SAMPLE.rz);
+      /* receding into the portal: once airborne the sheet gently shrinks —
+         the coil reads as depth, so smaller means further in. A pure
+         function of phase, so scrubs and replays agree. */
+      const sink = paramsRef.current.sink;
+      const u = smooth01((s.phase - 0.25) / 0.75);
+      const k = 1 - u * (1 - sink.endScale);
       M.compose(
         V.set(s.spawn.x + SAMPLE.x, s.spawn.y + SAMPLE.y, SAMPLE.z),
         Q.setFromEuler(E),
-        S1,
+        SV.set(k, k, k),
       );
       mesh.setMatrixAt(i, M);
       (phases.array as Float32Array)[i] = s.phase;

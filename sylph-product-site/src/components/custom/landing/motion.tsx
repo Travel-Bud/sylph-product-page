@@ -73,63 +73,6 @@ export function ambient(trigger: Element, ...tweens: gsap.core.Tween[]) {
   });
 }
 
-const STATIONS = ["book", "capture", "match", "enforce", "record"] as const;
-export type Station = (typeof STATIONS)[number];
-
-/**
- * Section eyebrow: the airstream dash (a real element, so it can draw in
- * with the heading) + the label, plus the page's running head — the five-
- * station pipeline rail with this section's station lit. The rail repeats
- * the hero foot / footer line verbatim, so the body reads as stops on one
- * line of air rather than a stack of slides.
- */
-export function SectionEyebrow({
-  children,
-  station,
-}: {
-  children: ReactNode;
-  station?: Station;
-}) {
-  const ref = useRef<HTMLSpanElement>(null);
-
-  useGSAP(
-    () => {
-      const el = ref.current;
-      if (!el) return;
-      const mm = gsap.matchMedia();
-      mm.add(MM_MOTION, () => {
-        gsap.from(el.querySelector(".ar-dash"), {
-          scaleX: 0,
-          transformOrigin: "left center",
-          duration: 0.6,
-          ease: EASE_REVEAL,
-          scrollTrigger: { trigger: el, start: START_GROUP, once: true },
-        });
-      });
-    },
-    { scope: ref },
-  );
-
-  return (
-    <span className="ar-eyebrow-row" ref={ref}>
-      {station && (
-        <span className="ar-rail" aria-hidden="true">
-          {STATIONS.map((s, i) => (
-            <span key={s} className={s === station ? "is-on" : undefined}>
-              {i > 0 && <i>&gt;</i>}
-              {s}
-            </span>
-          ))}
-        </span>
-      )}
-      <span className="ar-eyebrow">
-        <i className="ar-dash" aria-hidden="true" />
-        {children}
-      </span>
-    </span>
-  );
-}
-
 /**
  * Line-mask headline reveal: lines rise out of overflow-hidden wrappers, once,
  * on scroll-in. Static (fully visible) under reduced motion or before JS.

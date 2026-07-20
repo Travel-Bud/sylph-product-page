@@ -31,8 +31,9 @@ export interface ExceptionRow {
 
 export type PanelRow = CrowRow | ExceptionRow;
 
-/* A handful, not a blizzard (owner's call, 2026-07-08): eight clearable rows
-   sweep away in two overlapping waves — at most a few sheets share the air.
+/* A handful, not a blizzard (owner's calls, 2026-07-08): six clearable rows,
+   ALL visible in the expansive pane, sweep away — nothing feeds in from
+   below, no pile behind the fold. What you see is what the wind takes.
    The tally still tells the 214 story; the paper just doesn't crowd it. */
 export const PANEL_ROWS: PanelRow[] = [
   { kind: "crow", label: "ANA · SFO → KIX", amount: "$980.00" },
@@ -43,9 +44,6 @@ export const PANEL_ROWS: PanelRow[] = [
   { kind: "exception", who: "R. Alvarez", detail: "Team dinner ×6", amount: "$612.00", rule: "MEAL-01 · not itemized" },
   { kind: "crow", label: "Marriott · Chicago", amount: "$418.75" },
   { kind: "exception", who: "J. Park", detail: "Delta · seat upgrade", amount: "$780.00", rule: "FLT-02 · above cabin" },
-  { kind: "crow", label: "JR Haruka · KIX → Osaka", amount: "$23.40" },
-  { kind: "crow", label: "Ichiran · lunch, Osaka", amount: "$14.75" },
-  { kind: "crow", label: "Coffee · SFO T2", amount: "$6.80" },
 ];
 
 export const CROW_COUNT = PANEL_ROWS.filter((r) => r.kind === "crow").length;
@@ -61,14 +59,27 @@ function Foot() {
   );
 }
 
+/**
+ * The head is the headline now: a giant serif tally that falls 214 → 3 while
+ * the wind works, over a meter that drains to the amber sliver of exceptions.
+ * Selector contract (orchestrator + reset): the falling number is
+ * `.wq-head .n b`; the meter fill is `.wq-meter .fill`.
+ */
 function Head({ count }: { count: string }) {
   return (
     <div className="wq-head">
       <span className="t">
-        Needs review <small>· sample</small>
+        Needs review <small>· this month</small>
       </span>
       <span className="n">
-        <b>{count}</b> of 214
+        <b>{count}</b>
+        <span className="of">
+          flagged · of <strong>214</strong> checked
+        </span>
+      </span>
+      <span className="wq-meter">
+        <i className="fill" />
+        <i className="cap" />
       </span>
     </div>
   );
@@ -98,7 +109,7 @@ export function QueuePanel() {
       <div
         className="wq"
         role="img"
-        aria-label="Sample review queue: of 214 charges this month, 211 cleared themselves and three exceptions await review"
+        aria-label="Sample review queue: of 214 charges this month, 211 cleared themselves and 3 exceptions await review"
       >
         <div aria-hidden="true">
           <Head count="3" />

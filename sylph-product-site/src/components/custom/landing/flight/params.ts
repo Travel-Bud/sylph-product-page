@@ -8,7 +8,36 @@
  * physical constants of the one wind every sheet shares.
  */
 
+/** The aurora artwork the vortex anchor is expressed against. */
+export const AURORA_ART = {
+  src: "/landing/aurora-vortex.jpg",
+  width: 2560,
+  height: 1440,
+} as const;
+
 export interface FlightParams {
+  /** the coil's eye, in FRACTIONS OF THE ARTWORK — one anchor shared by the
+      background shader and the flight sink so sheets and light agree on
+      where the portal is */
+  vortex: {
+    xFrac: number;
+    yFrac: number;
+  };
+  /** the wind-in: how flights bend off the free field into the spiral */
+  sink: {
+    /** flight phase at which the path starts committing to the spiral */
+    bendStart: number;
+    /** turns a sheet winds around the eye on its way in */
+    swirlTurns: number;
+    /** 1 = counterclockwise on screen, -1 = clockwise (match the art) */
+    spinDir: number;
+    /** radius decay exponent — higher dives to the eye sooner */
+    plunge: number;
+    /** sheet scale at the eye (receding into the portal) */
+    endScale: number;
+    /** extra roll as the sheet joins the rotation, radians */
+    swirlRoll: number;
+  };
   gust: {
     /** unconstrained travel over one full flight at gust crest, px */
     strength: number;
@@ -113,24 +142,44 @@ export interface FlightParams {
     flowGain: number;
     /** luma-weighted brightness swell at gust crest (0..1) */
     swell: number;
+    /** the living vortex: apparent angular speed at the core, rad/s.
+        Runs on an ambient clock that never rewinds — the coil churns
+        from first paint, through the flight, and forever after. */
+    spinSpeed: number;
+    /** loop period of the two-phase flow crossfade, seconds — bounds how
+        far the art ever winds before the faded-out phase snaps back */
+    spinPeriod: number;
+    /** rigid-rotation plateau radius around the eye (aspect-corrected UV) */
+    coreRadius: number;
+    /** decay band width outside the plateau — shear lives only here */
+    bandWidth: number;
   };
 }
 
 /** Provisional physics — every value below is a leva knob until Ben's checkpoint-2 pass. */
 export const DEFAULT_PARAMS: FlightParams = {
-  gust: { strength: 720, attack: 0.2, peak: 0.16, decay: 0.64 },
+  vortex: { xFrac: 0.7, yFrac: 0.29 },
+  sink: {
+    bendStart: 0.36,
+    swirlTurns: 1.05,
+    spinDir: 1,
+    plunge: 1.35,
+    endScale: 0.18,
+    swirlRoll: 0.7,
+  },
+  gust: { strength: 560, attack: 0.2, peak: 0.16, decay: 0.64 },
   field: {
     noiseScale: 0.0032,
-    curlIntensity: 220,
+    curlIntensity: 200,
     fieldTimeScale: 0.85,
-    baseWindAngleDeg: 18,
-    climbBoostDeg: 46,
+    baseWindAngleDeg: 22,
+    climbBoostDeg: 64,
   },
   paper: {
     peelAmp: 26,
     bendAmp: 1.2,
     foldSharp: 0.55,
-    foldAngle: 1.35,
+    foldAngle: 2.3,
     tumble: 0.8,
     rippleAmp: 5,
     rippleFreq: 2.4,
@@ -144,22 +193,22 @@ export const DEFAULT_PARAMS: FlightParams = {
     bodyRamp: 0.5,
   },
   pacing: {
-    flightDuration: 2.3,
-    waveGap: 1.2,
+    flightDuration: 2.2,
+    waveGap: 1.7,
     staggerJitter: 0.12,
-    liftSpacing: 0.18,
+    liftSpacing: 0.3,
     backfillDur: 0.6,
     shiverDur: 0.7,
-    sheetsPerWave: [4, 4],
+    sheetsPerWave: [3, 2],
   },
   dissolve: {
-    start: 0.55,
-    edgeWidth: 0.42,
+    start: 0.7,
+    edgeWidth: 0.36,
     erodeScale: 5.5,
     erodeElong: 3.2,
     trailBias: 0.55, /* holes originate at the trailing edge — shredding, not decay */
-    huePull: 0.8, /* the sheet is light-toned BEFORE it erodes */
-    illum: 0.2,
+    huePull: 0.7, /* the sheet is light-toned BEFORE it erodes */
+    illum: 0.32,
     glowColor: "#58e8ad",
   },
   counter: {
@@ -167,5 +216,13 @@ export const DEFAULT_PARAMS: FlightParams = {
     eases: ["power2.inOut", "power2.inOut"],
   },
   exceptions: { shudderAmp: 5, shudderFreq: 3 },
-  bg: { drift: 0.05, flowGain: 0.45, swell: 0.28 },
+  bg: {
+    drift: 0.05,
+    flowGain: 0.45,
+    swell: 0.28,
+    spinSpeed: 0.11,
+    spinPeriod: 7,
+    coreRadius: 0.15,
+    bandWidth: 0.24,
+  },
 };

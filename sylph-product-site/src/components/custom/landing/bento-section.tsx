@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { SectionEyebrow, RevealHeading, RiseGroup, gsap, useGSAP, EASE_REVEAL, MM_MOTION, START_GROUP } from "./motion";
+import { RevealHeading, RiseGroup, gsap, useGSAP, EASE_REVEAL, MM_MOTION, START_GROUP } from "./motion";
 
 /**
  * Bento: the rest of what Sylph does around the trip, shown as small true
@@ -63,7 +63,6 @@ export function BentoSection() {
     <section ref={ref} className="ar-sec ar-sec--wash" id="inside" aria-labelledby="inside-h">
       <div className="wrap">
         <div className="ar-head">
-          <SectionEyebrow>Inside Sylph</SectionEyebrow>
           <RevealHeading className="ar-h2">
             <span id="inside-h">
               Everything the trip touches, <em>handled.</em>
@@ -77,7 +76,7 @@ export function BentoSection() {
             <div className="bn-vis" aria-hidden="true">
               <div className="bn-report">
                 <div className="bn-report-head">
-                  <b>Osaka · May 12–17</b>
+                  <b>Osaka · May 12 to 17</b>
                   <span className="ok-mark">report opened itself</span>
                 </div>
                 <div className="bn-mini-row"><span>ANA · SFO → KIX</span><span>$980.00</span></div>
@@ -129,7 +128,7 @@ export function BentoSection() {
             <div className="bn-vis" aria-hidden="true">
               <div className="bn-itin">
                 <span><b>10:40a</b> SFO → KIX · ANA 106</span>
-                <span><b>May 12–17</b> Hyatt Regency Osaka</span>
+                <span><b>May 12 to 17</b> Hyatt Regency Osaka</span>
                 <span><b>4:05p</b> KIX → SFO · ANA 105</span>
               </div>
             </div>

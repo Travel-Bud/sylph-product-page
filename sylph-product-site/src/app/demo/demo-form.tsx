@@ -41,7 +41,7 @@ export function DemoForm() {
           </div>
           <h3>Request received.</h3>
           <p>
-            Thanks, we&rsquo;ll reach out within one business day to set up your walkthrough. In the meantime,
+            Thanks. We&rsquo;ll reach out within one business day to set up your walkthrough. In the meantime,
             check your inbox for a confirmation.
           </p>
         </div>
@@ -83,9 +83,9 @@ export function DemoForm() {
           <option value="" disabled>
             Select…
           </option>
-          <option>1-50</option>
-          <option>51-200</option>
-          <option>201-1,000</option>
+          <option>1 to 50</option>
+          <option>51 to 200</option>
+          <option>201 to 1,000</option>
           <option>1,000+</option>
         </select>
       </div>

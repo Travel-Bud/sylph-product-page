@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { LandingBird } from "./landing-bird";
-import { SectionEyebrow, RevealHeading, RiseGroup, gsap, useGSAP, EASE_REVEAL, MM_MOTION, START_GROUP, START_STAGE } from "./motion";
+import { RevealHeading, RiseGroup, gsap, useGSAP, EASE_REVEAL, MM_MOTION, START_GROUP, START_STAGE } from "./motion";
 
 const Tick = () => (
   <span className="tick" aria-hidden="true">
@@ -88,7 +88,6 @@ export function BookingSection() {
     <section ref={ref} className="ar-sec ar-sec--band" id="booking" aria-labelledby="booking-h">
       <div className="wrap bk-grid">
         <div className="bk-copy">
-          <SectionEyebrow station="book">Policy-aware booking</SectionEyebrow>
           <RevealHeading className="ar-h2">
             <span id="booking-h">
               Book the trip. The policy is <em>already there.</em>
@@ -152,7 +151,7 @@ export function BookingSection() {
             <div
               className="app-frame bk-card"
               role="img"
-              aria-label="Booking inside the Sylph app: sample flight results with policy verdicts — two fares in policy, one needing approval under rule FLT-02"
+              aria-label="Booking inside the Sylph app: sample flight results with policy verdicts. Two fares in policy, one needing approval under rule FLT-02"
             >
               <div aria-hidden="true">
                 <div className="app-bar">
@@ -174,7 +173,7 @@ export function BookingSection() {
                 <div className="bk-row">
                   <div className="fl">
                     <b>ANA · nonstop</b>
-                    <span>10:40a — 2:25p · economy</span>
+                    <span>10:40a to 2:25p · economy</span>
                   </div>
                   <span className="fare">$980.00</span>
                   <span className="ok-mark mark-cell">In policy</span>
@@ -182,7 +181,7 @@ export function BookingSection() {
                 <div className="bk-row">
                   <div className="fl">
                     <b>United · 1 stop</b>
-                    <span>8:05a — 3:10p · economy</span>
+                    <span>8:05a to 3:10p · economy</span>
                   </div>
                   <span className="fare">$912.00</span>
                   <span className="ok-mark mark-cell">In policy</span>
@@ -190,7 +189,7 @@ export function BookingSection() {
                 <div className="bk-row">
                   <div className="fl">
                     <b>Delta · nonstop</b>
-                    <span>11:20a — 3:05p · business</span>
+                    <span>11:20a to 3:05p · business</span>
                   </div>
                   <span className="fare">$2,340.00</span>
                   <span className="hold-mark mark-cell">Needs approval · FLT-02</span>

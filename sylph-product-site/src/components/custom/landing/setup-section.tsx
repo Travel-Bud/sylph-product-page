@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { SectionEyebrow, RevealHeading, gsap, ScrollTrigger, useGSAP, EASE_REVEAL, MM_MOTION, START_GROUP } from "./motion";
+import { RevealHeading, gsap, ScrollTrigger, useGSAP, EASE_REVEAL, MM_MOTION, START_GROUP } from "./motion";
 
 /**
  * Setup: fifteen minutes, three stations. The idea of the viewport: setup is
@@ -78,7 +78,6 @@ export function SetupSection() {
     <section ref={ref} className="ar-sec ar-sec--wash" id="setup" aria-labelledby="setup-h">
       <div className="wrap">
         <div className="ar-head">
-          <SectionEyebrow station="enforce">15-minute configuration</SectionEyebrow>
           <RevealHeading className="ar-h2">
             <span id="setup-h">
               Drop in your policy. <em className="em-ink">Go get a coffee.</em>

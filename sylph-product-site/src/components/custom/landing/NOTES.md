@@ -1,3 +1,224 @@
+# TROPE CLEANUP + RIVER LEGIBILITY PASS (2026-07-18)
+
+Ben's brief: strip the AI-trope furniture, make the capture photos convincing,
+and fix the moments where the river runs through text.
+
+- **Eyebrow kit REMOVED everywhere:** the hero's "Corporate travel & expense"
+  dash-eyebrow, the `book > capture > match > enforce > record` pipeline lines
+  (hero foot + footer), and `SectionEyebrow` (dash + station rail) in all five
+  sections. `SectionEyebrow`/`Station` deleted from motion.tsx; `.ar-rail`,
+  `.ar-eyebrow-row`, `.ar-dash`, `.ar-pipeline` CSS deleted (base
+  `.ar-eyebrow` kept — /dev labs still use it). Headings now open each
+  chapter directly.
+- **Spine station nodes REMOVED** (same trope family — mono uppercase
+  `○ ENFORCE` etc.); `Geo.nodes`, `.sp-node` CSS, and `ptAtY` gone.
+- **Capture photos replaced** with stock-style people shots: `capture-tap.jpg`
+  (card tapped on a POS across a café counter) and `capture-text-in.jpg`
+  (traveler photographing a receipt to text it in), gpt-image-2 high,
+  1536x1152 (4:3 = `.cap-vis`). Old `capture-terminal.jpg`/`capture-text.jpg`
+  deleted (in git history). NOTE: gpt-image-2 rejects sizes below a minimum
+  pixel budget — 768x576 fails; iterate at final size with `--quality low`.
+- **River legibility (spine.tsx):**
+  - QUIET ZONES: `QUIET_SELS` lists bare-ink text blocks; at build time,
+    wherever the sampled path actually crosses one (x∩y test, per viewport),
+    the shared gradient is dimmed to `QUIET_DIM` (0.16) across that y-band
+    with soft ramps (`quietStops`, pure gradient surgery — zero runtime
+    cost, packet dims with it since all strokes share the gradient).
+  - Enforce anchor moved to the su-grid gutter (`ax: 0.325` on `.su-rule`)
+    so the line threads between the 0:00/0:12 columns instead of running
+    through column 1.
+  - `LEG_DIR` capture→book flipped RIGHT (+0.55): the descent and the
+    boarding-pass emission ride open air beside the booking copy, never
+    across "already there.". book→enforce softened to -0.6, enforce→sky
+    to -0.25.
+  - Stamp emission ("cleared · ¥3,200 → $21.55") now rides BELOW the su-grid
+    (measured), no longer over the travel-expense-policy.pdf chip.
+- Verified: 14-stop Playwright walk (channel chrome, 1440×900) ×2 rounds —
+  every chapter checked for line-through-text; tsc + lint green.
+- **Em/en dash sweep (same day, Ben's follow-up):** zero dashes in visible
+  copy on `/` and `/demo` (code comments exempt). Rewords: capture proof line
+  (comma), hero replay button (`·`), rec-catch caption (commas), flight times
+  ("10:40a to 2:25p"), bento dates ("May 12 to 17"), demo title
+  ("Book a demo · Sylph"), demo lede/point/thanks (colon/period), company-size
+  options ("1 to 50"). Booking aria-label de-dashed too.
+
+# THE SPINE — the current made visible, full-page (2026-07-08, later session)
+
+Ben's brief: "a flowing spine along the full landing page which spits out
+receipts at important places" — the OPEN DIRECTION from v5.1 (river-as-page-
+spine), now built. Supersedes the three discrete CurrentSeam bands (deleted;
+`current-seam.tsx` keeps only RecordLanding).
+
+- **`spine.tsx` (TheSpine):** one continuous procedural streamline from the
+  hero coil's quadrant to the decision record. Catmull-Rom path through
+  MEASURED anchors per chapter (capture `.ci-slot`, booking `.app-frame` left
+  gap, setup `.su-rule`, interlude, bento, `#record .rec-landing`) + one
+  seeded sway midpoint per leg (`LEG_DIR` tunes side/magnitude so the line
+  clears headings and product windows). Rebuilt on resize (RO, debounced) and
+  font settle; renders nothing outside desktop+motion (`MM_SPINE`).
+- **Layering — "under glass":** `.lp-body` wraps the six chapters; every
+  `.wrap` gets z1; TheSpine mounts DOM-LAST with `.lp-spine` at z0 → the line
+  paints above section backgrounds/washes/grain/interlude photo but below ALL
+  content; it visibly dives UNDER each evidence card. `.lp-spine-paper` (z3)
+  flies the receipts above the page. Both layers reach `top:-120px` into the
+  hero's veiled seam (HERO_REACH), so the line is born inside the coil's air.
+- **Color is one userSpaceOnUse gradient** keyed to measured y: born aurora
+  in the hero dark, --green over paper, aurora across the interlude sky
+  (deliberately VISIBLE over the photo — verified, it reads as an aurora
+  ribbon), fading to 0 into the record. Strokes: halo/body/core + a bright
+  dash-window PACKET whose dashoffset is scroll-scrubbed (the gust travels
+  ahead of the reader; `[style]`-gated opacity so it never paints pre-JS).
+- **Nodes:** quiet mono stops (capture/book/enforce/record) placed where the
+  path crosses each chapter's top air (`ptAtY(sectionTop+48)`) — the page
+  reads as a pipeline diagram.
+- **Emissions (MotionPathPlugin, all scrub, seeded):** hero→capture two
+  receipts dive under the cap card; a BOARDING PASS (new asset) rides the
+  booking gap and dissolves at the app-frame's edge, chip "booked · in policy
+  / report opened itself"; a receipt is stamped "cleared · ¥3,200 → $21.55"
+  mid-air in setup's lower half; a HOTEL FOLIO (new asset) unspools below the
+  bento into RecordLanding. Emission fraction windows are computed from the
+  same analytic samples that build the path (fracAtY), so paper always rides
+  the drawn line.
+- **New assets:** `boarding-pass.png` (640×779, SFO→KIX = canonical trip,
+  kept crisp) + `receipt-folio.png` (420×1181, "Total 82000" blurred RGB-only
+  — non-canonical number). gpt-image-1 `--background transparent` + the v4.2
+  Pillow hardening pipeline.
+- **Gotchas burned:** (1) useGSAP `scope` scopes ScrollTrigger selector
+  STRINGS — `trigger: "#booking"` silently resolved against the spine root →
+  body fallback / zero-length windows. Resolve section triggers via
+  `document.querySelector` and pass ELEMENTS. (2) Lenis re-asserts its own
+  target after a native `window.scrollTo` in an eval — "state at scroll 0"
+  reads were actually at the old position; measure `scrollY` in the same
+  read. (3) The preview tab's screenshot surface desyncs from scroll after a
+  reload — use Playwright `channel:'chrome'` headless for scrolled captures.
+- Verified: scroll-walk screenshots at 12 stops ×1440 + 1280/1728 spots, no
+  console/page errors; mobile + reduced-motion collapse both layers (nothing
+  mounts); /demo + /pricing untouched; build green (/ first-load 190→201kB —
+  MotionPathPlugin; three still async-only); lint 0 new; flight vitest 6/6.
+  Dev helper: `window.__spineST` (ScrollTrigger) exposed in dev builds only.
+
+---
+
+# The Current + receipt morph — the page arc (2026-07-08, same session as v5.1)
+
+Ben's go on the "In → Along → Out" arc, plus: the flying paper must look like
+the MOCKUP receipts, not row-strips.
+
+- **Row → receipt morph (sheet-material):** each captured row is a 10:1 plank
+  only for the swap instant; over phase 0.05→0.24 the plane compacts to a
+  seeded receipt-note proportion (aCard attr, ~118-158×78-106px) while the
+  fragment crossfades the row print into a PROCEDURAL receipt (warm-white body,
+  seeded ruled lines, total bar, diagonal crease shadow — premultiplied like
+  the rest of the pipeline). Swap frame untouched; harnesses stay green
+  (det GREEN, A/B 0.5 LSB/0%, 659f max 9.7ms 0>17).
+- **CurrentSeam (`current-seam.tsx` + `.cur-seam` CSS):** scroll-scrubbed
+  receipt cutouts (the capture intake's own pngs) riding seams between
+  chapters — the reader's scroll IS the wind, nothing ambient (Ben rejected
+  clock-driven bg motion). Three variants placed in page.tsx: `intake`
+  (hero→capture, paper drifts out of the night), `pass` (setup→interlude,
+  one sheet crosses), `unspool` (bento→record, sheets straighten + hand off).
+  Desktop+motion only; display:none ≤980px and under reduced motion.
+- **RecordLanding + `.rec-catch`:** the unspooled sheets settle onto the
+  record-paper archive behind the decision card (z between backplate and
+  card), once, on section enter; caption closes the hero's loop: "the 211
+  that cleared themselves land here — in order, cited." This is the answer
+  to Ben's black-box worry: the coil is a spool, not a hole — the vortex
+  appears ONCE (hero), the river carries, the record pays it off.
+- Build green after arc (/ 190kB unchanged).
+
+---
+
+# Hero v5.1 rework — static coil, visible-only sweep, expansive glass (2026-07-08)
+
+Ben's same-day feedback on v5: the dynamic vortex "does not look good" → the coil
+is STATIC again (the living-vortex shader is parked in the lab — hero mounts no
+bg canvas); bills feeding in from below "feels strange" → BACKFILL DELETED
+(no pool rows; the orchestrator clips the fly-list to rows wholly inside the
+pane — what you see is what the wind takes; emptied slots stay empty until the
+collapse closes the ledger); panel "more expansive like the mockups" → 524px
+glass, roomier row metrics, 5 crows + 3 exceptions all visible (PANEL_ROWS
+trimmed, waves [3,2]). Sheet/atlas indices are capture-order — the visibility
+filter maps through `flyIdx` so a flying crow keeps its own texture.
+Re-verified after rework: determinism GREEN, A/B 0.5 LSB/0%, 659f avg 8.33
+max 10ms 0>17, replay 3→99→3, vitest 6/6, tsc/eslint clean.
+
+OPEN DIRECTION (Ben, thinking aloud): carry the motif through the page —
+receipts leaving/entering a river that follows the reader — BUT he suspects
+vortex-everywhere reads as a BLACK BOX vs. Sylph's observability story. Proposed
+resolution (awaiting his go): vortex appears ONCE (hero intake); the RIVER is
+the page spine with paper riding in/out of frame at receipt-relevant sections;
+the payoff is the record/audit section where the current unspools and lays the
+cleared items back down as a flat cited audit trail — the coil was winding the
+month INTO the record, not into a hole.
+
+---
+
+# Hero v5 "Into the Vortex" — living portal + integrated flight (2026-07-08)
+
+Ben's brief (after the 3-direction exploration in
+`docs/prompts/landing-references/hero-directions/` — he picked A "Vortex Intake",
+liked B's split-verdict legibility, and required the vortex be DYNAMIC): the gust
+must read as receipts riding the aurora INTO a spiral vortex with real paper
+weight, and the needs-review panel must make "down to 3" the dominant focal point.
+Phase-3 integration shipped in the same pass — the flight lab now drives the real
+hero. Fresh-eyes eval run; its findings (tape silhouettes, radial clock-hands,
+early green ignite, ambiguous counter copy) all fixed.
+
+- **New art:** `public/landing/aurora-vortex.jpg` (gpt-image-2 high, 2560×1440) —
+  ribbons wind into a coil at image fraction (0.70, 0.29). `AURORA_ART` +
+  `params.vortex` are the single anchor; `vortexWorldPoint()` (flight-field.ts)
+  replicates the `.wh-bg` cover/center-right/inset-6% layout so the flight sink and
+  the bg shader agree on where the portal is at any viewport.
+- **The vortex LIVES:** aurora-bg.tsx is now a two-phase looping flow (each phase
+  winds ±θ/2 around the eye and resets while crossfaded out — endless apparent spin,
+  bounded distortion; rigid core plateau + narrow shear band). Two clocks by design:
+  gust warp reads virtual timeline time (deterministic, scrub-safe); the spin reads
+  an ambient clock that only accrues (timeline advances feed it deltas; a ~30fps
+  gsap.ticker drives it between flights, paused offscreen via IntersectionObserver).
+  The canvas fades in once ready and STAYS — the churn is the page's resting state
+  (measured: mean |Δ| ≈ 9/channel over 6s at rest). Mobile gets the living vortex
+  too (any WebGL2 width); reduced motion gets the static JPG.
+- **Flight into the coil:** `precomputePath` gains a sink post-pass — past a seeded
+  bendStart the fitted free path blends onto a log-spiral that lands on a seeded
+  60–100px STANDOFF orbit at the eye's rim (never skewering the core), tangent-
+  aligned via unwrapped atan2 (no ±π seam), flutter/tumble damped by wind-in
+  progress, roll into the rotation. Sheets shrink into the portal (scale is a pure
+  function of phase). Byte-equal + orbit-contract vitest tests.
+- **Fold-to-slip (the tape killer):** captured rows are 10:1 planks, so the vertex
+  shader Z-folds BOTH wings along seeded creases (one up, one down) over phase
+  0.05→0.26 — silhouettes compact to folded-slip proportions with matte per-face
+  shading (vFace). Swap frame untouched (fold is 0 at phase 0). Curvature rim-light
+  is now fully airT-gated: paper stays paper until the coil; green means proximity
+  to the portal.
+- **Panel (B's legibility folded in):** giant serif tally (`.wq-head .n b`,
+  Newsreader ~3rem) falls 214→3 with "flagged · of 214 checked" beside it; meter
+  drains to a GLOWING amber cap (2.8%); amber rule chips on exceptions; deeper glass
+  (rgba .68/.8) + aurora border. Same selector contract — orchestrator/reset
+  unchanged except the meter tween + persistent bg canvas. Panel sits BELOW the
+  coil's eye on desktop (stage translateY — the portal must stay visible).
+- **hero-section.tsx** now runs the tier ladder end-to-end: gl (capture → atlas →
+  FlightCanvas + orchestrator, visibility gate at 2.1s, 3.5s bailout to DOM sweep),
+  dom/fade (calm two-cluster fade + tally/meter/collapse — the old SVG streamline
+  gust is DELETED), reduced-motion/no-JS (settled truth). Replay rebuilds via
+  resetFlight → same 214, same 3. three.js enters only via next/dynamic
+  (`/` first-load 190kB, three absent; loads on demand).
+- **Gotchas burned here:** R3F's Canvas wrapper sets pointer-events:auto INSIDE a
+  pointer-events:none layer — it swallowed the replay-button clicks (fix: style
+  prop + CSS `!important` backstop on both canvases); `lsof -ti :3000` lists CLIENT
+  sockets too (filter `-sTCP:LISTEN`); Playwright's bundled headless shell has NO GL
+  in this env ("BindToCurrentSequence failed") but `channel:'chrome', headless:true`
+  gives full Metal GPU incl. the strict performance-caveat probe.
+- **Harnesses (real GPU, post-integration):** determinism GREEN (frame hashes ×2
+  rebuilds), A/B swap max 0.5 LSB / 0% >2LSB, play 761f avg 8.33ms max 11.7ms
+  0>17ms, build green, flight-field vitest 6/6.
+- **Next (agreed with Ben, not built):** the RETURN ARC — cleared bills spat back
+  out further down the page, assembling into a report/record (a second AuroraBgCanvas
+  with mirrored spin + a reversed flight field; modules are already reusable).
+  Residual polish knobs live in the lab (`/dev/hero`): heading spread, fold angle,
+  swirl turns, spin speed.
+
+---
+
 # Hero paper flight — DOM→WebGL rebuild, lab phase (2026-07-08)
 
 Ben's brief: upgrade the v4.2 DOM queue sweep to true paper physics (plan:
