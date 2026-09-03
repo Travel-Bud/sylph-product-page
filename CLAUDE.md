@@ -1,0 +1,97 @@
+# CLAUDE.md
+
+Orientation for anyone (engineer or agent) working in `sylph-product-page`.
+
+## What this repo is
+
+The single marketing surface for Sylph, served at https://sylph-product.com. Since 2026-09-03 it is the design source for the landing page: `application-v2` no longer carries the landing, and there is no sync back. Landing changes are made here and only here.
+
+## Layout
+
+The Next.js app lives in `sylph-product-site/`. Run every package command from inside that directory. The repo root holds `README.md`, this file, `.env.example`, and `docs/`.
+
+```
+sylph-product-site/
+  src/app/                          file routes (see Routes)
+  src/app/hooks/useServerActions.ts demo-form submit hook
+  src/components/custom/landing/    the landing sections, nav, footer, bird, landing.css, field/ (three.js particle field)
+  src/components/custom/sylph-identity/  brand marks, incl. sylph-bird-path.ts (see Invariant)
+  public/landing/                   landing images and video
+  next.config.ts                    image formats + the /privacy redirect
+  pnpm-workspace.yaml               allowBuilds (see below)
+```
+
+## Stack
+
+Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. Motion and 3D: framer-motion, gsap + @gsap/react, lenis (smooth scroll), three + @react-three/fiber, leva (dev tweak panel). Tests run on vitest.
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `pnpm install --frozen-lockfile` | install; must not change `pnpm-lock.yaml` |
+| `pnpm dev` | dev server on :3000 |
+| `pnpm build` / `pnpm start` | production build / serve it |
+| `pnpm lint` | eslint (eslint-config-next) |
+| `pnpm typecheck` | `tsc --noEmit` |
+| `pnpm test` | `vitest run` |
+
+All four gates (`typecheck`, `lint`, `test`, `build`) must exit 0 before a push.
+
+`pnpm-workspace.yaml` carries `allowBuilds` entries for `sharp` and `unrs-resolver`. pnpm 11 refuses to install a package with a postinstall build script unless a build decision is recorded, and those two (Next image optimisation and the eslint resolver) need theirs. Do not remove the entries; add to them only when pnpm asks.
+
+## Branch model
+
+- `staging` is the working branch. Cut feature work from it and merge back into it.
+- `staging` into `main` is the deploy. Vercel builds `main` through its git integration; there is no workflow file in this repo.
+- Every other pushed branch gets a Vercel preview URL automatically.
+- `landing-v3` is Ben's in-progress redesign on its own branch. It is not merged into `/` and is not part of the deploy path.
+
+## Environment variables
+
+Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time. They are set in the Vercel dashboard; changing one needs a redeploy. Locally, copy `.env.example` at the repo root to `sylph-product-site/.env.local` (gitignored).
+
+| Variable | Used by |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | `src/app/page.tsx` metadataBase, canonical link, OG image URLs. Fallback is `https://sylph-product.com`. |
+| `NEXT_PUBLIC_EMAIL_API_URL` | `useServerActions.ts`, the demo-form POST target. No fallback; the form fails without it. |
+
+## Routes
+
+| Route | Notes |
+|---|---|
+| `/` | the landing (`src/app/page.tsx`), carries site metadata and JSON-LD |
+| `/pricing` | pricing page |
+| `/demo` | demo request page; `demo-form.tsx` is the wired submission |
+| `/terms` | stub page, stays until a terms document is published |
+| `/privacy` | no page; `next.config.ts` issues a 308 to `https://legal.januslabsinc.com/sylph/v1/privacy` |
+| `/launching-soon` | leftover pre-launch page, still served |
+| `/dev/hero` | hero lab, 404s in production unless `NEXT_PUBLIC_ENABLE_HERO_LAB=1` |
+| `/api/demo` | stub that returns `{ok:true}`; NOT the real submit path, the form never calls it |
+| `opengraph-image.tsx`, `twitter-image.tsx` | generated social images under `src/app/` |
+
+## Cross-host link contract
+
+- The only links from this site to the app are `https://app.sylph-product.com/login`, in `landing-nav.tsx` (two places) and `landing-footer.tsx`. The app never links back to this site.
+- Legal documents live on `https://legal.januslabsinc.com/sylph/v1/` and are never rendered here. `/privacy` redirects there; `/terms` keeps a stub because no terms document is published yet.
+
+## Demo-lead path
+
+`src/app/demo/demo-form.tsx` calls `src/app/hooks/useServerActions.ts`, which does `axios.post(NEXT_PUBLIC_EMAIL_API_URL, ...)`. That URL is the Cloudflare `email-worker` in `sylph-infra/cloudflare/workers/email-worker/`, which sends through SES to sales. The Worker runs in a different Cloudflare account and is never changed from this repo; if lead delivery breaks, look there.
+
+## Invariant
+
+`src/components/custom/sylph-identity/sylph-bird-path.ts` must stay byte-identical to application-v2's copy. It is the one shared brand asset; change it in both repos in the same session or not at all.
+
+## Conventions
+
+- File names are kebab-case, matching the existing files. Components are PascalCase. Import with the `@/*` alias.
+- Commit messages: `{Action}: {Description}`, e.g. `Added:`, `Fixed:`, `Removed:`.
+- No em dashes anywhere, in copy or in docs. Use commas, colons, or full stops.
+- Never edit `demo-form.tsx` as part of a landing sync; it is the wired form and differs from any upstream copy by design.
+
+## Non-goals (for now)
+
+- No SEO files (`robots.ts`, `sitemap.ts`, per-route metadata).
+- No analytics or telemetry SDK.
+- No legal-document rendering; the legal host owns that.
