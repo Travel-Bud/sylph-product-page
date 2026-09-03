@@ -20,7 +20,7 @@ const TITLE = "Sylph · Stop reviewing expenses. Start reviewing exceptions.";
 const DESCRIPTION =
   "Sylph books travel inside your policy, catches receipts on their own (straight from the payment terminal, or by text), and checks every charge as it lands. The routine clears itself; your team reviews only the exceptions. Configured in 15 minutes from your own policy document.";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph.ai";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph-product.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
