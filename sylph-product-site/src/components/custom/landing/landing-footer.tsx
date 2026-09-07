@@ -75,7 +75,7 @@ export function LandingFooter() {
             <ul>
               <li><Link href="/demo">Book a demo</Link></li>
               <li><Link href="https://app.sylph-product.com/login">Log in</Link></li>
-              <li><a href="mailto:hello@sylph.ai">hello@sylph.ai</a></li>
+              <li><a href="mailto:atharva-sumant@januslabsinc.com">atharva-sumant@januslabsinc.com</a></li>
             </ul>
           </nav>
           <nav aria-label="Legal">

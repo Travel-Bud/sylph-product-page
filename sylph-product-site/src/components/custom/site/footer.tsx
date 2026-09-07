@@ -37,7 +37,7 @@ export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
                 <Link href="/login">Log in</Link>
               </li>
               <li>
-                <a href="mailto:hello@sylph.ai">hello@sylph.ai</a>
+                <a href="mailto:atharva-sumant@januslabsinc.com">atharva-sumant@januslabsinc.com</a>
               </li>
             </ul>
           </nav>

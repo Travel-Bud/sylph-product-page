@@ -7,7 +7,7 @@ const TITLE = "Sylph: your policy, enforced on every charge";
 const DESCRIPTION =
   "Sylph turns your travel and expense policy into rules, then checks every card charge, receipt and booking against them. Deterministic verdicts that cite the rule, the threshold and the amount. Works with the cards and banks you already use.";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph.ai";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph-product.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
