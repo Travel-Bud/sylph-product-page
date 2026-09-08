@@ -34,7 +34,6 @@ export default function DemoPage() {
       <section className="lead">
         <div className="wrap lead-grid">
           <div className="lead-copy">
-            <p className="eyebrow">Book a demo</p>
             <h1 className="h1 h1-sm">See Sylph clear a report on your own policy.</h1>
             <p className="lede">
               Thirty minutes, no slides. Your policy, a month of sample charges, real verdicts.

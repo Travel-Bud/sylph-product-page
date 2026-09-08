@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Mark } from "./mark";
 import { HOME, SITE_ANCHORS } from "./anchors";
+import { JanusNod } from "./janus-nod";
 
 export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
   return (
@@ -55,6 +56,7 @@ export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
         </div>
         <div className="footer-line">
           <span>© 2026 Sylph</span>
+          <JanusNod />
           <span className="footer-sec">Policies and receipts are encrypted in transit and at rest, and never used to train models.</span>
           {sampleNote && <span>Product panels on this page use sample data, not customer data.</span>}
         </div>

@@ -1,0 +1,264 @@
+/* ============================================================
+   LAB A: "Runs on air"  (direction prototype, /fresh/lab/air)
+   Motion language: drift, then land. Everything light is carried
+   in on a current and settles exactly where it belongs; verdict
+   chips land the same way. Scoped to .lab-air; site.css untouched.
+   ============================================================ */
+
+.lab-air .air-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 10fr) minmax(0, 12fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: center;
+}
+.lab-air .air-h1 {
+  max-width: 12ch;
+}
+.lab-air .hero-note {
+  color: var(--green-700);
+  letter-spacing: 0.02em;
+}
+
+/* ---- the stage: clip panel, two drifting objects, the landing strip ---- */
+.lab-air .air-stage {
+  position: relative;
+  isolation: isolate;
+  margin-bottom: 96px;
+}
+.lab-air .air-clip {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: #fff;
+  border: 1px solid var(--hair);
+  box-shadow: var(--shadow-hero);
+}
+.lab-air .air-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.lab-air .air-obj {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+.lab-air .air-obj .obj {
+  filter: drop-shadow(0 20px 24px rgba(16, 27, 22, 0.16));
+}
+.lab-air .air-obj-1 {
+  left: -84px;
+  top: -70px;
+  transform: rotate(-12deg);
+}
+.lab-air .air-obj-2 {
+  right: -70px;
+  top: 34%;
+  transform: rotate(10deg);
+}
+.lab-air .air-strip {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: -72px;
+  z-index: 3;
+  box-shadow: var(--shadow-hero);
+}
+.lab-air .air-rows {
+  display: flex;
+  flex-direction: column;
+}
+.lab-air .air-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "m a c"
+    "cite cite cite";
+  column-gap: 14px;
+  row-gap: 3px;
+  align-items: center;
+  padding: 10px 16px;
+  border-top: 1px solid var(--hair);
+}
+.lab-air .air-row:first-child {
+  border-top: 0;
+}
+.lab-air .air-m {
+  grid-area: m;
+  font-weight: 600;
+  letter-spacing: -0.006em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lab-air .air-a {
+  grid-area: a;
+  font-size: 13px;
+}
+.lab-air .air-chip {
+  grid-area: c;
+  transform-origin: 50% 60%;
+}
+.lab-air .air-cite {
+  grid-area: cite;
+  font-size: 11.5px;
+  color: var(--ink-4);
+}
+
+/* ---- beats ---- */
+.lab-air .air-sec .sec-head {
+  margin-bottom: 36px;
+}
+.lab-air .air-two {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+}
+.lab-air .air-clip-sm {
+  aspect-ratio: 16 / 11;
+  border-radius: var(--r-panel);
+}
+.lab-air .air-match {
+  max-width: 520px;
+  justify-self: center;
+  width: 100%;
+}
+.lab-air .air-next .sec-head {
+  margin-bottom: 0;
+}
+.lab-air .air-clip-night {
+  aspect-ratio: 16 / 11;
+  border-color: var(--night-hair-2);
+  box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.6);
+}
+.lab-air .air-clip-night .air-video {
+  filter: brightness(0.96);
+}
+.lab-air .air-tag {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  z-index: 2;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green-800);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--hair-2);
+}
+
+/* ---- motion: drift, then land. Settled state is the base rule. ---- */
+@media (prefers-reduced-motion: no-preference) {
+  .lab-air .air-copy > * {
+    animation: air-rise 1.1s var(--ease) both;
+    animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+  }
+  .lab-air .air-clip {
+    animation: air-rise 1.2s var(--ease) both;
+    animation-delay: 160ms;
+  }
+  .lab-air .air-obj {
+    animation: air-drift-in 1.6s var(--ease) both;
+  }
+  .lab-air .air-obj-1 {
+    animation-delay: 420ms;
+  }
+  .lab-air .air-obj-2 {
+    animation-delay: 620ms;
+  }
+  .lab-air .air-obj .obj {
+    animation: air-float 7.5s ease-in-out infinite alternate;
+  }
+  .lab-air .air-obj-2 .obj {
+    animation-duration: 8.5s;
+    animation-delay: -3s;
+  }
+  .lab-air .air-strip {
+    animation: air-rise 1.1s var(--ease) both;
+    animation-delay: 720ms;
+  }
+  /* verdict chips land once the strip is on screen (LoopGate adds .is-in) */
+  .lab-air [data-once]:not(.is-in) .air-chip {
+    opacity: 0;
+    transform: translateY(-18px) scale(1.22);
+  }
+  .lab-air .air-chip {
+    transition:
+      transform 0.85s var(--ease),
+      opacity 0.45s var(--ease);
+    transition-delay: calc(var(--i, 0) * 520ms + 1100ms);
+  }
+}
+@keyframes air-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes air-drift-in {
+  from {
+    opacity: 0;
+    translate: 0 -46px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes air-float {
+  from {
+    translate: 0 -5px;
+    rotate: -1.2deg;
+  }
+  to {
+    translate: 0 5px;
+    rotate: 1.2deg;
+  }
+}
+
+/* ---- responsive ---- */
+@media (max-width: 1024px) {
+  .lab-air .air-grid {
+    grid-template-columns: 1fr;
+    gap: 64px;
+  }
+  .lab-air .air-stage {
+    margin-bottom: 84px;
+  }
+  .lab-air .air-two {
+    grid-template-columns: 1fr;
+  }
+  .lab-air .air-two-rev .air-clip {
+    order: -1;
+  }
+}
+@media (max-width: 640px) {
+  .lab-air .air-obj {
+    display: none;
+  }
+  .lab-air .air-strip {
+    position: static;
+    margin-top: 16px;
+  }
+  .lab-air .air-stage {
+    margin-bottom: 0;
+  }
+  .lab-air .air-clip {
+    border-radius: 16px;
+  }
+  .lab-air .air-cite {
+    display: none;
+  }
+}

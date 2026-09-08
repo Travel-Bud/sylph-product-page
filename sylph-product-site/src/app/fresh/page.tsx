@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import "@/components/custom/site/site.css";
-import { siteFonts } from "@/components/custom/site/fonts";
+import { siteFonts, faceFrom } from "@/components/custom/site/fonts";
 import { SiteNav, SiteFooter, SmoothScroll, Hero, Bento, Next, Close, LoopGate } from "@/components/custom/site";
+import { ReceiptJourney } from "@/components/custom/site/receipt-journey";
+import { How } from "@/components/custom/site/how";
 
 const TITLE = "Sylph: your policy, enforced on every charge";
 const DESCRIPTION =
@@ -41,9 +43,11 @@ const JSON_LD = {
   ],
 };
 
-export default function LandingPage() {
+/* `?face=onest` switches the page voice for the type A/B (Familjen is the default). */
+export default async function LandingPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const face = faceFrom((await searchParams).face);
   return (
-    <main className={`site ${siteFonts}`} id="main">
+    <main className={`site ${siteFonts}`} id="main" data-face={face}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <a href="#hero" className="skip">
         Skip to content
@@ -52,7 +56,9 @@ export default function LandingPage() {
         <LoopGate />
         <SiteNav watchNight />
         <Hero />
+        <ReceiptJourney />
         <Bento />
+        <How />
         <Next />
         <Close />
         <SiteFooter sampleNote />

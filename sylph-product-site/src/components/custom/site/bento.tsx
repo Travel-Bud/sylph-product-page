@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { gsap } from "./motion";
+import { gsap, ScrollTrigger } from "./motion";
 import { Flip } from "gsap/Flip";
+import { enterTile } from "./bento-motion";
 import { Obj, type ObjName } from "./obj";
 import { VerdictCard } from "./verdicts";
 import { ReviewQueue } from "./review";
@@ -59,7 +60,7 @@ const TILES: Tile[] = [
     hue: "mint",
     compact: (
       <div className="t-cards">
-        <Obj name="card" size={150} className="t-obj" />
+        <Obj name="card" size={150} className="t-obj" priority />
       </div>
     ),
     open: (
@@ -148,13 +149,23 @@ export function Bento() {
   };
 
   useLayoutEffect(() => {
+    // the page's scroll-scrubbed pieces (the receipt journey) re-measure after any layout change,
+    // including a close by Escape, which captures no Flip state
+    const refresh = window.setTimeout(() => ScrollTrigger.refresh(), 640);
     const st = flipState.current;
     const el = grid.current;
-    if (!st || !el) return;
-    flipState.current = null;
-    Flip.from(st, { duration: 0.55, ease: "power2.inOut", nested: true, scale: false, simple: true });
-    const opened = open ? el.querySelector<HTMLElement>(`[data-tile="${open}"] .tile-x`) : null;
-    if (opened) gsap.fromTo(opened, { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.4, delay: 0.3, ease: "power2.out" });
+    let entrance: ReturnType<typeof enterTile> | undefined;
+    if (st && el) {
+      flipState.current = null;
+      Flip.from(st, { duration: 0.55, ease: "power2.inOut", nested: true, scale: false, simple: true });
+      const tile = open ? el.querySelector<HTMLElement>(`[data-tile="${open}"]`) : null;
+      // the open surface enters the way its subject would, once the layout has settled
+      if (tile) entrance = enterTile(open!, tile, 0.26);
+    }
+    return () => {
+      window.clearTimeout(refresh);
+      entrance?.kill();
+    };
   }, [open]);
 
   useEffect(() => {
@@ -187,7 +198,6 @@ export function Bento() {
     <section id="product" className="sec bento-sec" aria-labelledby="product-title">
       <div className="wrap">
         <div className="sec-head rv">
-          <p className="eyebrow">The product</p>
           <h2 id="product-title" className="h2">
             One engine, every charge.
           </h2>

@@ -62,7 +62,6 @@ export default function PricingPage() {
       <SiteNav />
       <section className="lead lead-center">
         <div className="wrap">
-          <p className="eyebrow">Pricing</p>
           <h1 className="h1 h1-sm">Simple pricing, per employee.</h1>
           <p className="lede">
             Every plan includes matching, currency normalization and deterministic enforcement. Booking
