@@ -4,6 +4,7 @@ import { Obj } from "./obj";
 import { HOME } from "./anchors";
 import { VideoLoop } from "./video-loop";
 import { Mark } from "./mark";
+import { QBO_LIVE } from "./sample-data";
 
 /* Hero clip: our own three objects (receipt, boarding pass, envelope) lifting on a current and
    settling back; first and last frame are the same render, so the loop is exact. */
@@ -12,7 +13,7 @@ const HERO_CLIP = { src: "/site/video/lab/air-trio.mp4", poster: "/site/video/la
 /* The landing strip under the clip: three sample charges whose verdicts land once the strip is on
    screen (LoopGate adds .is-in). Counts on the page are counts of the rows shown. */
 const STRIP = [
-  { merchant: "United Airlines", amount: "$412.30", verdict: "ok", label: "Cleared", cite: "T-004, in policy" },
+  { merchant: "United Airlines", amount: "$412.30", verdict: "ok", label: "Cleared", cite: "receipt from email, T-004, in policy" },
   { merchant: "Sushi Kanda", amount: "$84.20", verdict: "warn", label: "Needs a note", cite: "M-041, $9.20 over the $75 dinner cap" },
   { merchant: "Bar Bianco", amount: "$46.90", verdict: "block", label: "Blocked", cite: "M-022, alcohol, kept off the total" },
 ] as const;
@@ -24,11 +25,11 @@ export function Hero() {
       <div className="wrap hero-grid">
         <div className="hero-copy">
           <h1 id="hero-title" className="h1" style={{ "--i": 0 } as React.CSSProperties}>
-            Nothing to chase <span className="hl">at month end.</span>
+            Your expenses <span className="hl">close themselves.</span>
           </h1>
           <p className="lede" style={{ "--i": 1 } as React.CSSProperties}>
-            Sylph turns your policy into rules and checks every charge as it happens. Receipts find their
-            own charges. At month end the report is already there. You review the exceptions, not the pile.
+            Every card charge finds its receipt, gets checked and coded, and lands on the report. You see
+            the exceptions, not the pile. At month end the journal is ready{QBO_LIVE ? " and posts to QuickBooks\u00a0Online" : ""}.
           </p>
           <div className="hero-cta" style={{ "--i": 2 } as React.CSSProperties}>
             <Link href={`${HOME}/demo`} className="btn btn-primary btn-lg">
@@ -39,8 +40,8 @@ export function Hero() {
               <Arrow />
             </a>
           </div>
-          <p className="hero-note mono" style={{ "--i": 3 } as React.CSSProperties}>
-            Expenses run on air.
+          <p className="hero-note" style={{ "--i": 3 } as React.CSSProperties}>
+            No policy document needed. Sylph writes one from a dozen answers.
           </p>
         </div>
 
@@ -57,7 +58,7 @@ export function Hero() {
           </div>
           <div className="win air-strip" data-once aria-label="Sample verdicts">
             <div className="win-bar">
-              <span>Enforcement</span>
+              <span>Month end</span>
               <span className="sample">Sample data</span>
             </div>
             <ul className="air-rows">

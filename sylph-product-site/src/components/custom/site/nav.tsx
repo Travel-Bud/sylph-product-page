@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Mark } from "./mark";
-import { HOME, SITE_ANCHORS } from "./anchors";
+import { APP_LOGIN, HOME, SITE_ANCHORS } from "./anchors";
 
 /**
  * Fixed bar. Transparent over the hero, frosted once scrolled. On the home
@@ -77,9 +77,9 @@ export function SiteNav({ watchNight = false }: { watchNight?: boolean }) {
         </div>
 
         <div className="nav-cta">
-          <Link href="/login" className="btn btn-ghost nav-login">
+          <a href={APP_LOGIN} className="btn btn-ghost nav-login">
             Log in
-          </Link>
+          </a>
           <Link href={`${HOME}/demo`} className="btn btn-primary">
             Book a demo
           </Link>
@@ -108,12 +108,12 @@ export function SiteNav({ watchNight = false }: { watchNight?: boolean }) {
           Pricing
         </Link>
         <div className="nav-sheet-cta">
-          <Link href="/login" className="btn btn-secondary btn-lg" onClick={close}>
-            Log in
-          </Link>
           <Link href={`${HOME}/demo`} className="btn btn-primary btn-lg" onClick={close}>
             Book a demo
           </Link>
+          <a href={APP_LOGIN} className="btn btn-secondary btn-lg" onClick={close}>
+            Log in
+          </a>
         </div>
       </div>
     </nav>

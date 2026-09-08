@@ -7,6 +7,7 @@ import { enterTile } from "./bento-motion";
 import { Obj, type ObjName } from "./obj";
 import { VerdictCard } from "./verdicts";
 import { ReviewQueue } from "./review";
+import { QBO_LIVE } from "./sample-data";
 import { CurrencyVisual, ExportChips, FaresWindow, MatchCard, ReceiptWays, ReportPaper, RuleRows, RulesWindow } from "./panels";
 
 gsap.registerPlugin(Flip);
@@ -30,37 +31,29 @@ interface Tile {
  */
 const TILES: Tile[] = [
   {
-    id: "policy",
-    art: "policy",
-    label: "Policy into rules",
-    span: 2,
-    hue: "lavender",
-    compact: (
-      <div className="t-policy">
-        <Obj name="policy" size={132} className="t-obj" />
-        <RuleRows n={4} />
-      </div>
-    ),
-    open: <RulesWindow />,
-    caption: "Drop in the PDF. Every rule quotes its sentence. You approve the set once.",
-  },
-  {
-    id: "verdict",
-    label: "Verdicts",
+    id: "receipts",
+    art: "receipt",
+    label: "Receipts find their charge",
     span: 1,
     hue: "white",
-    compact: <VerdictCard compact />,
-    open: <VerdictCard />,
-    caption: "Move the amount. Same rules, same answer, every time.",
+    compact: <ReceiptWays compact />,
+    open: (
+      <div className="t-receipts">
+        <ReceiptWays />
+        <MatchCard />
+      </div>
+    ),
+    caption: "Upload, email or text. Each one finds its own charge and lands on the report.",
   },
+
   {
     id: "cards",
-    label: "Any card, any bank",
+    label: "Your cards, your banks",
     span: 1,
     hue: "mint",
     compact: (
       <div className="t-cards">
-        <Obj name="card" size={150} className="t-obj" priority />
+        <Obj name="card" size={150} className="t-obj" />
       </div>
     ),
     open: (
@@ -71,21 +64,70 @@ const TILES: Tile[] = [
     ),
     caption: "Keep the cards and banks you have. Statements import, connected accounts sync.",
   },
+
   {
-    id: "receipts",
-    art: "receipt",
-    label: "Receipts",
-    span: 1,
+    id: "review",
+    art: "phone",
+    label: "Only exceptions reach you",
+    span: 2,
     hue: "white",
-    compact: <ReceiptWays compact />,
+    compact: <ReviewQueue compact />,
+    open: <ReviewQueue />,
+    caption: "Each exception arrives with its rule, the amount over and the employee's note. Cleared lines never do.",
+  },
+
+  {
+    id: "record",
+    art: "report",
+    label: "The month, closed",
+    span: 2,
+    hue: "sand",
+    compact: <ReportPaper compact />,
     open: (
-      <div className="t-receipts">
-        <ReceiptWays />
-        <MatchCard />
+      <div className="t-record">
+        <ReportPaper />
+        <ExportChips />
       </div>
     ),
-    caption: "Upload, email or text. It finds its charge.",
+    caption: `Cleared charges land on the report by themselves, coded to the accounts you set once. The journal is ready for your accountant${QBO_LIVE ? " and posts to QuickBooks\u00a0Online" : ""}.`,
   },
+
+  {
+    id: "policy",
+    art: "policy",
+    label: "Policy, written or built",
+    span: 2,
+    hue: "lavender",
+    compact: (
+      <div className="t-policy">
+        <Obj name="policy" size={132} className="t-obj" />
+        <RuleRows n={4} />
+      </div>
+    ),
+    open: <RulesWindow />,
+    caption: "Bring the PDF, or answer a dozen questions and Sylph writes one. Every rule quotes its sentence. You approve the set once.",
+  },
+
+  {
+    id: "verdict",
+    label: "Same rules, same answer",
+    span: 1,
+    hue: "white",
+    compact: <VerdictCard compact />,
+    open: <VerdictCard />,
+    caption: "Move the amount. The verdict cites the rule, the threshold and the amount, every time.",
+  },
+
+  {
+    id: "currency",
+    label: "Any currency",
+    span: 1,
+    hue: "amber",
+    compact: <CurrencyVisual />,
+    open: <CurrencyVisual large />,
+    caption: "Normalized at the rate on the receipt date. Duplicates flagged the same way.",
+  },
+
   {
     id: "booking",
     art: "boarding-pass",
@@ -96,46 +138,13 @@ const TILES: Tile[] = [
     open: <FaresWindow />,
     caption: "Fares at the airline's price. No markup, no commission, no fee per trip.",
   },
-  {
-    id: "currency",
-    label: "Any currency",
-    span: 1,
-    hue: "amber",
-    compact: <CurrencyVisual />,
-    open: <CurrencyVisual large />,
-    caption: "Normalized at the rate on the receipt date. Duplicates flagged the same way.",
-  },
-  {
-    id: "review",
-    art: "phone",
-    label: "Review queue",
-    span: 2,
-    hue: "white",
-    compact: <ReviewQueue compact />,
-    open: <ReviewQueue />,
-    caption: "Only the exceptions reach you, each with its rule and the employee's note.",
-  },
-  {
-    id: "record",
-    art: "report",
-    label: "The record",
-    span: 2,
-    hue: "sand",
-    compact: <ReportPaper compact />,
-    open: (
-      <div className="t-record">
-        <ReportPaper />
-        <ExportChips />
-      </div>
-    ),
-    caption: "Cleared charges land on the report by themselves. PDF, workbook, CSV.",
-  },
 ];
 
 export function Bento() {
   const grid = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState<string | null>(null);
   const flipState = useRef<ReturnType<typeof Flip.getState> | null>(null);
+  const lastOpen = useRef<string | null>(null);
   const reduced = useRef(false);
 
   useEffect(() => {
@@ -187,6 +196,23 @@ export function Bento() {
     };
   }, [open]);
 
+  // keyboard focus follows the open surface and comes back to the toggle on close
+  useEffect(() => {
+    const el = grid.current;
+    if (!el) return;
+    const toggleOf = (id: string) => el.querySelector<HTMLElement>(`[data-tile="${id}"] .tile-toggle`);
+    if (open) {
+      lastOpen.current = open;
+      const t = window.setTimeout(() => toggleOf(open)?.focus({ preventScroll: true }), 80);
+      return () => window.clearTimeout(t);
+    }
+    if (lastOpen.current) {
+      const id = lastOpen.current;
+      lastOpen.current = null;
+      toggleOf(id)?.focus({ preventScroll: true });
+    }
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
@@ -195,11 +221,11 @@ export function Bento() {
   }, [open]);
 
   return (
-    <section id="product" className="sec bento-sec" aria-labelledby="product-title">
+    <section id="product" className="sec sec--band bento-sec" aria-labelledby="product-title">
       <div className="wrap">
         <div className="sec-head rv">
           <h2 id="product-title" className="h2">
-            One engine, every charge.
+            From the card charge to the closed month.
           </h2>
         </div>
         <div className="bento" ref={grid}>
@@ -221,6 +247,7 @@ export function Bento() {
                     type="button"
                     className="tile-toggle"
                     aria-expanded={isOpen}
+                    aria-controls={`tile-x-${t.id}`}
                     aria-label={isOpen ? `Close ${t.label}` : `Open ${t.label}`}
                     onClick={() => toggle(t.id)}
                   >
@@ -229,7 +256,7 @@ export function Bento() {
                   </button>
                 </div>
                 {isOpen ? (
-                  <div className="tile-x">
+                  <div className="tile-x" id={`tile-x-${t.id}`}>
                     <div className="tile-x-main">{t.open}</div>
                     <div className="tile-x-side">
                       <p className="tile-cap">{t.caption}</p>
@@ -241,7 +268,7 @@ export function Bento() {
                     <div className="tile-body" aria-hidden="true">
                       {t.compact}
                     </div>
-                    <button type="button" className="tile-open" aria-label={`Open ${t.label}`} onClick={() => toggle(t.id)} />
+                    <button type="button" className="tile-open" tabIndex={-1} aria-label={`Open ${t.label}`} onClick={() => toggle(t.id)} />
                   </>
                 )}
               </article>

@@ -3,14 +3,13 @@ import { ImageResponse } from "next/og";
 // Social card in the landing's voice: white ground, ink type, the coloured
 // phrase, and a sample verdict row. No fabricated metrics. Next wires this
 // to both og:image and twitter:image.
-export const alt = "Sylph: your policy, enforced on every charge.";
+export const alt = "Sylph: your expenses close themselves.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const INK = "#101b16";
 const INK_3 = "#5d6761";
 const GREEN = "#0ecc83";
-const GREEN_700 = "#0a7c53";
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -36,12 +35,8 @@ export default function OpengraphImage() {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 20, letterSpacing: 3, color: GREEN_700 }}>
-            <div style={{ width: 24, height: 2, background: GREEN }} />
-            CORPORATE TRAVEL AND EXPENSE
-          </div>
           <div style={{ display: "flex", flexDirection: "column", fontSize: 84, fontWeight: 600, lineHeight: 1.0, letterSpacing: -3 }}>
-            <span>Your policy,</span>
+            <span>Your expenses</span>
             <span
               style={{
                 backgroundImage: "linear-gradient(94deg, #076044 0%, #0a9a66 46%, #2c6395 100%)",
@@ -49,7 +44,7 @@ export default function OpengraphImage() {
                 color: "transparent",
               }}
             >
-              enforced on every charge.
+              close themselves.
             </span>
           </div>
         </div>
@@ -73,7 +68,7 @@ export default function OpengraphImage() {
           </div>
           <div style={{ display: "flex", gap: 24, alignItems: "center", color: "#a15c07", fontWeight: 600 }}>
             <span style={{ width: 12, height: 12, borderRadius: 6, background: "#f59e0b" }} />
-            Needs a note · M-041 · cap $75.00 · $9.20 over
+            Needs a note, M-041, $9.20 over the $75 cap
           </div>
         </div>
       </div>

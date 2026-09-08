@@ -6,7 +6,7 @@ import { gsap, ScrollTrigger } from "./motion";
 const PATH = "M 14 96 C 240 96, 300 40, 600 64 S 940 118, 1186 70";
 
 const STATIONS = [
-  { k: "Your policy", v: "“Dinner is capped at $75 a person. Anything over needs a note.”", at: 0.06 },
+  { k: "Your policy, written or built", v: "“Dinner is capped at $75 a person. Anything over needs a note.”", at: 0.06 },
   { k: "The rule Sylph drafts", v: "M-041, dinner, amount per person over $75.00, needs a note", at: 0.5 },
   { k: "The verdict on a charge", v: "Sushi Kanda $84.20, $9.20 over", chip: "Needs a note", at: 0.97 },
 ];

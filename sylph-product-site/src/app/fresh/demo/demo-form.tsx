@@ -68,7 +68,7 @@ export function DemoForm() {
   return (
     <form className="demo-form" onSubmit={onSubmit} noValidate>
       <div className="form-head">Request a demo</div>
-      <div className="form-sub">Thirty minutes on your own policy. No commitment.</div>
+      <div className="form-sub">Thirty minutes, with or without a policy document. No commitment.</div>
 
       <div className="field">
         <label htmlFor="d-name">

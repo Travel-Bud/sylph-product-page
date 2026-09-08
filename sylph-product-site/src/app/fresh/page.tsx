@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import "@/components/custom/site/site.css";
-import { siteFonts, faceFrom } from "@/components/custom/site/fonts";
-import { SiteNav, SiteFooter, SmoothScroll, Hero, Bento, Next, Close, LoopGate } from "@/components/custom/site";
+import { siteFonts } from "@/components/custom/site/fonts";
+import { SiteNav, SiteFooter, SmoothScroll, Hero, Bento, Start, Next, Close, LoopGate } from "@/components/custom/site";
 import { ReceiptJourney } from "@/components/custom/site/receipt-journey";
 import { How } from "@/components/custom/site/how";
 
-const TITLE = "Sylph: your policy, enforced on every charge";
+const TITLE = "Sylph: expenses that close themselves";
 const DESCRIPTION =
-  "Sylph turns your travel and expense policy into rules, then checks every card charge, receipt and booking against them. Deterministic verdicts that cite the rule, the threshold and the amount. Works with the cards and banks you already use.";
+  "Every card charge finds its receipt, gets checked against your rules and lands on the report, coded and ready for your accountant. No policy document needed to start. Works with the cards and banks you already use.";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph-product.com";
 
@@ -43,11 +43,9 @@ const JSON_LD = {
   ],
 };
 
-/* `?face=onest` switches the page voice for the type A/B (Familjen is the default). */
-export default async function LandingPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const face = faceFrom((await searchParams).face);
+export default function LandingPage() {
   return (
-    <main className={`site ${siteFonts}`} id="main" data-face={face}>
+    <main className={`site ${siteFonts}`} id="main">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
       <a href="#hero" className="skip">
         Skip to content
@@ -58,6 +56,7 @@ export default async function LandingPage({ searchParams }: { searchParams: Prom
         <Hero />
         <ReceiptJourney />
         <Bento />
+        <Start />
         <How />
         <Next />
         <Close />

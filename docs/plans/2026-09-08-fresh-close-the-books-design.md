@@ -52,3 +52,28 @@ Second person, plain words, no finance jargon beyond "close the books". Voice re
 typecheck, lint (no new findings; `main` already carries 11 in the v5 tree), vitest, build; screenshots at 1440 and
 390; reduced motion still complete; console clean; zero horizontal overflow; dash sweep and claims audit; the
 ai-slop-check, hierarchy-rhythm-review and web-interface-guidelines passes with findings fixed or recorded.
+
+## Status (2026-09-08, after the build)
+
+Built on `landing-v3-personality`. Gates: typecheck 0; lint at the 11 pre-existing errors in the v5 tree, none in
+`site/` or `fresh/`; vitest 6/6; build 0 with `/fresh` static again; console clean; no horizontal overflow at 1440
+or 390; the H1 holds two lines at 390, 1024, 1280 and 1440; reduced motion renders the Start chapter settled and
+hides the receipt sprite. Evidence: `docs/plans/2026-09-08-close-the-books/*.jpg` (headless Chrome).
+
+Review passes and what they changed:
+- ai-slop-check: the OG image lost its uppercase eyebrow and its middots and carries the new headline; the gradient
+  headline phrase stays as Ben's deliberate WorkOS echo (one rule, `.site .hl`, to flatten).
+- Hierarchy: the hero note is one sentence in `--ink-3` hung off the buttons; tile titles 15px (were 13.5px, below
+  body size); the hand-off line under the Start cards steps down to 15px; the mobile menu sheet puts Book a demo first.
+- Rhythm: the Start styles use the file's own values (7fr/5fr with minmax guards, 880px collapse, panel shadow, band
+  ground on both visuals, rule-row metrics, the air-chip landing numbers, `--r-ctl`); the bento sits on a band so the
+  grounds run white, band, white, band, night, mint.
+- Interface guidelines: the three Log in links now point at `https://app.sylph-product.com/login` (they were `/login`,
+  a 404 on this host since the port); the demo page gets a skip link and `id="main"`; footer nav headings are h2;
+  keyboard focus follows an opened tile and returns to its toggle on close, the overlay button leaves the tab order,
+  `aria-controls` wired; 44px burger and mobile arrow links; `touch-action: manipulation`; safe-area padding on the
+  nav; the new small text in `--ink-2`; non-breaking "QuickBooks Online".
+
+Open, Ben's call: the night chapter's height (a reviewer reads it as out-shouting the sale), Pricing as a text link
+in the close, the encryption line promoted out of the footer, Flip animating box size (kept as deliberate),
+`#product-<id>` deep links for opened tiles, `inert` behind the mobile sheet.

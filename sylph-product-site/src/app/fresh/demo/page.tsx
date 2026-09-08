@@ -8,13 +8,13 @@ import { DemoForm } from "./demo-form";
 export const metadata: Metadata = {
   title: "Book a Sylph demo",
   description:
-    "A thirty-minute walkthrough on your own travel and expense policy: the rules it becomes, the verdicts it gives, and how finance reviews exceptions instead of expenses.",
+    "A thirty-minute walkthrough on last month's charges, with or without a policy document: the rules Sylph checks, the verdicts it gives, and how the month closes with only the exceptions left to review.",
 };
 
 const POINTS = [
   {
-    t: "Your policy, drafted into rules",
-    d: "Your PDF becomes a ruleset you can read, every rule quoting its sentence.",
+    t: "Your policy, written or built",
+    d: "Your PDF, or your answers to a dozen questions, becomes a ruleset you can read.",
   },
   {
     t: "A verdict you can check",
@@ -28,15 +28,18 @@ const POINTS = [
 
 export default function DemoPage() {
   return (
-    <main className={`site ${siteFonts}`}>
+    <main className={`site ${siteFonts}`} id="main">
+      <a href="#lead" className="skip">
+        Skip to content
+      </a>
       <SmoothScroll>
       <SiteNav />
-      <section className="lead">
+      <section className="lead" id="lead">
         <div className="wrap lead-grid">
           <div className="lead-copy">
-            <h1 className="h1 h1-sm">See Sylph clear a report on your own policy.</h1>
+            <h1 className="h1 h1-sm">See your month close.</h1>
             <p className="lede">
-              Thirty minutes, no slides. Your policy, a month of sample charges, real verdicts.
+              Thirty minutes, no slides. Last month&rsquo;s charges, your policy or a dozen answers, real verdicts.
             </p>
             <ul className="lead-points">
               {POINTS.map((p) => (

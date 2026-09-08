@@ -7,7 +7,7 @@ import { HowLine } from "./how-line";
  */
 export function How() {
   return (
-    <section id="how" className="sec how" aria-labelledby="how-title">
+    <section id="how" className="sec sec--band how" aria-labelledby="how-title">
       <div className="wrap">
         <div className="how-head rv">
           <h2 id="how-title" className="h2">
