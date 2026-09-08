@@ -4185,6 +4185,8 @@ html.lenis {
   font-weight: 500;
 }
 .site .sb-rule .mono {
+  flex: none;
+  white-space: nowrap;
   font-size: 11.5px;
   color: var(--ink-2);
 }
