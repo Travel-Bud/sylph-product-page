@@ -1,4 +1,5 @@
 import { Obj } from "./obj";
+import { QBO_LIVE } from "./sample-data";
 
 /* Product surfaces used by the bento. Minimal text: numbers, names, states,
    and one citation where the citation is the information. */
@@ -303,8 +304,14 @@ export function ExportChips() {
       </li>
       <li>
         <span className="chip chip-neutral">CSV</span>
-        <span>Shaped for your ledger</span>
+        <span>Journal, payroll and AP files, coded to your accounts</span>
       </li>
+      {QBO_LIVE && (
+        <li>
+          <span className="chip chip-neutral">QBO</span>
+          <span>Posts the journal to QuickBooks&nbsp;Online</span>
+        </li>
+      )}
     </ul>
   );
 }

@@ -1,76 +1,65 @@
 import type { Metadata } from "next";
-import "@/components/custom/landing/landing.css";
-import { LandingNav, LandingFooter } from "@/components/custom/landing";
+import "@/components/custom/site/site.css";
+import { siteFonts } from "@/components/custom/site/fonts";
+import { SiteNav, SiteFooter, SmoothScroll } from "@/components/custom/site";
+import { Check } from "@/components/custom/site/icons";
 import { DemoForm } from "./demo-form";
 
 export const metadata: Metadata = {
-  title: "Book a demo · Sylph",
+  title: "Book a Sylph demo",
   description:
-    "See Sylph clear an expense report in real time: receipts match to charges, currency normalizes, and policy enforces automatically. Book a 30-minute walkthrough on your own policy.",
+    "A thirty-minute walkthrough on last month's charges, with or without a policy document: the rules Sylph checks, the verdicts it gives, and how the month closes with only the exceptions left to review.",
 };
+
+const POINTS = [
+  {
+    t: "Your policy, written or built",
+    d: "Your PDF, or your answers to a dozen questions, becomes a ruleset you can read.",
+  },
+  {
+    t: "A verdict you can check",
+    d: "A flagged dinner earns its citation: rule, threshold, amount.",
+  },
+  {
+    t: "The review surface",
+    d: "Cleared lines file themselves. Only the exceptions reach you.",
+  },
+];
 
 export default function DemoPage() {
   return (
-    <main className="sylph-lp">
-      <LandingNav />
-
-      <section className="band band--tight">
-        <div className="wrap">
-          <div className="demo-grid">
-            <div className="demo-lead">
-              <span className="kicker">
-                <span className="tick" />
-                Book a demo
-              </span>
-              <h1>See Sylph clear a report in real time.</h1>
-              <p className="lede">
-                A focused 30-minute walkthrough on your own travel policy. We&rsquo;ll show how a receipt
-                matches its charge, normalizes currency, and gets a cited verdict, so finance reviews
-                exceptions, not expenses.
-              </p>
-              <ul className="demo-points">
-                <li>
-                  <span className="ic">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                      <path d="M5 12l4 4L19 6" />
-                    </svg>
+    <main className={`site ${siteFonts}`} id="main">
+      <a href="#lead" className="skip">
+        Skip to content
+      </a>
+      <SmoothScroll>
+      <SiteNav />
+      <section className="lead" id="lead">
+        <div className="wrap lead-grid">
+          <div className="lead-copy">
+            <h1 className="h1 h1-sm">See your month close.</h1>
+            <p className="lede">
+              Thirty minutes, no slides. Last month&rsquo;s charges, your policy or a dozen answers, real verdicts.
+            </p>
+            <ul className="lead-points">
+              {POINTS.map((p) => (
+                <li key={p.t}>
+                  <span className="lead-ic" aria-hidden="true">
+                    <Check />
                   </span>
                   <div>
-                    <b>Your policy, drafted into rules.</b>
-                    <p>Bring a policy PDF and watch Sylph turn it into a reviewable condition tree.</p>
+                    <b>{p.t}</b>
+                    <p>{p.d}</p>
                   </div>
                 </li>
-                <li>
-                  <span className="ic">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                      <path d="M5 12l4 4L19 6" />
-                    </svg>
-                  </span>
-                  <div>
-                    <b>The enforcement &ldquo;aha&rdquo;.</b>
-                    <p>See a flagged dinner earn its verdict: rule, threshold, and amount, every time.</p>
-                  </div>
-                </li>
-                <li>
-                  <span className="ic">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                      <path d="M5 12l4 4L19 6" />
-                    </svg>
-                  </span>
-                  <div>
-                    <b>The finance-review surface.</b>
-                    <p>How the clean ~90% clears automatically and only the exceptions reach your queue.</p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-            <DemoForm />
+              ))}
+            </ul>
           </div>
+          <DemoForm />
         </div>
       </section>
-
-      <LandingFooter />
+      <SiteFooter />
+      </SmoothScroll>
     </main>
   );
 }

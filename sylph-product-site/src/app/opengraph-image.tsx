@@ -1,17 +1,15 @@
 import { ImageResponse } from "next/og";
 
-// Honest social card in the landing's own Night Air voice: brand + the
-// verbatim pillar + the pipeline. No fabricated data, no metrics.
-// Next auto-wires this to both og:image and twitter:image so shared links
-// render the same night the page opens on.
-export const alt = "Sylph: Stop reviewing expenses. Start reviewing exceptions.";
+// Social card in the landing's voice: white ground, ink type, the coloured
+// phrase, and a sample verdict row. No fabricated metrics. Next wires this
+// to both og:image and twitter:image.
+export const alt = "Sylph: stop chasing receipts.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const NIGHT = "#0a1410";
-const MOON = "#f4f7f5";
-const MOON_DIM = "rgba(244, 247, 245, 0.62)";
-const AURORA = "#2ede97";
+const INK = "#101b16";
+const INK_3 = "#5d6761";
+const GREEN = "#0ecc83";
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -23,60 +21,54 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: NIGHT,
-          backgroundImage: `radial-gradient(85% 60% at 78% 118%, rgba(46,222,151,0.32) 0%, rgba(46,222,151,0.10) 45%, rgba(46,222,151,0) 75%)`,
-          color: MOON,
-          padding: "70px 76px",
+          background: "#ffffff",
+          backgroundImage:
+            "radial-gradient(38% 50% at 88% 12%, rgba(74,144,201,0.22) 0%, rgba(74,144,201,0) 70%), radial-gradient(40% 50% at 70% 100%, rgba(14,204,131,0.2) 0%, rgba(14,204,131,0) 70%)",
+          color: INK,
+          padding: "64px 72px",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div
-            style={{
-              width: 42,
-              height: 42,
-              borderRadius: 12,
-              background: "rgba(244,247,245,0.12)",
-              color: AURORA,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 22,
-            }}
-          >
-            ~
-          </div>
-          <div style={{ fontSize: 32, fontWeight: 700, letterSpacing: -0.5 }}>Sylph</div>
-          <div style={{ fontSize: 15, color: MOON_DIM, letterSpacing: 4, marginLeft: 8 }}>
-            CORPORATE TRAVEL &amp; EXPENSE
-          </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 14, fontSize: 30, fontWeight: 600 }}>
+          <div style={{ width: 14, height: 14, borderRadius: 7, background: GREEN }} />
+          Sylph
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ fontSize: 76, fontWeight: 700, lineHeight: 1.05, letterSpacing: -2 }}>
-            Stop reviewing expenses.
-          </div>
-          <div style={{ fontSize: 76, fontWeight: 700, lineHeight: 1.05, letterSpacing: -2, color: AURORA }}>
-            Start reviewing exceptions.
-          </div>
-          <div style={{ fontSize: 27, color: MOON_DIM, marginTop: 30, maxWidth: 940, lineHeight: 1.4 }}>
-            Booking inside your policy, receipts that arrive on their own, and a cited,
-            replayable verdict on every charge. Configured in 15 minutes.
+        <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+          <div style={{ display: "flex", flexDirection: "column", fontSize: 84, fontWeight: 600, lineHeight: 1.0, letterSpacing: -3 }}>
+            <span>Stop chasing</span>
+            <span
+              style={{
+                backgroundImage: "linear-gradient(94deg, #076044 0%, #0a9a66 46%, #2c6395 100%)",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              receipts.
+            </span>
           </div>
         </div>
 
         <div
           style={{
             display: "flex",
-            justifyContent: "space-between",
             alignItems: "center",
-            fontSize: 21,
-            color: MOON_DIM,
+            justifyContent: "space-between",
+            padding: "18px 24px",
+            border: "1px solid rgba(16,27,22,0.14)",
+            borderRadius: 14,
+            background: "rgba(255,255,255,0.9)",
+            fontSize: 24,
           }}
         >
-          <div>Expenses run on air.</div>
-          <div style={{ fontFamily: "monospace", color: AURORA }}>
-            book &gt; capture &gt; match &gt; enforce &gt; record
+          <div style={{ display: "flex", gap: 28, alignItems: "center" }}>
+            <span style={{ fontWeight: 600 }}>Sushi Kanda</span>
+            <span style={{ color: INK_3 }}>$84.20</span>
+            <span style={{ color: INK_3 }}>Meals</span>
+          </div>
+          <div style={{ display: "flex", gap: 24, alignItems: "center", color: "#a15c07", fontWeight: 600 }}>
+            <span style={{ width: 12, height: 12, borderRadius: 6, background: "#f59e0b" }} />
+            Needs a note, M-041, $9.20 over the $75 cap
           </div>
         </div>
       </div>

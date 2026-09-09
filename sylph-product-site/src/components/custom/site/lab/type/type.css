@@ -1,0 +1,95 @@
+/* Type board: every candidate as the real hero + two real panels. Scoped to .lab-type. */
+.lab-type .type-lead {
+  padding: calc(var(--nav-h) + 40px) 0 28px;
+  border-bottom: 1px solid var(--hair);
+}
+.lab-type .type-lead .lede {
+  margin-top: 10px;
+}
+.lab-type .type-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+.lab-type .type-toc a {
+  color: var(--ink-3);
+  text-decoration: none;
+}
+.lab-type .type-toc a:hover {
+  color: var(--ink);
+}
+.lab-type .type-spec {
+  padding: 56px 0 64px;
+  border-bottom: 1px solid var(--hair);
+  font-family: var(--sans);
+}
+.lab-type .type-spec:nth-child(even) {
+  background: var(--band);
+}
+.lab-type .type-spec-head {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-areas:
+    "n name"
+    "n note";
+  column-gap: 12px;
+  row-gap: 4px;
+  align-items: baseline;
+  margin-bottom: 34px;
+}
+.lab-type .type-spec-n {
+  grid-area: n;
+  font-size: 12px;
+  color: var(--green-700);
+}
+.lab-type .type-spec-name {
+  grid-area: name;
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+.lab-type .type-spec-note {
+  grid-area: note;
+  font-size: 14px;
+  color: var(--ink-3);
+  max-width: 70ch;
+}
+.lab-type .type-spec-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 11fr) minmax(0, 10fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+}
+.lab-type .type-spec .h1 {
+  font-family: var(--display, var(--sans));
+  font-weight: var(--h1w, 560);
+  letter-spacing: var(--h1t, -0.032em);
+  max-width: 12ch;
+}
+.lab-type .type-spec .hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.lab-type .type-spec-panels {
+  display: grid;
+  gap: 16px;
+}
+.lab-type .type-spec .mono,
+.lab-type .type-spec .num,
+.lab-type .type-spec .eyebrow,
+.lab-type .type-spec .win-bar,
+.lab-type .type-spec .sample,
+.lab-type .type-spec .chip {
+  font-family: var(--mono);
+}
+@media (max-width: 1024px) {
+  .lab-type .type-spec-hero {
+    grid-template-columns: 1fr;
+  }
+}

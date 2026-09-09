@@ -5,4 +5,5 @@ export { Hero } from "./hero";
 export { Bento } from "./bento";
 export { Next } from "./next";
 export { Close } from "./close";
+export { Start } from "./start";
 export { LoopGate } from "./loop-gate";

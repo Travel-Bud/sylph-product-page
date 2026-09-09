@@ -2,6 +2,10 @@
    labeled as sample data wherever it renders. No customer data, no invented
    aggregate metrics: counts on the page are counts of the rows shown. */
 
+/* Ben's decision 2026-09-08: the page states QuickBooks Online posting as shipped because the
+   connector lands before this page goes live. Flip to false to pull every QuickBooks line at once. */
+export const QBO_LIVE = true;
+
 export type Verdict = "ok" | "note" | "block";
 export type Category = "Meals" | "Airfare" | "Lodging" | "Ground" | "Rail" | "Office";
 

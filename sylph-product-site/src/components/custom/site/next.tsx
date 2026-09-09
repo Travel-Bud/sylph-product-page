@@ -1,12 +1,11 @@
 import { ReceiptRebuild } from "./receipt-rebuild";
-import { Obj } from "./obj";
+import { VideoLoop } from "./video-loop";
 
 export function Next() {
   return (
     <section id="next" className="sec sec--night next on-night" aria-labelledby="next-title">
       <div className="wrap">
         <div className="sec-head rv">
-          <p className="eyebrow">In build</p>
           <h2 id="next-title" className="h2">
             Where this is going.
           </h2>
@@ -18,7 +17,7 @@ export function Next() {
             <div className="next-vis">
               <span className="sample sample-night">In build, not yet available</span>
               <div className="ctl" aria-hidden="true">
-                <Obj name="terminal" size={230} className="ctl-obj" />
+                <VideoLoop src="/site/video/lab/terminal-tap.mp4" poster="/site/video/lab/terminal-tap.jpg" className="ctl-video" />
                 <div className="ctl-toast">
                   <span className="verdict verdict-block">
                     <i className="dot" />

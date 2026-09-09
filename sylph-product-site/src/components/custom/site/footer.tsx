@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Mark } from "./mark";
-import { HOME, SITE_ANCHORS } from "./anchors";
+import { APP_LOGIN, DEMO, PRICING, SITE_ANCHORS } from "./anchors";
+import { JanusNod } from "./janus-nod";
 
 export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
   return (
@@ -12,10 +13,10 @@ export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
               <Mark className="brand-mark" />
               <span>Sylph</span>
             </div>
-            <p>Corporate travel and expense that checks itself.</p>
+            <p>Expenses run on air.</p>
           </div>
           <nav aria-label="Product">
-            <h3>Product</h3>
+            <h2 className="footer-h">Product</h2>
             <ul>
               {SITE_ANCHORS.map((l) => (
                 <li key={l.href}>
@@ -23,18 +24,18 @@ export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
                 </li>
               ))}
               <li>
-                <Link href={`${HOME}/pricing`}>Pricing</Link>
+                <Link href={PRICING}>Pricing</Link>
               </li>
             </ul>
           </nav>
           <nav aria-label="Company">
-            <h3>Company</h3>
+            <h2 className="footer-h">Company</h2>
             <ul>
               <li>
-                <Link href={`${HOME}/demo`}>Book a demo</Link>
+                <Link href={DEMO}>Book a demo</Link>
               </li>
               <li>
-                <Link href="/login">Log in</Link>
+                <a href={APP_LOGIN}>Log in</a>
               </li>
               <li>
                 <a href="mailto:atharva-sumant@januslabsinc.com">atharva-sumant@januslabsinc.com</a>
@@ -42,7 +43,7 @@ export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
             </ul>
           </nav>
           <nav aria-label="Legal">
-            <h3>Legal</h3>
+            <h2 className="footer-h">Legal</h2>
             <ul>
               <li>
                 <Link href="/privacy">Privacy</Link>
@@ -55,6 +56,7 @@ export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
         </div>
         <div className="footer-line">
           <span>© 2026 Sylph</span>
+          <JanusNod />
           <span className="footer-sec">Policies and receipts are encrypted in transit and at rest, and never used to train models.</span>
           {sampleNote && <span>Product panels on this page use sample data, not customer data.</span>}
         </div>

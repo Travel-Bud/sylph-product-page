@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mark } from "./mark";
-import { HOME } from "./anchors";
+import { DEMO, PRICING } from "./anchors";
 
 export function Close() {
   return (
@@ -9,14 +9,14 @@ export function Close() {
         <Mark className="close-mark" />
         <div className="close-inner rv">
           <h2 id="close-title" className="h2">
-            See it run on your policy.
+            See your month close.
           </h2>
-          <p className="lede">Bring the PDF. Thirty minutes, your rules, real verdicts.</p>
+          <p className="lede">Bring last month&rsquo;s card statement, with or without a policy. Thirty minutes, your charges, real verdicts.</p>
           <div className="close-cta">
-            <Link href={`${HOME}/demo`} className="btn btn-primary btn-lg">
+            <Link href={DEMO} className="btn btn-primary btn-lg">
               Book a demo
             </Link>
-            <Link href={`${HOME}/pricing`} className="btn btn-secondary btn-lg">
+            <Link href={PRICING} className="btn btn-secondary btn-lg">
               Pricing
             </Link>
           </div>
