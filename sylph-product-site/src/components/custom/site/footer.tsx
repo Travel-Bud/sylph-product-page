@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mark } from "./mark";
-import { APP_LOGIN, HOME, SITE_ANCHORS } from "./anchors";
+import { APP_LOGIN, DEMO, PRICING, SITE_ANCHORS } from "./anchors";
 import { JanusNod } from "./janus-nod";
 
 export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
@@ -24,7 +24,7 @@ export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
                 </li>
               ))}
               <li>
-                <Link href={`${HOME}/pricing`}>Pricing</Link>
+                <Link href={PRICING}>Pricing</Link>
               </li>
             </ul>
           </nav>
@@ -32,7 +32,7 @@ export function SiteFooter({ sampleNote = false }: { sampleNote?: boolean }) {
             <h2 className="footer-h">Company</h2>
             <ul>
               <li>
-                <Link href={`${HOME}/demo`}>Book a demo</Link>
+                <Link href={DEMO}>Book a demo</Link>
               </li>
               <li>
                 <a href={APP_LOGIN}>Log in</a>

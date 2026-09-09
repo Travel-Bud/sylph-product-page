@@ -1,31 +1,47 @@
 "use client";
+
+import { useState } from "react";
 import useServerActions from "../hooks/useServerActions";
 
+/* Leads go through the Cloudflare email worker at NEXT_PUBLIC_EMAIL_API_URL (repo CLAUDE.md, demo-lead path). */
+const LEAD_TO = ["atharva-sumant@januslabsinc.com"];
+
 export function DemoForm() {
-  const { submitDemoForm, emailSent, error: serverError, loading } = useServerActions();
+  const { submitDemoForm, emailSent, error, loading } = useServerActions();
+
+  const [invalid, setInvalid] = useState<Record<string, string>>({});
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const name = data.get("name") as string;
-    const email = data.get("email") as string;
-    const company = data.get("company") as string;
-    const teamSize = data.get("teamSize") as string;
-    const note = data.get("message") as string;
-
-    submitDemoForm({
-      to: ["atharva-sumant@januslabsinc.com"],
-      subject: `Demo request from ${name} (${company})`,
+    const form = e.currentTarget;
+    const problems: Record<string, string> = {};
+    const name = form.elements.namedItem("name") as HTMLInputElement;
+    const email = form.elements.namedItem("email") as HTMLInputElement;
+    const company = form.elements.namedItem("company") as HTMLInputElement;
+    if (!name.value.trim()) problems.name = "Please add your name.";
+    if (!email.value.trim() || !email.validity.valid) problems.email = "Please use a valid work email.";
+    if (!company.value.trim()) problems.company = "Please add your company.";
+    setInvalid(problems);
+    if (Object.keys(problems).length) {
+      (problems.name ? name : problems.email ? email : company).focus();
+      return;
+    }
+    const data = new FormData(form);
+    const teamSize = (data.get("teamSize") as string) || "";
+    const note = (data.get("message") as string) || "";
+    await submitDemoForm({
+      to: LEAD_TO,
+      subject: `Demo request from ${name.value.trim()} (${company.value.trim()})`,
       message: [
-        `New demo request via sylph-product.com`,
-        ``,
-        `Name:      ${name}`,
-        `Email:     ${email}`,
-        `Company:   ${company}`,
+        "New demo request via sylph-product.com",
+        "",
+        `Name:      ${name.value.trim()}`,
+        `Email:     ${email.value.trim()}`,
+        `Company:   ${company.value.trim()}`,
         `Team size: ${teamSize || "Not specified"}`,
-        ``,
-        `What they want to see:`,
-        note ? note : "Nothing specified.",
+        "",
+        "What they want to see:",
+        note.trim() ? note.trim() : "Nothing specified.",
       ].join("\n"),
     });
   }
@@ -41,25 +57,38 @@ export function DemoForm() {
           </div>
           <h3>Request received.</h3>
           <p>
-            Thanks. We&rsquo;ll reach out within one business day to set up your walkthrough. In the meantime,
-            check your inbox for a confirmation.
+            Thanks. We will reply within one business day to set up your walkthrough.
           </p>
         </div>
       </div>
     );
   }
 
+  const submitting = loading;
 
   return (
     <form className="demo-form" onSubmit={onSubmit} noValidate>
       <div className="form-head">Request a demo</div>
-      <div className="form-sub">A 30-minute walkthrough on your own policy. No commitment.</div>
+      <div className="form-sub">Thirty minutes, with or without a policy document. No commitment.</div>
 
       <div className="field">
         <label htmlFor="d-name">
           Full name <span className="req">*</span>
         </label>
-        <input id="d-name" name="name" required autoComplete="name" placeholder="Alex Okafor" />
+        <input
+          id="d-name"
+          name="name"
+          required
+          autoComplete="name"
+          placeholder="Alex Okafor"
+          aria-invalid={invalid.name ? true : undefined}
+          aria-describedby={invalid.name ? "d-name-err" : undefined}
+        />
+        {invalid.name && (
+          <span id="d-name-err" className="field-err">
+            {invalid.name}
+          </span>
+        )}
       </div>
 
       <div className="field two">
@@ -67,13 +96,40 @@ export function DemoForm() {
           <label htmlFor="d-email">
             Work email <span className="req">*</span>
           </label>
-          <input id="d-email" name="email" type="email" required autoComplete="email" placeholder="alex@company.com" />
+          <input
+            id="d-email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="alex@company.com"
+            aria-invalid={invalid.email ? true : undefined}
+            aria-describedby={invalid.email ? "d-email-err" : undefined}
+          />
+          {invalid.email && (
+            <span id="d-email-err" className="field-err">
+              {invalid.email}
+            </span>
+          )}
         </div>
         <div className="field">
           <label htmlFor="d-company">
             Company <span className="req">*</span>
           </label>
-          <input id="d-company" name="company" required autoComplete="organization" placeholder="Company, Inc." />
+          <input
+            id="d-company"
+            name="company"
+            required
+            autoComplete="organization"
+            placeholder="Company, Inc."
+            aria-invalid={invalid.company ? true : undefined}
+            aria-describedby={invalid.company ? "d-company-err" : undefined}
+          />
+          {invalid.company && (
+            <span id="d-company-err" className="field-err">
+              {invalid.company}
+            </span>
+          )}
         </div>
       </div>
 
@@ -83,27 +139,24 @@ export function DemoForm() {
           <option value="" disabled>
             Select…
           </option>
-          <option>1 to 50</option>
-          <option>51 to 200</option>
-          <option>201 to 1,000</option>
-          <option>1,000+</option>
+          <option>1 to 100</option>
+          <option>101 to 1,000</option>
+          <option>More than 1,000</option>
         </select>
       </div>
 
       <div className="field">
         <label htmlFor="d-msg">What would you like to see? (optional)</label>
-        <textarea id="d-msg" name="message" placeholder="e.g. how policy-PDF → rules works, or reconciliation for multi-currency trips" />
+        <textarea id="d-msg" name="message" placeholder="e.g. how a policy PDF becomes rules, or reconciliation for multi-currency trips" />
       </div>
 
-      {serverError && <p className="form-err">{serverError}</p>}
+      {error && <p className="form-err">{error}</p>}
 
-      <button type="submit" className="btn btn-primary btn-lg" style={{ width: "100%" }} disabled={loading}>
-        {loading ? "Sending…" : "Book a demo"}
+      <button type="submit" className="btn btn-primary btn-lg" style={{ width: "100%" }} disabled={submitting}>
+        {submitting ? "Sending…" : "Book a demo"}
       </button>
 
-      <p className="form-fine">
-        We&rsquo;ll only use your details to contact you about Sylph. No spam, ever.
-      </p>
+      <p className="form-fine">We will only use your details to contact you about Sylph.</p>
     </form>
   );
 }

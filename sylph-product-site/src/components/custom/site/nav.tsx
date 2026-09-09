@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Mark } from "./mark";
-import { APP_LOGIN, HOME, SITE_ANCHORS } from "./anchors";
+import { APP_LOGIN, DEMO, HOME, PRICING, SITE_ANCHORS } from "./anchors";
 
 /**
  * Fixed bar. Transparent over the hero, frosted once scrolled. On the home
@@ -73,14 +73,14 @@ export function SiteNav({ watchNight = false }: { watchNight?: boolean }) {
               {l.label}
             </a>
           ))}
-          <Link href={`${HOME}/pricing`}>Pricing</Link>
+          <Link href={PRICING}>Pricing</Link>
         </div>
 
         <div className="nav-cta">
           <a href={APP_LOGIN} className="btn btn-ghost nav-login">
             Log in
           </a>
-          <Link href={`${HOME}/demo`} className="btn btn-primary">
+          <Link href={DEMO} className="btn btn-primary">
             Book a demo
           </Link>
           <button
@@ -104,11 +104,11 @@ export function SiteNav({ watchNight = false }: { watchNight?: boolean }) {
             {l.label}
           </a>
         ))}
-        <Link href={`${HOME}/pricing`} onClick={close}>
+        <Link href={PRICING} onClick={close}>
           Pricing
         </Link>
         <div className="nav-sheet-cta">
-          <Link href={`${HOME}/demo`} className="btn btn-primary btn-lg" onClick={close}>
+          <Link href={DEMO} className="btn btn-primary btn-lg" onClick={close}>
             Book a demo
           </Link>
           <a href={APP_LOGIN} className="btn btn-secondary btn-lg" onClick={close}>

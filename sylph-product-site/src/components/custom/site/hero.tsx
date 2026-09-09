@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Arrow } from "./icons";
 import { Obj } from "./obj";
-import { HOME } from "./anchors";
+import { DEMO } from "./anchors";
 import { VideoLoop } from "./video-loop";
 import { Mark } from "./mark";
 import { QBO_LIVE } from "./sample-data";
@@ -32,7 +32,7 @@ export function Hero() {
             the exceptions, not the pile. At month end the journal is ready{QBO_LIVE ? " and posts to QuickBooks\u00a0Online" : ""}.
           </p>
           <div className="hero-cta" style={{ "--i": 2 } as React.CSSProperties}>
-            <Link href={`${HOME}/demo`} className="btn btn-primary btn-lg">
+            <Link href={DEMO} className="btn btn-primary btn-lg">
               Book a demo
             </Link>
             <a href="#product" className="link-arrow">

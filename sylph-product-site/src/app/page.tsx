@@ -1,24 +1,13 @@
 import type { Metadata } from "next";
-import "@/components/custom/landing/landing.css";
-import { landingFonts } from "@/components/custom/landing/fonts";
-import {
-  LandingNav,
-  HeroSection,
-  CaptureSection,
-  BookingSection,
-  SetupSection,
-  InterludeSection,
-  BentoSection,
-  RecordSection,
-  TheSpine,
-  CloseSection,
-  LandingFooter,
-  SmoothScroll,
-} from "@/components/custom/landing";
+import "@/components/custom/site/site.css";
+import { siteFonts } from "@/components/custom/site/fonts";
+import { SiteNav, SiteFooter, SmoothScroll, Hero, Bento, Start, Next, Close, LoopGate } from "@/components/custom/site";
+import { ReceiptJourney } from "@/components/custom/site/receipt-journey";
+import { How } from "@/components/custom/site/how";
 
-const TITLE = "Sylph · Stop reviewing expenses. Start reviewing exceptions.";
+const TITLE = "Sylph: stop chasing receipts";
 const DESCRIPTION =
-  "Sylph books travel inside your policy, catches receipts on their own (straight from the payment terminal, or by text), and checks every charge as it lands. The routine clears itself; your team reviews only the exceptions. Configured in 15 minutes from your own policy document.";
+  "Every card charge finds its receipt, gets checked against your rules and lands on the report, coded and ready for your accountant. No policy document needed to start. Works with the cards and banks you already use.";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph-product.com";
 
@@ -27,21 +16,10 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: "/" },
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    siteName: "Sylph",
-    type: "website",
-    url: "/",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-  },
+  openGraph: { title: TITLE, description: DESCRIPTION, siteName: "Sylph", type: "website", url: "/" },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION },
 };
 
-// Organization + WebSite structured data so the homepage is eligible for rich results.
 const JSON_LD = {
   "@context": "https://schema.org",
   "@graph": [
@@ -66,41 +44,22 @@ const JSON_LD = {
 
 export default function LandingPage() {
   return (
-    <main className={`sylph-lp lp-home ${landingFonts}`} id="main">
+    <main className={`site ${siteFonts}`} id="main">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
-      <a href="#capture" className="lp-skip">
-        Skip to how it works
+      <a href="#hero" className="skip">
+        Skip to content
       </a>
       <SmoothScroll>
-        <LandingNav overDark />
-
-        {/* Night: the aurora, the pillar, the wind doing its work. */}
-        <HeroSection />
-
-        {/* The body walks the claim — capture, booking, setup, one photographic
-            exhale, the rest, record — and THE SPINE runs beneath all of it:
-            the hero's current made visible for the whole descent, threading
-            every chapter and spitting paper out at each station until it
-            flattens into the record. A spool, not a hole. (TheSpine mounts
-            last so its layer paints above the chapter backgrounds and below
-            every .wrap of content.) */}
-        <div className="lp-body">
-          <CaptureSection />
-          <BookingSection />
-          <SetupSection />
-          <InterludeSection />
-          <BentoSection />
-          <RecordSection />
-          <TheSpine />
-        </div>
-
-        {/* The night returns: close + footer share one frame and ONE light —
-            the planet's atmosphere below. */}
-        <div className="night-frame">
-          <div className="nf-glow" aria-hidden="true" />
-          <CloseSection />
-          <LandingFooter />
-        </div>
+        <LoopGate />
+        <SiteNav watchNight />
+        <Hero />
+        <ReceiptJourney />
+        <Bento />
+        <Start />
+        <How />
+        <Next />
+        <Close />
+        <SiteFooter sampleNote />
       </SmoothScroll>
     </main>
   );
