@@ -77,3 +77,5 @@ Review passes and what they changed:
 Open, Ben's call: the night chapter's height (a reviewer reads it as out-shouting the sale), Pricing as a text link
 in the close, the encryption line promoted out of the footer, Flip animating box size (kept as deliberate),
 `#product-<id>` deep links for opened tiles, `inert` behind the mobile sheet.
+
+H1 changed by Ben after the build, 2026-09-08: "Stop chasing receipts." (hero, title, social card).

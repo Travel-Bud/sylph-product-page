@@ -5,7 +5,7 @@ import { SiteNav, SiteFooter, SmoothScroll, Hero, Bento, Start, Next, Close, Loo
 import { ReceiptJourney } from "@/components/custom/site/receipt-journey";
 import { How } from "@/components/custom/site/how";
 
-const TITLE = "Sylph: expenses that close themselves";
+const TITLE = "Sylph: stop chasing receipts";
 const DESCRIPTION =
   "Every card charge finds its receipt, gets checked against your rules and lands on the report, coded and ready for your accountant. No policy document needed to start. Works with the cards and banks you already use.";
 

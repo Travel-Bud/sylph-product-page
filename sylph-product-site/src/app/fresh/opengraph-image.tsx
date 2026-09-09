@@ -3,7 +3,7 @@ import { ImageResponse } from "next/og";
 // Social card in the landing's voice: white ground, ink type, the coloured
 // phrase, and a sample verdict row. No fabricated metrics. Next wires this
 // to both og:image and twitter:image.
-export const alt = "Sylph: your expenses close themselves.";
+export const alt = "Sylph: stop chasing receipts.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -36,7 +36,7 @@ export default function OpengraphImage() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
           <div style={{ display: "flex", flexDirection: "column", fontSize: 84, fontWeight: 600, lineHeight: 1.0, letterSpacing: -3 }}>
-            <span>Your expenses</span>
+            <span>Stop chasing</span>
             <span
               style={{
                 backgroundImage: "linear-gradient(94deg, #076044 0%, #0a9a66 46%, #2c6395 100%)",
@@ -44,7 +44,7 @@ export default function OpengraphImage() {
                 color: "transparent",
               }}
             >
-              close themselves.
+              receipts.
             </span>
           </div>
         </div>

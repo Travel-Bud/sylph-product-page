@@ -25,7 +25,7 @@ export function Hero() {
       <div className="wrap hero-grid">
         <div className="hero-copy">
           <h1 id="hero-title" className="h1" style={{ "--i": 0 } as React.CSSProperties}>
-            Your expenses <span className="hl">close themselves.</span>
+            Stop chasing <span className="hl">receipts.</span>
           </h1>
           <p className="lede" style={{ "--i": 1 } as React.CSSProperties}>
             Every card charge finds its receipt, gets checked and coded, and lands on the report. You see
