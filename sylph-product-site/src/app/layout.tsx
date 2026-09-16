@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { IBM_Plex_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const satoshi = localFont({
@@ -41,6 +42,7 @@ export default function RootLayout({
     <html lang="en" className={`${satoshi.variable} ${ibmPlexMono.variable}`}>
       <body className="antialiased">
         <div className="relative min-h-screen">{children}</div>
+        <Analytics />
       </body>
     </html>
   );
