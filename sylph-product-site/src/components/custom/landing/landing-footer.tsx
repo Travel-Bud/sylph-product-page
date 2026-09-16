@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { LandingBird } from "./landing-bird";
 import { gsap, useGSAP, MM_MOTION } from "./motion";
+import { DEMO } from "@/components/custom/site/anchors";
 
 /**
  * Footer: the horizon the page settles on. Lives inside the shared
@@ -73,7 +74,7 @@ export function LandingFooter() {
           <nav aria-label="Company">
             <h3>Company</h3>
             <ul>
-              <li><Link href="/demo">Book a demo</Link></li>
+              <li><Link href={DEMO}>Book a demo</Link></li>
               <li><Link href="https://app.sylph-product.com/login">Log in</Link></li>
               <li><a href="mailto:atharva-sumant@januslabsinc.com">atharva-sumant@januslabsinc.com</a></li>
             </ul>
