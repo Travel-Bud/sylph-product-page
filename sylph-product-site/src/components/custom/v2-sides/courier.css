@@ -1,0 +1,116 @@
+/* ============================================================
+   The courier (courier.tsx): the charge in flight between stops.
+   A fixed layer above the page and below the nav. Nothing in it
+   shows until script mounts it under no-preference, so reduced
+   motion and no-script see only the stops' own pills.
+   ============================================================ */
+
+.v2s-cour {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  overflow: hidden;
+  contain: strict;
+  display: none;
+}
+.v2s-cour[data-on] {
+  display: block;
+}
+.v2s-cour > * {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* the charge itself: the same pill as the stops (.v2s-token-pill), amber until month end */
+.v2s-cour-pill--ok {
+  border-color: var(--green);
+}
+
+/* the rail: a 1px square the script stretches along each run */
+.v2s-cour-rail {
+  width: 1px;
+  height: 1px;
+  background: var(--amber);
+  transform-origin: 0 0;
+}
+
+/* the bird, in ink; a bone copy over month end's deep green */
+.v2s-cour-bird {
+  width: 64px;
+  height: 61px;
+}
+.v2s-cour-bird svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.v2s-cour-bird-ink {
+  color: var(--ink);
+}
+.v2s-cour-bird-bone {
+  color: var(--bone);
+  opacity: 0;
+}
+
+/* the paper plane, folded from the pill: white, amber edges, an ink crease */
+.v2s-cour-plane {
+  width: 92px;
+  height: 50px;
+  overflow: visible;
+}
+.v2s-cour-plane-top {
+  fill: var(--bg);
+  stroke: var(--amber);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+.v2s-cour-plane-fold {
+  fill: var(--band);
+  stroke: var(--ink);
+  stroke-width: 0.7;
+  stroke-linejoin: round;
+}
+
+/* Priya's reply: a sent text bubble in her coat blue, the pill riding in its top row */
+.v2s-cour-bubble {
+  width: 272px;
+  padding: 50px 14px 11px;
+  border-radius: 18px 18px 5px 18px;
+  background: var(--coat);
+  color: var(--coat-ink);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+/* a stop the charge is not at is an empty dashed slot where the pill will land */
+.v2s .v2s-token-pill[data-courier="away"] {
+  border-style: dashed;
+  border-color: var(--hair-2);
+  background: transparent;
+  transition: border-color 0.2s linear;
+}
+.v2s .v2s-token-pill[data-courier="away"] > * {
+  opacity: 0;
+  transition: opacity 0.2s linear;
+}
+
+@media (max-width: 760px) {
+  .v2s-cour-bird {
+    width: 46px;
+    height: 44px;
+  }
+  .v2s-cour-plane {
+    width: 70px;
+    height: 38px;
+  }
+  .v2s-cour-bubble {
+    width: 232px;
+    font-size: 12.5px;
+  }
+}

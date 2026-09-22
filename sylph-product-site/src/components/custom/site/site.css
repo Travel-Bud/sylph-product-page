@@ -4617,3 +4617,370 @@ html.lenis {
     transform: none;
   }
 }
+
+/* ============================================================
+   LANDING V2, DIRECTION A (2026-09-22): the sorter, the questions,
+   the price line, a shorter night chapter. Remove this block and the
+   Sorter and Questions sections and the page is the premium pass again.
+   ============================================================ */
+
+/* ---- the sorter: twenty charges, the exceptions reach you ---- */
+.site .sort-board {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 24px;
+  margin-top: 48px;
+  align-items: start;
+}
+.site .sort-col {
+  box-shadow: var(--shadow-panel);
+}
+.site .sort-filed-list {
+  list-style: none;
+  margin: 0;
+  padding: 8px 20px 4px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 28px;
+}
+.site .sort-f {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--hair);
+  font-size: 14px;
+}
+.site .sort-f .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+.site .sort-m {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.site .sort-a {
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.site .sort-sum {
+  margin: 0;
+  padding: 12px 20px 16px;
+  font-size: 11.5px;
+  color: var(--green-700);
+}
+.site .sort-queue-list {
+  list-style: none;
+  margin: 0;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.site .sort-q {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--amber-line);
+  background: var(--amber-bg);
+}
+.site .sort-q-block {
+  border-color: var(--ox-line);
+  background: var(--ox-bg);
+}
+.site .sort-q-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 14.5px;
+  font-weight: 500;
+}
+.site .sort-q-top .sort-a {
+  color: var(--ink);
+  font-size: 14px;
+}
+.site .sort-cite {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--amber-ink);
+}
+.site .sort-q-block .sort-cite {
+  color: var(--ox-ink);
+}
+.site .sort-foot {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.site .sort-note {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+/* the sort itself: rows arrive in charge order, cleared ones file in from the right onto the report,
+   exceptions slide in from the left into the queue and flash once. The sorted board is the default. */
+@media (prefers-reduced-motion: no-preference) {
+  .site .sort-board.is-armed .sort-f,
+  .site .sort-board.is-armed .sort-q,
+  .site .sort-board.is-armed .sort-sum {
+    opacity: 0;
+  }
+  .site .sort-board.is-run .sort-f {
+    animation: sort-file 0.5s var(--ease) both;
+    animation-delay: calc(var(--o) * 110ms);
+  }
+  .site .sort-board.is-run .sort-q {
+    animation: sort-queue 0.7s var(--ease) both;
+    animation-delay: calc(var(--o) * 110ms);
+  }
+  .site .sort-board.is-run .sort-sum {
+    animation: sort-sum 0.4s var(--ease) both;
+    animation-delay: 2300ms;
+  }
+}
+@keyframes sort-file {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sort-queue {
+  0% {
+    opacity: 0;
+    transform: translateX(-28px) scale(0.98);
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+  55% {
+    opacity: 1;
+    transform: none;
+    box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.16);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+}
+@keyframes sort-sum {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (max-width: 880px) {
+  .site .sort-board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* on a phone the queue is the point: it leads, the filed list follows */
+  .site .sort-queue {
+    order: -1;
+  }
+}
+@media (max-width: 520px) {
+  .site .sort-filed-list {
+    grid-template-columns: 1fr;
+  }
+  .site .sort-q-top {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .site .sort-q-top .chip {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+
+/* ---- what finance asks first ---- */
+.site .qa-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 64px;
+  align-items: start;
+}
+.site .qa-head {
+  position: sticky;
+  top: calc(var(--nav-h) + 32px);
+}
+.site .qa-trust {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 12px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--hair-2);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 400px;
+}
+.site .qa-trust svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  fill: none;
+  stroke: var(--green-700);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.site .qa-list {
+  border-top: 1px solid var(--hair-2);
+}
+.site .qa {
+  border-bottom: 1px solid var(--hair-2);
+}
+.site .qa summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 0;
+  min-height: 44px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 19px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  touch-action: manipulation;
+}
+.site .qa summary::-webkit-details-marker {
+  display: none;
+}
+.site .qa summary:focus-visible {
+  outline: 2px solid var(--green-700);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.site .qa summary i {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+.site .qa summary i::before,
+.site .qa summary i::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 14px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: var(--ink-3);
+  transition: transform 0.3s var(--ease);
+}
+.site .qa summary i::after {
+  transform: rotate(90deg);
+}
+.site .qa[open] summary i::after {
+  transform: rotate(0deg);
+}
+.site .qa summary:hover i::before,
+.site .qa summary:hover i::after {
+  background: var(--ink);
+}
+.site .qa p {
+  margin: -6px 0 0;
+  padding: 0 40px 24px 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 620px;
+  text-wrap: pretty;
+}
+.site .qa p a {
+  color: var(--green-700);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 880px) {
+  .site .qa-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 36px;
+  }
+  .site .qa-head {
+    position: static;
+  }
+  .site .qa summary {
+    font-size: 17px;
+    padding: 18px 0;
+  }
+  .site .qa p {
+    padding-right: 0;
+  }
+}
+
+/* ---- the price line under the close ---- */
+.site .close-price {
+  margin: 20px 0 0;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+.site .close-price a {
+  color: var(--green-800);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+/* ---- the night chapter steps back: shorter visuals, less air ---- */
+.site .next {
+  padding: clamp(56px, 6vw, 88px) 0;
+}
+.site .next .next-grid {
+  margin-top: 32px;
+}
+/* the chip gets its own row above the visual, so it never sits on the receipt or the terminal toast
+   (it did at the old fixed height too); the visual sizes to its content */
+.site .next .next-vis {
+  height: auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding: 10px 10px 0;
+}
+.site .next .sample-night {
+  position: static;
+  align-self: flex-end;
+}
+.site .next .ctl {
+  position: relative;
+  inset: auto;
+  height: 220px;
+  margin-bottom: 10px;
+}
+.site .next .rb {
+  padding: 8px 18px 20px;
+}
+.site .next .next-card {
+  padding: 18px 20px 22px;
+}
+.site .next .next-card .h3 {
+  font-size: 19px;
+}
+
+/* ---- pricing: the Expense and Flights bundle line under each tier price (Ben, 2026-09-22) ---- */
+.site .tier-bundle {
+  margin: 6px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--green-800);
+}

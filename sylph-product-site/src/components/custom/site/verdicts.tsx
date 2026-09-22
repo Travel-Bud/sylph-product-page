@@ -81,8 +81,9 @@ export function VerdictCard({ compact = false }: { compact?: boolean }) {
         />
         <div className="vc-ticks mono" aria-hidden="true">
           <span>$12</span>
-          <span className="vc-tick-cap">cap $75.00</span>
-          <span className="vc-tick-appr">block $120.00</span>
+          {/* The compact tile is ~230px wide: the long labels collided there, so it shows the thresholds alone. */}
+          <span className="vc-tick-cap">{compact ? "$75" : "cap $75.00"}</span>
+          <span className="vc-tick-appr">{compact ? "$120" : "block $120.00"}</span>
           <span>$140</span>
         </div>
         <div className={`vc-result vc-result-${r.verdict}`} aria-live="polite">

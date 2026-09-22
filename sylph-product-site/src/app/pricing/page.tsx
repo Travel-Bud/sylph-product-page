@@ -14,8 +14,9 @@ export const metadata: Metadata = {
 const TIERS = [
   {
     name: "Small business",
-    price: "$30",
-    period: "per active employee, per month",
+    price: "$25",
+    period: "per active employee, per month, for Expense or Flights",
+    bundle: "Expense and Flights together, $40",
     description: "Policy enforcement and receipt matching for teams up to 100 employees.",
     highlighted: true,
     features: [
@@ -32,8 +33,9 @@ const TIERS = [
   },
   {
     name: "Mid-size",
-    price: "$40",
-    period: "per active employee, per month",
+    price: "$35",
+    period: "per active employee, per month, for Expense or Flights",
+    bundle: "Expense and Flights together, $60",
     description: "Adds the audit log, dedicated onboarding and priority support, for 101 to 1,000 employees.",
     highlighted: false,
     features: [
@@ -49,6 +51,7 @@ const TIERS = [
     name: "Enterprise",
     price: "Custom",
     period: "",
+    bundle: "",
     description: "Dedicated service for more than 1,000 employees.",
     highlighted: false,
     features: ["More than 1,000 employees", "Everything in Mid-size", "Dedicated account manager", "Custom integrations", "Volume discounts"],
@@ -80,6 +83,7 @@ export default function PricingPage() {
                   <span className="num">{t.price}</span>
                   {t.period && <span className="tier-period">{t.period}</span>}
                 </div>
+                {t.bundle && <p className="tier-bundle">{t.bundle}</p>}
                 <p className="tier-desc">{t.description}</p>
                 <ul className="tier-features">
                   {t.features.map((f) => (
