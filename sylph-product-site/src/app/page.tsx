@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "@/components/custom/site/site.css";
 import { siteFonts } from "@/components/custom/site/fonts";
-import { SiteNav, SiteFooter, SmoothScroll, Hero, Bento, Start, Next, Close, LoopGate } from "@/components/custom/site";
+import { SiteNav, SiteFooter, SmoothScroll, Hero, Bento, Held, Start, Next, Close, LoopGate } from "@/components/custom/site";
 import { ReceiptJourney } from "@/components/custom/site/receipt-journey";
 import { How } from "@/components/custom/site/how";
 
@@ -55,6 +55,7 @@ export default function LandingPage() {
         <Hero />
         <ReceiptJourney />
         <Bento />
+        <Held />
         <Start />
         <How />
         <Next />
