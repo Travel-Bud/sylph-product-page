@@ -154,7 +154,8 @@ export function SidesClose() {
   );
 }
 
-export function SidesFooter() {
+/** `sampleNote` is for the landing, where every panel carries sample data; /pricing and /demo leave it off. */
+export function SidesFooter({ sampleNote = false }: { sampleNote?: boolean }) {
   return (
     <footer className="v2s-foot">
       <div className="v2s-wrap v2s-foot-in">
@@ -171,7 +172,8 @@ export function SidesFooter() {
           <Link href="/privacy">Privacy</Link>
         </nav>
         <p className="v2s-foot-fine">
-          Sample data throughout: Priya, Dana, the merchants and every amount are invented. {TRUST} &copy; 2026
+          {sampleNote && "Sample data throughout: Priya, Dana, the merchants and every amount are invented. "}
+          {TRUST} &copy; 2026
           Janus Labs.
         </p>
       </div>

@@ -1,0 +1,441 @@
+/* ============================================================
+   /pricing and /demo in the "Two sides" look (stage track).
+   Same White Air tokens as the landing (.v2s in sides.css): plans
+   sit side by side between an ink rule and an ink floor, divided by
+   hairlines, the way the hero's two sides are. No cards, no shadows.
+   ============================================================ */
+
+/* ---------- shared page head ---------- */
+.v2p-head {
+  padding: clamp(40px, 7vw, 88px) 0 clamp(24px, 3.5vw, 40px);
+}
+.v2p-head-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 16px 56px;
+  align-items: end;
+}
+
+/* ---------- plans ---------- */
+.v2p-tiers {
+  padding-bottom: clamp(48px, 6vw, 80px);
+}
+.v2p-tiers:focus {
+  outline: none;
+}
+.v2p-grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+}
+.v2p-tier {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 24px clamp(18px, 2.2vw, 32px) 28px;
+}
+.v2p-tier + .v2p-tier {
+  border-left: 1px solid var(--hair-2);
+}
+.v2p-tier.is-hi {
+  background: var(--band);
+}
+.v2p-tier-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.v2p-name {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.v2p-size {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.v2p-price {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 18px;
+}
+.v2p-num {
+  font-size: clamp(44px, 4.4vw, 60px);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+.v2p-period {
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  max-width: 30ch;
+}
+.v2p-bundle {
+  align-self: flex-start;
+  margin-top: 14px;
+  padding: 5px 12px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.v2p-desc {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.v2p-feats {
+  list-style: none;
+  display: grid;
+  gap: 9px;
+  margin: 18px 0 26px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hair-2);
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+.v2p-feats li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+.v2p-feats svg {
+  margin-top: 3px;
+  color: var(--ink);
+}
+.v2p-cta {
+  margin-top: auto;
+  width: 100%;
+}
+.v2p-fine {
+  max-width: 72ch;
+  margin-top: 18px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+/* ---------- both sides, on every plan ---------- */
+.v2p-sides {
+  padding: clamp(40px, 6vw, 72px) 0;
+  background: var(--band);
+  border-top: 1px solid var(--hair-2);
+}
+.v2p-sides-k {
+  font-size: clamp(22px, 2.2vw, 28px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+.v2p-sides-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+  border-top: 1px solid var(--ink);
+}
+.v2p-side {
+  padding: 20px clamp(0px, 2.4vw, 32px) 0 0;
+}
+.v2p-side + .v2p-side {
+  padding: 20px 0 0 clamp(16px, 2.4vw, 32px);
+  border-left: 1px solid var(--ink);
+}
+.v2p-side-who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.v2p-side-who > span:last-child {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+.v2p-side-who strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+.v2p-side--priya strong {
+  color: var(--coat-ink);
+}
+.v2p-side--dana strong {
+  color: var(--sweater-ink);
+}
+.v2p-side-who > span:last-child > span {
+  font-size: 13.5px;
+  color: var(--ink-3);
+}
+.v2p-side ul {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* ---------- /demo ---------- */
+.v2d {
+  padding: clamp(32px, 6vw, 80px) 0 clamp(48px, 7vw, 96px);
+}
+.v2d-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 480px);
+  gap: 32px clamp(32px, 6vw, 88px);
+  align-items: start;
+}
+.v2d-copy .v2s-lede {
+  margin-top: 18px;
+}
+.v2d-points {
+  list-style: none;
+  display: grid;
+  margin-top: 28px;
+  border-top: 1px solid var(--ink);
+}
+.v2d-points li {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--hair-2);
+}
+.v2d-points b {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+}
+.v2d-points p {
+  margin-top: 3px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.v2d-points .v2s-head {
+  margin-top: 2px;
+}
+.v2d-note {
+  margin-top: 18px;
+  font-size: 14px;
+  color: var(--ink-3);
+}
+
+/* The wired form (demo-form.tsx, never edited here) keeps its own class names; this styles
+   them in C's look. Scoped under .v2d-form so nothing else is touched. */
+.v2d-form .demo-form {
+  display: grid;
+  gap: 16px;
+  padding: clamp(20px, 2.6vw, 30px);
+  background: var(--bg);
+  border: 1.5px solid var(--ink);
+  border-radius: 20px;
+}
+.v2d-form .form-head {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.v2d-form .form-sub {
+  margin-top: -10px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+.v2d-form .field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.v2d-form .field.two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 14px;
+}
+.v2d-form label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.v2d-form .req {
+  color: var(--ox-ink);
+}
+.v2d-form input,
+.v2d-form select,
+.v2d-form textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 14px;
+  font: inherit;
+  /* 16px keeps iOS from zooming into the field */
+  font-size: 16px;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1.5px solid var(--hair-2);
+  border-radius: 12px;
+  transition: border-color 0.2s var(--ease);
+  appearance: none;
+}
+.v2d-form select {
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23101b16' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+.v2d-form textarea {
+  min-height: 104px;
+  resize: vertical;
+}
+.v2d-form input::placeholder,
+.v2d-form textarea::placeholder {
+  color: var(--ink-3);
+  opacity: 0.75;
+}
+@media (hover: hover) {
+  .v2d-form input:hover,
+  .v2d-form select:hover,
+  .v2d-form textarea:hover {
+    border-color: var(--ink-3);
+  }
+}
+.v2d-form input:focus-visible,
+.v2d-form select:focus-visible,
+.v2d-form textarea:focus-visible {
+  outline: 2px solid var(--green-700);
+  outline-offset: 1px;
+  border-color: var(--ink);
+}
+.v2d-form [aria-invalid="true"] {
+  border-color: var(--ox);
+}
+.v2d-form .field-err,
+.v2d-form .form-err {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ox-ink);
+}
+.v2d-form .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  margin-top: 4px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--bone);
+  background: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.v2d-form .btn:hover {
+  background: #26332c;
+}
+.v2d-form .btn:active {
+  transform: translateY(1px);
+}
+.v2d-form .btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.v2d-form .btn:focus-visible {
+  outline: 2px solid var(--green-700);
+  outline-offset: 3px;
+}
+.v2d-form .form-fine {
+  font-size: 13px;
+  color: var(--ink-3);
+  text-align: center;
+}
+.v2d-form .demo-success {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  padding: 8px 0;
+}
+.v2d-form .ok-ic {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.v2d-form .demo-success h3 {
+  font-size: 22px;
+  font-weight: 600;
+}
+.v2d-form .demo-success p {
+  color: var(--ink-2);
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 960px) {
+  .v2p-head-in,
+  .v2d-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v2p-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v2p-tier + .v2p-tier {
+    border-left: 0;
+    border-top: 1px solid var(--ink);
+  }
+  /* on a phone the form comes straight after the promise; the three points follow it */
+  .v2d-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .v2d-copy {
+    display: contents;
+  }
+  .v2d-form {
+    order: 3;
+    margin-top: 24px;
+  }
+  .v2d-points {
+    order: 4;
+    margin-top: 32px;
+  }
+}
+@media (max-width: 640px) {
+  .v2p-head {
+    padding-top: 28px;
+  }
+  .v2p-tier {
+    padding: 22px 16px 24px;
+  }
+  .v2p-sides-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v2p-side,
+  .v2p-side + .v2p-side {
+    padding: 18px 0;
+    border-left: 0;
+  }
+  .v2p-side + .v2p-side {
+    border-top: 1px solid var(--hair-2);
+  }
+  .v2d {
+    padding-top: 24px;
+  }
+  .v2d-form .field.two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v2d-form .demo-form {
+    margin: 0 calc(-1 * var(--gutter) + 8px);
+    padding: 20px 16px;
+  }
+}

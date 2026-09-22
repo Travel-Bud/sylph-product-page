@@ -2,9 +2,12 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Mark } from "@/components/custom/site/mark";
 import { APP_LOGIN, DEMO, PRICING } from "@/components/custom/site/anchors";
 import { isOn, play, setOn, subscribe } from "./sound";
+/* the rail, the lit link and the sound switch are styled with the hero */
+import "./hero.css";
 
 type Spot = "priya" | "dana" | "month-end" | "your-month" | "questions" | null;
 const STOPS = [0, 1, 2, 3, 4, 5];
@@ -49,11 +52,28 @@ function SoundToggle() {
  * while it is an exception and green once month end closes it. The lit link says whose side you
  * are reading. Reading only; nothing here moves the page.
  */
+/* A section link: on the landing it glides in place (scroll.tsx) and lights while its section is
+   read; anywhere else it leads home to that section. */
+function Sec({ id, side, landing, lit, children }: { id: string; side?: "priya" | "dana"; landing: boolean; lit: boolean; children: React.ReactNode }) {
+  if (!landing) return <Link href={`/#${id}`}>{children}</Link>;
+  return (
+    <a href={`#${id}`} data-side={side} aria-current={lit ? "true" : undefined}>
+      {children}
+    </a>
+  );
+}
+
+/* the landing lives at /; /v2/sides is its old address and redirects there */
+const LANDING = new Set(["/", "/v2/sides"]);
+
 export function SidesNav() {
   const rail = useRef<HTMLDivElement>(null);
   const [spot, setSpot] = useState<Spot>(null);
+  const path = usePathname();
+  const landing = LANDING.has(path);
 
   useEffect(() => {
+    if (!landing) return;
     let raf = 0;
     const tick = () => {
       raf = 0;
@@ -101,37 +121,38 @@ export function SidesNav() {
       window.removeEventListener("scroll", on);
       window.removeEventListener("resize", on);
     };
-  }, []);
-
-  const cur = (s: Spot) => (spot === s ? ({ "aria-current": "true" } as const) : {});
+  }, [landing]);
 
   return (
     <header className="v2s-nav">
       <div className="v2s-wrap v2s-nav-in">
-        <Link href="/v2/sides" className="v2s-brand" aria-label="Sylph, top of page">
+        <Link href="/" className="v2s-brand" aria-label={landing ? "Sylph, top of page" : "Sylph home"}>
           <Mark className="v2s-brand-mark" />
           Sylph
         </Link>
         <nav className="v2s-nav-links" aria-label="Page">
-          <a href="#receipts" data-side="priya" {...cur("priya")}>
+          <Sec id="receipts" side="priya" landing={landing} lit={spot === "priya"}>
             Priya&rsquo;s side
-          </a>
-          <a href="#policy" data-side="dana" {...cur("dana")}>
+          </Sec>
+          <Sec id="policy" side="dana" landing={landing} lit={spot === "dana"}>
             Dana&rsquo;s side
-          </a>
-          <a href="#month-end" {...cur("month-end")}>
+          </Sec>
+          <Sec id="month-end" landing={landing} lit={spot === "month-end"}>
             Month end
-          </a>
-          <a href="#your-month" {...cur("your-month")}>
+          </Sec>
+          <Sec id="your-month" landing={landing} lit={spot === "your-month"}>
             Sample month
-          </a>
-          <a href="#questions" {...cur("questions")}>
+          </Sec>
+          <Sec id="questions" landing={landing} lit={spot === "questions"}>
             Questions
-          </a>
-          <Link href={PRICING}>Pricing</Link>
+          </Sec>
+          <Link href={PRICING} aria-current={path === PRICING ? "page" : undefined}>
+            Pricing
+          </Link>
         </nav>
         <div className="v2s-nav-cta">
-          <SoundToggle />
+          {/* only the landing makes sound */}
+          {landing && <SoundToggle />}
           <a href={APP_LOGIN} className="v2s-nav-login">
             Log in
           </a>
@@ -141,14 +162,17 @@ export function SidesNav() {
         </div>
       </div>
       <div className="v2s-rail" aria-hidden="true">
-        <div className="v2s-wrap">
-          <div className="v2s-rail-in" ref={rail}>
-            <span className="v2s-rail-fill" />
-            {STOPS.map((n) => (
-              <span key={n} className="v2s-rail-stop" style={{ left: `${n * 20}%` }} />
-            ))}
+        {/* the charge's rail belongs to the landing; elsewhere this is the nav's plain hairline */}
+        {landing && (
+          <div className="v2s-wrap">
+            <div className="v2s-rail-in" ref={rail}>
+              <span className="v2s-rail-fill" />
+              {STOPS.map((n) => (
+                <span key={n} className="v2s-rail-stop" style={{ left: `${n * 20}%` }} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </header>
   );

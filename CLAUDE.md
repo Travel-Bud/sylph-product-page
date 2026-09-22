@@ -14,7 +14,10 @@ The Next.js app lives in `sylph-product-site/`. Run every package command from i
 sylph-product-site/
   src/app/                          file routes (see Routes)
   src/app/hooks/useServerActions.ts demo-form submit hook
-  src/components/custom/site/       the landing (Ben's v3, promoted to the root 2026-09-08): sections, nav, footer, site.css, sample-data.ts
+  src/components/custom/v2-sides/   the landing, "Two sides" (promoted 2026-09-22): hero, chapters, courier, cast, your-month, sound, scroll
+  src/components/custom/site/       the v3 panel library (site.css, sample-data.ts, anchors.ts); its panels are reused inside the landing's tiles
+  src/app/legacy-fonts.ts           Satoshi and IBM Plex Mono, loaded only by /launching-soon, /terms and /dev through their layouts
+  public/site/characters/           the Priya and Dana cast (matte clay renders, transparent WebP)
   src/components/custom/landing/    the July v5 landing, now only behind /launching-soon and the /dev/hero lab
   src/components/custom/sylph-identity/  brand marks, incl. sylph-bird-path.ts (see Invariant)
   public/landing/                   landing images and video
@@ -46,7 +49,7 @@ All four gates (`typecheck`, `lint`, `test`, `build`) must exit 0 before a push.
 - `staging` is the working branch. Cut feature work from it and merge back into it.
 - `staging` into `main` is the deploy. Vercel builds `main` through its git integration; there is no workflow file in this repo.
 - Every other pushed branch gets a Vercel preview URL automatically.
-- Ben's v3 landing was merged (PR #1) and promoted to `/` on 2026-09-08; there is no separate landing branch.
+- The "Two sides" landing replaced Ben's v3 at `/` (2026-09-22, V2 exploration; plan and evidence under `docs/plans/2026-09-22-landing-v2*`).
 
 ## Environment variables
 
@@ -61,7 +64,7 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 
 | Route | Notes |
 |---|---|
-| `/` | the landing (`src/app/page.tsx`, Ben's v3 re-led on closing the books), carries site metadata and JSON-LD |
+| `/` | the landing (`src/app/page.tsx`, "Two sides": Priya spends, Dana closes the books), carries site metadata and JSON-LD |
 | `/pricing` | pricing page |
 | `/demo` | demo request page; `demo-form.tsx` posts through `useServerActions` to the email worker |
 | `/terms` | stub page, stays until a terms document is published |
@@ -70,11 +73,13 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 | `/fresh`, `/fresh/demo`, `/fresh/pricing` | 308 to `/`, `/demo`, `/pricing` (the preview was promoted 2026-09-08); `/fresh/lab/*` are Ben's design boards |
 | `/dev/hero` | hero lab, 404s in production unless `NEXT_PUBLIC_ENABLE_HERO_LAB=1` |
 | `/api/demo` | stub that returns `{ok:true}`; NOT the real submit path, the form never calls it |
-| `opengraph-image.tsx` | generated social image under `src/app/` (also used for the Twitter card) |
+| `/v2`, `/v2/sides`, `/v2/ledger` | 307 to `/` (the V2 exploration; the other directions live in git history) |
+| `/v2/clip` | noindex composition route the clip renderer (`scripts/clip/`) captures; the clips are in `public/site/clip/` |
+| `opengraph-image.jpg`, `twitter-image.jpg` | static social card under `src/app/` (the clip's poster), with `.alt.txt` files |
 
 ## Cross-host link contract
 
-- The only links from this site to the app are `https://app.sylph-product.com/login` (`APP_LOGIN` in `site/anchors.ts`, used by `nav.tsx` and `footer.tsx`; the v5 `landing-nav.tsx` and `landing-footer.tsx` carry the same URL). The app never links back to this site.
+- The only links from this site to the app are `https://app.sylph-product.com/login` (`APP_LOGIN` in `site/anchors.ts`, used by the landing's `v2-sides/nav.tsx` and `closing.tsx` and the v3 `site/nav.tsx` and `footer.tsx`; the v5 `landing-nav.tsx` and `landing-footer.tsx` carry the same URL). The app never links back to this site.
 - Legal documents live on `https://legal.januslabsinc.com/sylph/v1/` and are never rendered here. `/privacy` redirects there; `/terms` keeps a stub because no terms document is published yet.
 
 ## Demo-lead path
