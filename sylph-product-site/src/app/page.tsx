@@ -6,7 +6,7 @@ import "@/components/custom/site/site.css";
 import "@/components/custom/v2-sides/sides.css";
 import { SidesNav } from "@/components/custom/v2-sides/nav";
 import { SidesHero } from "@/components/custom/v2-sides/hero";
-import { Receipts, Policy, Verdicts, Desk, MonthEnd } from "@/components/custom/v2-sides/chapters";
+import { Receipts, Policy, Verdicts, Desk, MonthEnd, Seam } from "@/components/custom/v2-sides/chapters";
 import { Questions, SidesClose, SidesFooter } from "@/components/custom/v2-sides/closing";
 import { Reveal } from "@/components/custom/v2-sides/reveal";
 import { SidesScroll } from "@/components/custom/v2-sides/scroll";
@@ -63,10 +63,16 @@ export default function LandingPage() {
       <Reveal />
       <SidesNav />
       <SidesHero />
+      {/* between scenes, a seam the charge crosses (round 6) */}
+      <Seam leg={0} />
       <Receipts />
+      <Seam leg={1} />
       <Policy />
+      <Seam leg={2} />
       <Verdicts />
+      <Seam leg={3} />
       <Desk />
+      <Seam leg={4} />
       <MonthEnd />
       <YourMonth />
       <Questions />

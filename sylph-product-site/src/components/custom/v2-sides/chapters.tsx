@@ -137,6 +137,42 @@ function Card({ side, title, children, className = "" }: { side: Side | "both"; 
   );
 }
 
+/* ---------- the seams between scenes (round 6) ----------
+   Each scene is framed off from the next by a seam: an ink hairline across the top and bottom and one
+   down the middle, the line that divides the two sides. The side the charge leaves sits at the top, on
+   that person's half; the side it goes to sits at the bottom, on theirs; the next scene's card sits on
+   the dividing line. The courier flies every leg through that card (data-courier-seam, courier.tsx). */
+
+const SEAMS: { from: Side | "both"; to: Side | "both"; title: string }[] = [
+  { from: "both", to: "priya", title: "The photo" },
+  { from: "priya", to: "dana", title: "The rule" },
+  { from: "dana", to: "priya", title: "The answer" },
+  { from: "priya", to: "dana", title: "The desk" },
+  { from: "dana", to: "both", title: "Month end" },
+];
+
+export function Seam({ leg }: { leg: number }) {
+  const s = SEAMS[leg];
+  if (!s) return null;
+  return (
+    <div className={`v2c-seam v2c-seam--${s.from}-${s.to}`} data-courier-seam={leg} aria-hidden="true">
+      <div className="v2s-wrap v2c-seam-in">
+        <span className="v2c-seam-line" />
+        <span className={`v2c-seam-tag v2c-seam-tag--top v2c-seam-tag--${s.from}`}>
+          <SideTag side={s.from} />
+        </span>
+        <span className="v2c-seam-card">
+          <b className="mono">0{leg + 1}</b>
+          <span>{s.title}</span>
+        </span>
+        <span className={`v2c-seam-tag v2c-seam-tag--bottom v2c-seam-tag--${s.to}`}>
+          <SideTag side={s.to} />
+        </span>
+      </div>
+    </div>
+  );
+}
+
 /* ---------- 1. Receipts: choose how the receipt arrives, watch that path find its charge ---------- */
 
 const WAYS: { id: string; obj: ObjName; label: string; did: string; charge: EngineRow; when: string }[] = [

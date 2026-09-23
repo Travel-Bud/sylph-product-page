@@ -1382,8 +1382,22 @@
     flex-wrap: wrap;
     justify-content: space-between;
   }
+  /* "Compile again" holds its place before it is offered, so the row never re-flows when it appears */
+  .v2c-cstage:not(.is-timed) .v2c-crun {
+    display: inline-flex;
+    flex: none;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid transparent;
+    visibility: hidden;
+  }
   .v2c-cstatus-t {
     min-width: 0;
+    /* one line always: its text changes as the compile runs, and a wrap flip moved the row below */
+    flex: 1 1 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .v2c-cbar {
     order: 3;
@@ -1473,5 +1487,118 @@
   .v2s-price-m-plan dd {
     font-size: 20px;
     font-weight: 600;
+  }
+}
+
+/* ---------- the seams between scenes (round 6, courier track) ----------
+   Designed space, not padding: a frame of ink hairlines (top, bottom, and the dividing line down the
+   middle) that the charge crosses on its way to the next scene. White ground, so every scene's own
+   ground (white, band, deep green) meets a clear edge. */
+.v2c-seam {
+  height: clamp(250px, 40svh, 400px);
+  background: var(--bg);
+}
+.v2c-seam-in {
+  position: relative;
+  height: 100%;
+}
+.v2c-seam-in::before,
+.v2c-seam-in::after {
+  content: "";
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: var(--ink);
+}
+.v2c-seam-in::before {
+  top: 0;
+}
+.v2c-seam-in::after {
+  bottom: 0;
+}
+.v2c-seam-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--ink);
+}
+/* into month end the two sides meet: the dividing line stops at the card */
+.v2c-seam--dana-both .v2c-seam-line {
+  bottom: 50%;
+}
+.v2c-seam-tag {
+  position: absolute;
+}
+.v2c-seam-tag--top {
+  top: 18px;
+}
+.v2c-seam-tag--bottom {
+  bottom: 18px;
+}
+.v2c-seam-tag--priya {
+  left: var(--gutter);
+}
+.v2c-seam-tag--dana {
+  right: var(--gutter);
+}
+.v2c-seam-tag--both {
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  background: var(--bg);
+}
+.v2c-seam-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 18px;
+  border: 1px solid var(--ink);
+  border-radius: 14px;
+  background: var(--bg);
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+.v2c-seam-card b {
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.v2c-seam-card span {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+@media (max-width: 760px) {
+  .v2c-seam {
+    height: clamp(170px, 26svh, 230px);
+  }
+  .v2c-seam-card {
+    padding: 9px 14px;
+  }
+  .v2c-seam-card b {
+    font-size: 22px;
+  }
+  .v2c-seam-card span {
+    font-size: 15px;
+  }
+  .v2c-seam-tag--top {
+    top: 12px;
+  }
+  .v2c-seam-tag--bottom {
+    bottom: 12px;
+  }
+}
+
+/* Dana's answer takes the place of her two buttons at the same height, so filing the charge never
+   shifts the page below (CLS) */
+@media (pointer: coarse), (max-width: 760px) {
+  .v2c-q-status {
+    min-height: 44px;
   }
 }

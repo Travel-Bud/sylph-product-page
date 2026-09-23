@@ -346,14 +346,24 @@ export function Courier() {
         /* a carried pill never leaves the screen, which matters on phones where paths run edge to edge */
         const pw = pill.offsetWidth;
         const keep = (x: number, left = pw / 2, right = pw / 2) => clamp(x, left + 6, Math.max(left + 6, W - right - 6));
+        /* the seam between the two scenes: every flight passes through its card, mid-flight, wherever
+           the card is on screen at that moment (read live, it scrolls with the page) */
+        const seamEl = document.querySelector<HTMLElement>(`[data-courier-seam="${leg.from}"]`);
+        const cardR = seamEl?.querySelector(".v2c-seam-card")?.getBoundingClientRect();
+        const M: V = cardR ? { x: cardR.left + cardR.width / 2, y: cardR.top + cardR.height / 2 } : { x: (A.x + Z.x) / 2, y: (A.y + Z.y) / 2 };
+        /* two cubics meeting at M with a shared tangent t, so the path runs smoothly through the card */
+        const thru = (c1: V, t: V, c4: V): Cubic[] => [
+          [A, c1, { x: M.x - t.x, y: M.y - t.y }, M],
+          [M, { x: M.x + t.x, y: M.y + t.y }, c4, Z],
+        ];
 
         if (leg.from === 4) {
           /* ---------- Dana's approval files it: a green Approved stamp lands on the charge in her
              queue, the pill turns cleared, and it drops out of the queue and down into its line on
              the September report ---------- */
           const sE = E.w / (pw || 1);
-          const segs: Cubic[] = [[A, { x: A.x, y: A.y + H * 0.34 }, { x: Z.x, y: Z.y - H * 0.34 }, Z]];
-          const path = walker(segs);
+          /* straight down through the Month end card, like a sheet dropped into a tray */
+          const path = walker(thru({ x: A.x, y: A.y + H * 0.2 }, { x: (Z.x - A.x) * 0.2, y: H * 0.14 }, { x: Z.x, y: Z.y - H * 0.2 }));
           const stampAt = (x: number, y: number, sc: number, o: number, pop: number) =>
             put(stamp, x + (pw / 2 - 10) * sc, y - (pill.offsetHeight / 2) * sc, o, -9, lerp(1.5, 1, pop) * sc);
           if (p < g) {
@@ -379,11 +389,8 @@ export function Courier() {
         } else if (leg.from === 0) {
           /* ---------- the bird, once: out of Dana's queue in the hero, a wide arc, in to the charge ---------- */
           const out = A.x < W / 2 ? 1 : -1;
-          const P1 = vp(W * (out > 0 ? 0.9 : 0.1), H * 0.4, W, H);
-          const path = walker([
-            [A, vp(A.x + out * W * 0.12, A.y - H * 0.34, W, H), vp(W * (out > 0 ? 0.94 : 0.06), H * 0.12, W, H), P1],
-            [P1, vp(P1.x, H * 0.7, W, H), vp(Z.x - out * W * 0.22, Z.y + H * 0.06, W, H), Z],
-          ]);
+          /* up and out toward the roomier side, back across through the scene card, round to the charge */
+          const path = walker(thru(vp(A.x + out * W * 0.2, A.y - H * 0.34, W, H), { x: -out * W * 0.2, y: H * 0.03 }, vp(Z.x - out * W * 0.22, Z.y + H * 0.1, W, H)));
           const hg = hang();
           /* the empty bird comes down from off screen and levels out over the charge, already
              heading the way the flight sets off */
@@ -426,7 +433,7 @@ export function Courier() {
           const copyE = rect(E.el.closest(".v2c-copy"));
           let pts: V[];
           if (gridS && gridE && copyE) {
-            const hs = gridS.bottom + 26;
+            let hs = gridS.bottom + 26;
             const sib = Array.from(gridE.children)
               .filter((c) => !c.contains(E.el))
               .map((c) => c.getBoundingClientRect())
@@ -438,14 +445,38 @@ export function Courier() {
             const xl = (copyE.left + leftN) / 2;
             const xv = Math.abs(xl - S.x) <= Math.abs(xr - S.x) ? xl : xr;
             const he = Math.max(copyE.bottom, E.y + E.h / 2) + 18;
-            pts = [
-              { x: S.x, y: S.y },
-              { x: S.x, y: hs },
-              { x: xv, y: hs },
-              { x: xv, y: he },
-              { x: E.x, y: he },
-              { x: E.x, y: E.y },
-            ];
+            const seamR = seamEl?.getBoundingClientRect();
+            if (seamR && cardR) {
+              /* through the seam: along its top, down the dividing line (round the scene card, a
+                 station on the line), along its bottom, then in beside Dana's copy as before */
+              hs = seamR.top + 34;
+              const y2 = seamR.bottom - 34;
+              const ct = cardR.top - 12;
+              const cb = cardR.bottom + 12;
+              const cr = cardR.right + 14;
+              pts = [
+                { x: S.x, y: S.y },
+                { x: S.x, y: hs },
+                { x: M.x, y: hs },
+                { x: M.x, y: ct },
+                { x: cr, y: ct },
+                { x: cr, y: cb },
+                { x: M.x, y: cb },
+                { x: M.x, y: y2 },
+                { x: xv, y: y2 },
+                { x: xv, y: he },
+                { x: E.x, y: he },
+                { x: E.x, y: E.y },
+              ];
+            } else
+              pts = [
+                { x: S.x, y: S.y },
+                { x: S.x, y: hs },
+                { x: xv, y: hs },
+                { x: xv, y: he },
+                { x: E.x, y: he },
+                { x: E.x, y: E.y },
+              ];
           } else {
             const gut = Math.max(8, Math.min(S.x, E.x) - W * 0.2);
             pts = [
@@ -477,11 +508,9 @@ export function Courier() {
           /* ---------- the paper plane: a throw up and back, a long glide down the near side, and a
              flare into Priya's thread ---------- */
           const side = A.x < W / 2 ? -1 : 1;
-          const P1 = vp(side < 0 ? W * 0.08 : W * 0.92, H * 0.52, W, H);
-          const path = walker([
-            [A, vp(A.x - side * W * 0.1, A.y - H * 0.26, W, H), vp(side < 0 ? W * 0.02 : W * 0.98, H * 0.16, W, H), P1],
-            [P1, vp(P1.x, H * 0.86, W, H), vp(Z.x + side * W * 0.3, Z.y + H * 0.14, W, H), Z],
-          ]);
+          /* thrown up and away, a long level glide across the card toward Priya's side, a flare into her thread */
+          const sg = Z.x < M.x ? -1 : 1;
+          const path = walker(thru(vp(A.x - side * W * 0.12, A.y - H * 0.24, W, H), { x: sg * W * 0.22, y: H * 0.04 }, vp(Z.x - sg * W * 0.06, Z.y + H * 0.16, W, H)));
           /* it folds pointing level, the way it is thrown, and noses up into the throw */
           const hFold = side > 0 ? Math.PI : 0;
           if (p < g) {
@@ -511,10 +540,10 @@ export function Courier() {
           const bh = bubble.offsetHeight;
           const ph = pill.offsetHeight;
           const off = { x: bw / 2 - 14 - pw / 2, y: bh / 2 - 9 - ph / 2 };
-          const R = { x: clamp(Math.max(A.x, Z.x) + W * 0.34, A.x, W - bw + pw / 2 - 16), y: (A.y + Z.y) / 2 - H * 0.08 };
+          /* sent: near straight lines, through the card and on to Dana's queue */
           const path = walker([
-            [A, { x: lerp(A.x, R.x, 0.33), y: lerp(A.y, R.y, 0.33) }, { x: R.x - W * 0.06, y: R.y }, R],
-            [R, { x: R.x + W * 0.04, y: R.y + H * 0.02 }, { x: lerp(R.x, Z.x, 0.6), y: lerp(R.y, Z.y, 0.6) }, Z],
+            [A, { x: lerp(A.x, M.x, 0.35), y: lerp(A.y, M.y, 0.35) }, { x: lerp(A.x, M.x, 0.8), y: lerp(A.y, M.y, 0.8) }, M],
+            [M, { x: lerp(M.x, Z.x, 0.2), y: lerp(M.y, Z.y, 0.2) }, { x: lerp(M.x, Z.x, 0.65), y: lerp(M.y, Z.y, 0.65) }, Z],
           ]);
           if (p < g) {
             const k = outQ(kIn);
@@ -759,18 +788,20 @@ export function Courier() {
          shown is the right one. When the scroll rests inside a flight window, the flight finishes,
          slowly, to the nearer of its two stops, by position alone. */
       const LEG_S = phone ? 1.5 : 1.6;
-      let lastY = window.scrollY;
       let lastJ = -1;
+      let anchorJ = -1;
       let still = 0;
       const IDLE = 0.35;
       const step = (_t: number, dtMs: number) => {
         const dt = Math.min(0.1, dtMs / 1000);
         const y = window.scrollY;
-        if (Math.abs(y - lastY) > 0.5) {
-          lastY = y;
+        const j = jScroll(y);
+        /* resting is judged in journey units, so a pixel of scroll anchoring (content above
+           changing height) does not count as the visitor still scrolling */
+        if (Math.abs(j - anchorJ) > 0.01) {
+          anchorJ = j;
           still = 0;
         } else still += dt;
-        const j = jScroll(y);
         if (lastJ < 0) jd = Math.abs(j - Math.round(j / 2) * 2) < 1e-6 ? j : Math.round(j / 2) * 2;
         else if (Math.abs(j - lastJ) > 1) {
           /* a jump: start from the stop behind the landing point, in the direction of travel */
@@ -840,7 +871,7 @@ export function Courier() {
 
   return (
     <div className="v2s-cour" ref={root} aria-hidden="true">
-      {Array.from({ length: 5 }, (_, i) => (
+      {Array.from({ length: 11 }, (_, i) => (
         <i key={i} className="v2s-cour-rail" />
       ))}
       <div className="v2s-cour-bubble">

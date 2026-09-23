@@ -1,20 +1,34 @@
-/* The cast (cast track). Every rule here is scoped to .v2s-cast; motion is transform and opacity only.
-   Settled by default: the plain figure on a quiet contact shadow. Motion only under no-preference. */
+/* The cast (cast track). Every rule here is scoped to .v2s-cast; motion is transform, opacity and
+   clip-path only. Settled by default: the plain figure on a quiet contact shadow. The scroll
+   choreography (enter, leave) is GSAP in cast.tsx, on .v2s-cast-in / -out and the ground layers;
+   CSS owns the hero pair's intro and the reactions. Each layer owns one job, so nothing fights. */
 
 .v2s-cast {
   position: relative;
   display: block;
 }
 .v2s-cast-body,
-.v2s-cast-lean,
-.v2s-cast-idle,
+.v2s-cast-in,
+.v2s-cast-out,
+.v2s-cast-face,
 .v2s-cast-act,
 .v2s-cast-part,
-.v2s-cast-alt {
+.v2s-cast-step,
+.v2s-cast-alt,
+.v2s-cast-gin,
+.v2s-cast-gout {
   position: absolute;
   inset: 0;
   display: block;
   transform-origin: 50% 100%;
+}
+/* the ground layers scale about the feet, where the shadow sits */
+.v2s-cast-gin,
+.v2s-cast-gout {
+  transform-origin: 50% 97.4%;
+}
+.v2s-cast-face[data-mirror] {
+  transform: scaleX(-1);
 }
 .v2s-cast-img {
   position: absolute;
@@ -50,29 +64,13 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* ---- landing: a drop onto the ground line, a small squash at contact, the shadow growing under it ---- */
-  .v2s-cast[data-prio] .v2s-cast-body,
-  .v2s-cast[data-in] .v2s-cast-body {
-    animation: v2s-cast-land 1.15s both;
-  }
-  .v2s-cast[data-prio] .v2s-cast-shadow,
-  .v2s-cast[data-in] .v2s-cast-shadow {
-    animation: v2s-cast-ground 1.15s both;
-  }
-  /* the hero pair lands from CSS on first paint, no script needed; the rest wait to be seen.
-     The hero stills are the page's likely LCP, so they are painted opaque from the first frame and
-     only settle by transform: an image first shown at opacity 0 is reported late. */
+  /* ---- the hero pair: opaque from the first frame (they are the LCP), a drop by transform onto
+     the floor with a small squash at contact, the shadow growing under them. No script needed. ---- */
   .v2s-cast[data-prio] .v2s-cast-body {
-    animation-name: v2s-cast-settle;
+    animation: v2s-cast-settle 1.15s 0.15s both;
   }
-  .v2s-cast[data-prio] .v2s-cast-body,
   .v2s-cast[data-prio] .v2s-cast-shadow {
-    animation-delay: 0.15s;
-  }
-
-  /* ---- idle: one slow breath, only while on screen ---- */
-  .v2s-cast[data-vis="1"] .v2s-cast-idle[data-idle] {
-    animation: v2s-cast-breathe 5.6s ease-in-out var(--idle-delay, 0s) infinite alternate;
+    animation: v2s-cast-ground 1.15s 0.15s both;
   }
 
   /* ---- reactions (data-act is set by cast.tsx for the length of the reaction) ---- */
@@ -94,7 +92,6 @@
     opacity: 0;
     transition: opacity 0.2s linear 0.62s;
   }
-
   .v2s-cast[data-act="flash"] .v2s-cast-flash {
     animation: v2s-cast-flash 0.6s ease-out both;
   }
@@ -105,7 +102,7 @@
   .v2s-cast[data-act="read"] .v2s-cast-act {
     animation: v2s-cast-nod 1.3s ease-in-out 0.3s both;
   }
-  /* Dana looks up from the sheet: the head lifts a hair with the new pose */
+  /* Dana looks up: the head lifts a hair with the new pose */
   .v2s-cast[data-act="glance"] .v2s-cast-act {
     transform: scale(1.002, 1.006);
   }
@@ -124,57 +121,34 @@
   }
 }
 
-/* before a below-the-fold figure is seen it waits above its ground line; only when script runs and motion is allowed */
-@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .v2s-cast:not([data-prio]):not([data-in]) .v2s-cast-body {
-    opacity: 0;
-    transform: translateY(-26px);
+/* ---- phones: the same story, lighter. A shorter hero settle without the squash, quicker swaps, no nod,
+   a smaller lean-in. (The scroll entrances are shortened in cast.tsx; phones have no exits.) ---- */
+@media (prefers-reduced-motion: no-preference) and (max-width: 860px) {
+  .v2s-cast[data-prio] .v2s-cast-body {
+    animation: v2s-cast-settle-lite 0.7s cubic-bezier(0.3, 0.7, 0.2, 1) 0.1s both;
   }
-  @media (hover: none), (max-width: 860px) {
-    .v2s-cast:not([data-prio]):not([data-in]) .v2s-cast-body {
-      transform: translateY(-12px);
-    }
+  .v2s-cast[data-prio] .v2s-cast-shadow {
+    animation: v2s-cast-ground-lite 0.7s cubic-bezier(0.3, 0.7, 0.2, 1) 0.1s both;
   }
-  .v2s-cast:not([data-prio]):not([data-in]) .v2s-cast-shadow {
-    opacity: 0;
-    transform: scale(0.45);
+  .v2s-cast[data-alt="1"]:is([data-act="read"], [data-act="glance"]) .v2s-cast-alt {
+    transition: opacity 0.28s ease 0.1s;
+  }
+  .v2s-cast[data-alt="1"]:is([data-act="read"], [data-act="glance"]) .v2s-cast-base {
+    transition: opacity 0.14s linear 0.38s;
+  }
+  .v2s-cast[data-act="read"] .v2s-cast-act {
+    animation: none;
+  }
+  .v2s-cast[data-act="meet"] .v2s-cast-part--a {
+    animation-duration: 1.5s;
+    animation-name: v2s-cast-meet-lite-a;
+  }
+  .v2s-cast[data-act="meet"] .v2s-cast-part--b {
+    animation-duration: 1.4s;
+    animation-name: v2s-cast-meet-lite-b;
   }
 }
 
-/* ---- pointer lean: a fine pointer only. The figure turns toward it about its feet, its shadow shifts under it ---- */
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .v2s-cast-lean {
-    transform: rotate(calc(var(--lx, 0) * 1.1deg)) translateX(calc(var(--lx, 0) * 2px));
-    transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .v2s-cast-shadow {
-    translate: calc(var(--lx, 0) * 4px) 50%;
-    transition: translate 1.1s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-}
-
-@keyframes v2s-cast-land {
-  0% {
-    opacity: 0;
-    transform: translateY(-26px);
-    animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.45);
-  }
-  22% {
-    opacity: 1;
-  }
-  55% {
-    transform: translateY(0) scale(1.014, 0.982);
-    animation-timing-function: cubic-bezier(0.2, 0.6, 0.35, 1);
-  }
-  76% {
-    transform: translateY(-1.5px) scale(0.996, 1.005);
-    animation-timing-function: ease-in-out;
-  }
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-}
 @keyframes v2s-cast-settle {
   0% {
     transform: translateY(-18px);
@@ -208,12 +182,22 @@
     transform: none;
   }
 }
-@keyframes v2s-cast-breathe {
+@keyframes v2s-cast-settle-lite {
   from {
-    transform: none;
+    transform: translateY(-10px);
   }
   to {
-    transform: scale(1.003, 1.007);
+    transform: none;
+  }
+}
+@keyframes v2s-cast-ground-lite {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 @keyframes v2s-cast-flash {
@@ -263,74 +247,6 @@
   32%,
   66% {
     transform: rotate(-1.4deg) translateX(-2px);
-  }
-}
-
-/* ---- phones and touch: the same story, lighter. No idle loop, a shorter drop without the squash,
-   quicker swaps and a smaller lean-in. Pointer lean is already off (it needs a fine pointer). ---- */
-@media (prefers-reduced-motion: no-preference) and (hover: none), (prefers-reduced-motion: no-preference) and (max-width: 860px) {
-  .v2s-cast[data-vis="1"] .v2s-cast-idle[data-idle] {
-    animation: none;
-  }
-  .v2s-cast[data-prio] .v2s-cast-body,
-  .v2s-cast[data-in] .v2s-cast-body {
-    animation: v2s-cast-land-lite 0.7s cubic-bezier(0.3, 0.7, 0.2, 1) both;
-  }
-  .v2s-cast[data-prio] .v2s-cast-shadow,
-  .v2s-cast[data-in] .v2s-cast-shadow {
-    animation: v2s-cast-ground-lite 0.7s cubic-bezier(0.3, 0.7, 0.2, 1) both;
-  }
-  .v2s-cast[data-prio] .v2s-cast-body {
-    animation-name: v2s-cast-settle-lite;
-  }
-  .v2s-cast[data-prio] .v2s-cast-body,
-  .v2s-cast[data-prio] .v2s-cast-shadow {
-    animation-delay: 0.1s;
-  }
-  .v2s-cast[data-alt="1"]:is([data-act="read"], [data-act="glance"]) .v2s-cast-alt {
-    transition: opacity 0.28s ease 0.1s;
-  }
-  .v2s-cast[data-alt="1"]:is([data-act="read"], [data-act="glance"]) .v2s-cast-base {
-    transition: opacity 0.14s linear 0.38s;
-  }
-  .v2s-cast[data-act="read"] .v2s-cast-act {
-    animation: none;
-  }
-  .v2s-cast[data-act="meet"] .v2s-cast-part--a {
-    animation-duration: 1.5s;
-    animation-name: v2s-cast-meet-lite-a;
-  }
-  .v2s-cast[data-act="meet"] .v2s-cast-part--b {
-    animation-duration: 1.4s;
-    animation-name: v2s-cast-meet-lite-b;
-  }
-}
-@keyframes v2s-cast-land-lite {
-  from {
-    opacity: 0;
-    transform: translateY(-12px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes v2s-cast-settle-lite {
-  from {
-    transform: translateY(-10px);
-  }
-  to {
-    transform: none;
-  }
-}
-@keyframes v2s-cast-ground-lite {
-  from {
-    opacity: 0;
-    transform: scale(0.6);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 @keyframes v2s-cast-meet-lite-a {
