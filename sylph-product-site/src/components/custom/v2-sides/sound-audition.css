@@ -1,0 +1,205 @@
+/* /v2/sounds, the sound audition (stage track). Two sides tokens; plain rows between ink rules. */
+.v2a-head {
+  padding: clamp(32px, 5vw, 64px) 0 20px;
+}
+.v2a-head .v2s-lede {
+  margin-top: 14px;
+}
+.v2a {
+  padding-bottom: 80px;
+}
+.v2a kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  border: 1px solid var(--hair-2);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--ink-2);
+}
+.v2a-bar {
+  position: sticky;
+  top: 65px;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 24px;
+  padding: 12px 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--ink);
+}
+.v2a-keys {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.v2a-bar-acts {
+  display: flex;
+  gap: 10px;
+}
+.v2a-export {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+.v2a-export textarea {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 14px;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--band);
+  border: 1.5px solid var(--hair-2);
+  border-radius: 12px;
+  resize: vertical;
+}
+.v2a-slot {
+  padding: 22px 0 24px;
+  border-bottom: 1px solid var(--hair-2);
+  scroll-margin-top: 140px;
+}
+.v2a-slot.is-active {
+  box-shadow: inset 3px 0 0 var(--ink);
+  padding-left: 14px;
+}
+.v2a-slot-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 16px;
+  margin-bottom: 14px;
+}
+.v2a-slot-t {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.v2a-active {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.v2a-slot-where {
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+.v2a-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.v2a-cand {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 12px;
+  row-gap: 8px;
+  align-items: center;
+  padding: 10px 12px 10px 10px;
+  border: 1.5px solid var(--hair-2);
+  border-radius: 14px;
+  background: var(--bg);
+  transition: border-color 0.2s var(--ease);
+}
+.v2a-cand.is-on {
+  border-color: var(--ink);
+  background: var(--band);
+}
+.v2a-play {
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  width: 56px;
+  height: 64px;
+  padding: 6px 0;
+  font: inherit;
+  color: var(--bone);
+  background: var(--ink);
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s var(--ease), background-color 0.2s var(--ease);
+}
+.v2a-play kbd {
+  background: transparent;
+  color: var(--bone);
+  border-color: rgba(244, 247, 245, 0.35);
+}
+.v2a-play:active,
+.v2a-cand.is-playing .v2a-play {
+  transform: scale(0.94);
+}
+@media (hover: hover) {
+  .v2a-play:hover {
+    background: #26332c;
+  }
+}
+.v2a-txt {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.v2a-txt strong {
+  font-size: 14.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.v2a-txt .mono {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.v2a-use {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.v2a-use input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--ink);
+}
+.v2a-foot {
+  margin-top: 28px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+}
+.v2a-foot a {
+  color: var(--ink);
+  text-decoration: underline;
+}
+@media (max-width: 640px) {
+  .v2a-keys {
+    display: none;
+  }
+  .v2a-bar {
+    top: 65px;
+  }
+  .v2a-bar-acts {
+    width: 100%;
+  }
+  .v2a-bar-acts .v2s-btn {
+    flex: 1;
+  }
+  .v2a-slot.is-active {
+    padding-left: 10px;
+  }
+}

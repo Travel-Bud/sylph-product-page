@@ -1,0 +1,1604 @@
+/* ============================================================
+   Two sides, round 3: the chapters track (chapters, questions, close).
+   Each chapter is one composed screen: the person on their own edge,
+   the copy beside them, one panel that answers the visitor. White Air
+   rules hold: hard edges, no washes, no blur, no gradients; green only
+   for cleared; person colours only as small solid accents.
+   Scoped under .v2s; the .v2c prefix is this track's.
+   ============================================================ */
+
+.v2s .obj {
+  position: relative;
+  display: block;
+  flex: none;
+  pointer-events: none;
+}
+.v2c-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- the composed screen ---------- */
+.v2s .v2c {
+  --fh: min(440px, calc(100svh - 300px));
+  padding: clamp(40px, 6svh, 64px) 0;
+}
+/* Dana's chapters sit on the band, Priya's on white: the page alternates sides */
+.v2s .v2c--dana {
+  background: var(--band);
+}
+.v2c-grid {
+  display: grid;
+  grid-template-columns: auto minmax(0, 0.82fr) minmax(0, 1.25fr);
+  grid-template-areas: "fig copy panel";
+  align-items: center;
+  gap: 24px clamp(24px, 3vw, 44px);
+}
+.v2c--dana .v2c-grid {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.82fr) auto;
+  grid-template-areas: "panel copy fig";
+}
+.v2c--stack .v2c-grid {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.85fr);
+  grid-template-areas:
+    "panel copy"
+    "panel fig";
+  align-items: start;
+}
+.v2c--meet .v2c-grid {
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.1fr);
+  grid-template-areas:
+    "copy panel"
+    "fig panel";
+  align-items: start;
+}
+.v2c-fig {
+  grid-area: fig;
+  align-self: end;
+  height: var(--fh);
+}
+.v2c-fig .v2s-fig {
+  height: 100%;
+  width: auto;
+}
+.v2c--stack .v2c-fig {
+  height: min(280px, calc(100svh - 560px));
+  min-height: 200px;
+  justify-self: end;
+}
+.v2c--meet .v2c-fig {
+  height: min(300px, calc(100svh - 520px));
+  min-height: 200px;
+  justify-self: start;
+}
+.v2c-copy {
+  grid-area: copy;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  min-width: 0;
+}
+.v2c-h2 {
+  font-size: clamp(30px, 2.8vw, 42px);
+  line-height: 1.05;
+  letter-spacing: -0.028em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+.v2c-lede {
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 46ch;
+  text-wrap: pretty;
+}
+.v2c-lede p + p {
+  margin-top: 10px;
+}
+.v2c-panel {
+  grid-area: panel;
+  min-width: 0;
+}
+
+/* the courier landed here: one settling pulse (transform only) */
+@media (prefers-reduced-motion: no-preference) {
+  .v2s .v2s-token-pill.is-arrived {
+    animation: v2c-arrive 0.9s var(--ease);
+  }
+}
+@keyframes v2c-arrive {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ---------- the card every chapter panel sits in ---------- */
+.v2c-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 18px 18px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--hair-2);
+  border-radius: 14px;
+}
+.v2c-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+.v2c-card-k {
+  font-size: 15.5px;
+  font-weight: 600;
+}
+.v2c-card-tags {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.v2c-k {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+.v2c-foot {
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+.v2c-foot .mono {
+  color: var(--ink);
+}
+.v2c button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.v2c button:focus-visible {
+  outline: 2px solid var(--green-700);
+  outline-offset: 2px;
+}
+
+/* ---------- 1. receipts ---------- */
+.v2c-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.v2c-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 4px 10px;
+  border: 1px solid var(--hair-2);
+  border-radius: 10px;
+  background: var(--bg);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-2);
+  transition: border-color 0.2s, color 0.2s;
+}
+.v2c-tab:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+.v2c-tab[aria-selected="true"] {
+  border: 1.5px solid var(--ink);
+  color: var(--ink);
+}
+.v2c-match {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px minmax(0, 1fr);
+  align-items: end;
+  gap: 10px;
+}
+.v2c-match-side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.v2c-src,
+.v2c-charge {
+  min-height: 150px;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.v2c-src {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--hair-2);
+  font-size: 13.5px;
+}
+.v2c-src--text {
+  align-items: flex-end;
+}
+.v2c-src-bubble {
+  padding: 6px;
+  border-radius: 14px 14px 4px 14px;
+  background: var(--coat);
+}
+.v2c-mini-rcpt {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100px;
+  padding: 8px 9px;
+  border-radius: 8px;
+  background: var(--bg);
+  font-family: var(--mono);
+  font-size: 8.5px;
+}
+.v2c-mini-rcpt b {
+  font-weight: 600;
+}
+.v2c-mini-rcpt i {
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--hair-2);
+}
+.v2c-src-meta {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.v2c-mail-row {
+  line-height: 1.35;
+}
+.v2c-mail-row.mono {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.v2c-mail-att {
+  align-self: flex-start;
+  padding: 5px 8px;
+  border: 1px solid var(--hair-2);
+  border-radius: 6px;
+  font-size: 11px;
+}
+.v2c-src--upload {
+  align-items: center;
+}
+.v2c-drop {
+  width: 100%;
+  padding: 22px 10px;
+  border: 1.5px dashed var(--ink-3);
+  border-radius: 10px;
+  text-align: center;
+  font-size: 12px;
+}
+.v2c-match-line {
+  position: relative;
+  align-self: center;
+  height: 2px;
+  margin-top: 28px;
+  background: var(--ink);
+  transform-origin: left center;
+}
+.v2c-match-line::after {
+  content: "";
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--ink);
+  border-right: 2px solid var(--ink);
+  transform: rotate(45deg);
+}
+.v2c-charge {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: center;
+  gap: 2px 10px;
+  border: 1.5px solid var(--ink);
+}
+.v2c-charge-m {
+  font-size: 15px;
+  font-weight: 600;
+}
+.v2c-charge-a {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: 17px;
+}
+.v2c-charge-d {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.v2c-matched {
+  grid-column: 1 / -1;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--green-100);
+  color: var(--green-700);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+/* the chosen path finds its charge, once per choice and once on entry */
+@media (prefers-reduced-motion: no-preference) {
+  .v2c-match .v2c-src {
+    animation: v2c-in-l 0.5s var(--ease) both;
+  }
+  .v2c-match-line {
+    animation: v2c-draw 0.45s var(--ease) 0.3s both;
+  }
+  .v2c-match .v2c-charge {
+    animation: v2c-in 0.45s var(--ease) 0.5s both;
+  }
+  .v2c-matched {
+    animation: v2c-pop 0.4s var(--ease) 0.85s both;
+  }
+}
+@keyframes v2c-in-l {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+}
+@keyframes v2c-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes v2c-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes v2c-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+/* the two chapters whose panels carry the most get more of the row */
+#policy .v2c-grid {
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.75fr) auto;
+}
+#verdicts .v2c-grid {
+  grid-template-columns: auto minmax(0, 0.72fr) minmax(0, 1.5fr);
+}
+
+/* ---------- 2. policy: the compile ---------- */
+/* the pin: the section is a scroll track, the chapter screen sticks inside it while the compile runs */
+.v2s .v2c--pin {
+  height: calc(100svh + 80svh);
+  padding: 0;
+}
+.v2c-pin {
+  position: sticky;
+  top: 64px;
+  display: flex;
+  align-items: center;
+  height: calc(100svh - 64px);
+}
+.v2c-pin > .v2s-wrap {
+  width: 100%;
+}
+@media (max-width: 960px), (max-height: 699px) {
+  .v2s .v2c--pin {
+    height: auto;
+    padding: clamp(40px, 6svh, 64px) 0;
+  }
+  .v2c-pin {
+    position: static;
+    display: block;
+    height: auto;
+  }
+}
+
+.v2c-cstage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.v2c-cstatus {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 24px;
+}
+.v2c-cstatus-t {
+  flex: none;
+  min-width: 13.5em;
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+.v2c-cbar {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--hair-2);
+  overflow: hidden;
+}
+.v2c-cbar i {
+  display: block;
+  height: 100%;
+  background: var(--sweater-ink);
+  transform-origin: left center;
+}
+.v2c-crun {
+  display: none;
+}
+.v2c-cstage.is-timed .v2c-crun {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--hair-2);
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 600;
+}
+.v2c-cgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 12px;
+}
+.v2c-paper {
+  padding: 12px 14px;
+  border: 1px solid var(--hair-2);
+  border-radius: 10px;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-2);
+}
+.v2c-cl {
+  padding: 3px 1px;
+  border-radius: 3px;
+  cursor: pointer;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-color 0.2s, color 0.2s;
+}
+.v2c-tk {
+  color: var(--ink);
+  font-weight: 600;
+  border-bottom: 1.5px dotted var(--sweater-ink);
+  transition: opacity 0.18s;
+}
+.v2c-tk.is-out {
+  opacity: 0.2;
+}
+.v2c-cl:focus-visible {
+  outline: 2px solid var(--green-700);
+  outline-offset: 1px;
+}
+.v2c-cl-tag {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 5px;
+  border: 1px solid var(--sweater);
+  border-radius: 4px;
+  font-size: 9.5px;
+  line-height: 1.6;
+  vertical-align: 2px;
+  color: var(--sweater-ink);
+  transition: opacity 0.2s;
+}
+.v2c-cgut {
+  display: flex;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  padding-right: 5px;
+  border-right: 1px solid var(--ink);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--sweater-ink);
+}
+.v2c-rcs {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.v2c-rc {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-height: 44px;
+  padding: 7px 10px 8px;
+  border: 1px solid var(--hair-2);
+  border-radius: 8px;
+  background: var(--bg);
+  text-align: left;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.v2c-rc-h {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+.v2c-rc-id {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sweater-ink);
+  transition: opacity 0.2s;
+}
+.v2c-kind {
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  transition: opacity 0.12s, transform 0.28s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.v2c-kind--warn {
+  background: var(--amber-bg);
+  color: var(--amber-ink);
+}
+.v2c-kind--block {
+  background: var(--ox-bg);
+  color: var(--ox-ink);
+}
+.v2c-rf {
+  display: grid;
+  grid-template-columns: 3.6em minmax(0, 1fr);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+.v2c-rf-k {
+  color: var(--ink-3);
+}
+.v2c-rf-v {
+  justify-self: start;
+  color: var(--ink);
+  transition: opacity 0.12s, transform 0.22s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+/* the machinery, only while the compile is live (script ran, motion allowed) */
+.v2c-cstage.is-live .v2c-cl.is-waiting {
+  color: var(--ink-3);
+}
+.v2c-cstage.is-live .v2c-cl.is-waiting .v2c-cl-tag,
+.v2c-cstage.is-live .v2c-cl.is-reading .v2c-cl-tag {
+  opacity: 0;
+}
+.v2c-cstage.is-live .v2c-cl.is-reading {
+  background: var(--sweater);
+  color: var(--ink);
+}
+.v2c-cstage.is-live .v2c-rc.is-empty {
+  border-style: dashed;
+}
+.v2c-cstage.is-live .v2c-rc.is-empty .v2c-rc-id {
+  opacity: 0.4;
+}
+.v2c-cstage.is-live .v2c-rc.is-building {
+  border: 1px dashed var(--sweater-ink);
+}
+.v2c-cstage.is-live .v2c-rc:not(.is-locked) .v2c-kind {
+  opacity: 0;
+  transform: scale(1.7) rotate(-6deg);
+}
+/* while live, the script drives fields and chips frame by frame: no transitions fighting it */
+.v2c-cstage.is-live .v2c-rf-v,
+.v2c-cstage.is-live .v2c-kind {
+  transition: none;
+}
+.v2c-cstage.is-live .v2c-rf-v:not(.is-in) {
+  opacity: 0;
+  transform: scale(0.8);
+}
+.v2c-cstage.is-live .v2c-rc.is-locked {
+  animation: v2c-clunk 0.32s var(--ease);
+}
+@keyframes v2c-clunk {
+  0% {
+    transform: translateY(-3px);
+  }
+  60% {
+    transform: translateY(1px);
+  }
+  100% {
+    transform: none;
+  }
+}
+.v2c-fly-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: visible;
+}
+.v2c-flyt {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: -2px 0 0 -6px;
+  padding: 1px 6px;
+  border: 1.5px solid var(--sweater-ink);
+  border-radius: 6px;
+  background: var(--bg);
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: nowrap;
+  color: var(--ink);
+  will-change: transform, opacity;
+}
+
+/* tap, hover or focus a sentence or a rule: the pair lights together */
+.v2c-cstage[data-lit="0"] .v2c-cl[data-r="0"],
+.v2c-cstage[data-lit="1"] .v2c-cl[data-r="1"],
+.v2c-cstage[data-lit="2"] .v2c-cl[data-r="2"],
+.v2c-cstage[data-lit="3"] .v2c-cl[data-r="3"] {
+  background: var(--sweater);
+  color: var(--ink);
+}
+.v2c-cstage[data-lit="0"] .v2c-rc[data-r="0"],
+.v2c-cstage[data-lit="1"] .v2c-rc[data-r="1"],
+.v2c-cstage[data-lit="2"] .v2c-rc[data-r="2"],
+.v2c-cstage[data-lit="3"] .v2c-rc[data-r="3"] {
+  border-color: var(--sweater-ink);
+  box-shadow: inset 0 0 0 1px var(--sweater-ink);
+}
+
+.v2c-approve-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 56px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hair);
+  transition: opacity 0.3s;
+}
+.v2c-cstage.is-live:not(.is-compiled) .v2c-approve-row {
+  opacity: 0;
+  visibility: hidden;
+}
+.v2c-approve-q {
+  flex: 1;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.v2c-approve-b {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--bone) !important;
+  font-size: 14px;
+  font-weight: 600;
+}
+.v2c-approve-b:hover {
+  background: #26332c;
+}
+.v2c-stamp {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid var(--sweater-ink);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sweater-ink);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v2c-stamp {
+    animation: v2c-stampin 0.36s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+}
+@keyframes v2c-stampin {
+  from {
+    opacity: 0;
+    transform: scale(1.35) rotate(-3deg);
+  }
+}
+
+/* ---------- 3. verdicts ---------- */
+.v2c-pick {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+  gap: 14px;
+  align-items: start;
+}
+.v2c-pick-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.v2c-pick-b {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  align-items: center;
+  min-height: 44px;
+  padding: 9px 12px 10px;
+  border: 1px solid var(--hair-2);
+  border-radius: 14px 14px 14px 4px;
+  background: var(--bg);
+  text-align: left;
+  transition: border-color 0.2s;
+}
+.v2c-pick-b:hover {
+  border-color: var(--ink-3);
+}
+.v2c-pick-b[aria-selected="true"] {
+  border: 1.5px solid var(--ink);
+}
+.v2c-pick-when {
+  grid-column: 1 / -1;
+  font-size: 10.5px;
+  color: var(--ink-3);
+}
+.v2c-pick-m {
+  font-size: 14px;
+  font-weight: 600;
+}
+.v2c-pick-a {
+  font-size: 12.5px;
+}
+.v2c-pick-b .v2s-chip {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 4px;
+}
+.v2c-pick-detail {
+  min-width: 0;
+  padding: 2px 14px 12px;
+  border: 1px solid var(--hair-2);
+  border-radius: 12px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v2c-pick-detail > * {
+    animation: v2c-in 0.35s var(--ease) both;
+  }
+}
+.v2c .v2s-site .vc-ticks {
+  font-size: 10px;
+}
+.v2c-detail-plain,
+.v2c-detail-flight {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 14px;
+}
+.v2c-detail-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 15px;
+}
+.v2c-detail-top strong {
+  flex: 1 1 auto;
+  font-weight: 600;
+}
+.v2c-dl div {
+  padding: 9px 0;
+  border-top: 1px solid var(--hair);
+}
+.v2c-dl dt {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.v2c-dl dd {
+  font-size: 14px;
+}
+.v2c-dl dd.mono {
+  font-size: 12.5px;
+}
+/* the reused fares list, fitted to the detail column: carrier and price on a line, route and verdict under */
+.v2c-detail-flight .fare {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "main price"
+    "verdict verdict";
+  gap: 4px 12px;
+  padding: 10px 4px;
+}
+.v2c-detail-flight .fare-main {
+  grid-area: main;
+}
+.v2c-detail-flight .fare-price {
+  grid-area: price;
+}
+.v2c-detail-flight .fare .verdict {
+  grid-area: verdict;
+}
+.v2c-detail-flight .fare-route {
+  font-size: 10.5px;
+}
+.v2c-detail-p {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.v2c-next {
+  font-size: 13.5px;
+  color: var(--ink-3);
+}
+.v2c-next-tag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 2px 8px;
+  border: 1px dashed var(--ink-3);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* ---------- 4. desk ---------- */
+.v2c-strip {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 6px;
+}
+.v2c-cell {
+  display: grid;
+  place-items: center;
+  height: 30px;
+  border: 1px solid var(--hair-2);
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--ink-2);
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+.v2c-cell svg {
+  width: 12px;
+  height: 12px;
+}
+.v2c-cell--ok {
+  border-color: transparent;
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.v2c-cell--note {
+  border: 1.5px solid var(--amber);
+}
+.v2c-cell--block {
+  border: 1.5px solid var(--ox);
+}
+.v2c-cell--approved {
+  border: 1.5px solid var(--amber);
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.v2c-cell--returned {
+  border: 1.5px dashed var(--ink-3);
+}
+.v2c-strip-cap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.v2c-strip-cap b {
+  font-weight: 500;
+  color: var(--ink);
+}
+.v2c-queue {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.v2c-q {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px 9px 12px;
+  border: 1px solid var(--hair-2);
+  border-radius: 12px;
+  transition: opacity 0.26s ease, transform 0.26s var(--ease);
+}
+.v2c-q.is-ours {
+  border: 1.5px solid var(--amber);
+}
+.v2c-q.is-leaving--approved {
+  opacity: 0;
+  transform: translateX(28px);
+}
+.v2c-q.is-leaving--returned {
+  opacity: 0;
+  transform: translateX(-28px);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v2c-q.is-flash {
+    animation: v2c-arrive 1s var(--ease);
+  }
+}
+.v2c-q-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.v2c-q-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  font-size: 14px;
+}
+.v2c-q-top strong {
+  font-weight: 600;
+}
+.v2c-q-top .mono {
+  font-size: 12.5px;
+}
+.v2c-q-cite {
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.v2c-q-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.v2c-q-acts {
+  display: flex;
+  gap: 6px;
+}
+.v2c-q-b {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--hair-2);
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.v2c-q-b:hover {
+  border-color: var(--ink);
+}
+.v2c-q-approve {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bone) !important;
+}
+.v2c-q-approve:hover {
+  background: #26332c;
+}
+.v2c-q-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px;
+  border: 1px dashed var(--hair-2);
+  border-radius: 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+/* round 5: the charge waits in the queue as itself, and Dana's answer shows in its row */
+.v2c-q.is-approved {
+  border-color: var(--green);
+}
+.v2c-q.is-returned {
+  border-color: var(--hair-2);
+}
+.v2c-q-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.v2c-q-status--approved {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.v2c-q-status--returned {
+  background: var(--band);
+  color: var(--ink-2);
+}
+
+/* ---------- 5. month end ---------- */
+.v2c--meet .v2c-h2 {
+  color: var(--bone);
+  font-size: clamp(32px, 3.2vw, 48px);
+}
+.v2c--meet .v2c-lede,
+.v2c--meet .v2s-token-line,
+.v2c--meet .v2s-token-step {
+  color: var(--bone-2);
+}
+.v2c-air {
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--bone);
+}
+.v2c-rt {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+.v2c-rt th {
+  padding: 0 8px 8px;
+  border-bottom: 1px solid var(--ink);
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.v2c-rt td {
+  height: 40px;
+  padding: 0 8px;
+  border-top: 1px solid var(--hair);
+}
+.v2c-rt tbody tr {
+  transition: background-color 0.15s;
+}
+.v2c-rt tbody tr.is-on {
+  background: var(--band);
+}
+.v2c-rt tbody tr.is-on td:first-child {
+  box-shadow: inset 3px 0 0 var(--ink);
+}
+.v2c-rt td.mono {
+  font-size: 12.5px;
+}
+.v2c-num {
+  text-align: right !important;
+}
+.v2c-rt-b {
+  width: 100%;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+/* courier stop 5: the charge's own line on the report, a compact cleared pill */
+.v2c-rt .v2s-token-pill {
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-color: var(--green);
+}
+.v2c-rt .v2s-token-pill .mono {
+  font-size: 11px;
+}
+.v2c-rt tfoot td {
+  border-top: 1.5px solid var(--ink);
+  font-weight: 600;
+}
+.v2c-closed {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.v2c-cite-line {
+  min-height: 44px;
+  padding: 11px 12px;
+  border: 1px solid var(--ink);
+  border-radius: 10px;
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+.v2c-cite-line .mono {
+  margin-right: 6px;
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+.v2c-exports {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.v2c-exp {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--hair-2);
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 13px;
+  font-weight: 600;
+  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+}
+.v2c-exp:hover {
+  border-color: var(--ink);
+}
+.v2c-exp[aria-pressed="true"] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--bone);
+}
+.v2c-exp-say {
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+
+/* touch: every control reaches 44px */
+@media (pointer: coarse) {
+.v2c-q-b,
+.v2c-exp,
+.v2c-rt-b {
+    min-height: 44px;
+  }
+}
+
+/* ---------- questions and close, compact ---------- */
+.v2s .v2s-q {
+  padding: clamp(56px, 8svh, 88px) 0;
+}
+.v2s .v2s-qa summary {
+  padding: 15px 2px;
+  font-size: 17px;
+}
+.v2s .v2s-trust {
+  margin-top: 20px;
+}
+.v2s .v2s-close {
+  padding: clamp(56px, 8svh, 88px) 0;
+  text-align: left;
+}
+.v2s .v2s-close-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 32px clamp(32px, 5vw, 72px);
+}
+.v2s-close-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+.v2s .v2s-close-copy .v2s-h2 {
+  font-size: clamp(34px, 3.6vw, 52px);
+}
+.v2s .v2s-close-copy .v2s-lede {
+  margin: 0;
+}
+.v2s .v2s-close-copy .v2s-close-cta {
+  justify-content: flex-start;
+  margin-top: 0;
+}
+.v2s .v2s-close-in .v2s-price {
+  width: 100%;
+  margin: 0;
+}
+.v2s .v2s-close-in .v2s-price caption {
+  text-align: left;
+}
+
+/* ---------- stacking ---------- */
+
+@media (max-width: 960px) {
+  #policy .v2c-grid,
+  #verdicts .v2c-grid,
+  .v2c-grid,
+  .v2c--dana .v2c-grid,
+  .v2c--stack .v2c-grid,
+  .v2c--meet .v2c-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "fig"
+      "copy"
+      "panel";
+    align-items: start;
+  }
+  .v2c-fig,
+  .v2c--stack .v2c-fig,
+  .v2c--meet .v2c-fig {
+    height: 220px;
+    min-height: 0;
+    justify-self: start;
+  }
+  .v2c--dana .v2c-fig {
+    justify-self: end;
+  }
+  .v2s .v2s-close-in {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .v2c-card {
+    padding: 14px 14px 16px;
+  }
+  .v2c-match {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v2c-match-line {
+    width: 2px;
+    height: 24px;
+    margin: 0 auto;
+    transform-origin: top center;
+  }
+  .v2c-match-line::after {
+    right: -4px;
+    top: auto;
+    bottom: -1px;
+    transform: rotate(135deg);
+  }
+  .v2c-src,
+  .v2c-charge {
+    min-height: 0;
+  }
+  .v2c-pick {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .v2c-pick-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .v2c-strip {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .v2c-cell {
+    height: 24px;
+  }
+  .v2c-q {
+    grid-template-columns: minmax(0, 1fr);
+  }
+.v2c-q-b,
+.v2c-exp {
+    min-height: 44px;
+  }
+  .v2c-tabs {
+    gap: 6px;
+  }
+  .v2c-tab {
+    flex-direction: column;
+    gap: 2px;
+    min-height: 60px;
+    padding: 6px 4px;
+    font-size: 13.5px;
+  }
+  .v2c-tab .obj {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+}
+
+/* ---------- phones (round 4): the point on the first screen, thumbs, 14px body copy ---------- */
+.v2s-price-m {
+  display: none;
+}
+@media (max-width: 640px) {
+  .v2s .v2c {
+    padding: 36px 0 44px;
+  }
+  .v2c-grid,
+  .v2c--dana .v2c-grid,
+  .v2c--stack .v2c-grid,
+  .v2c--meet .v2c-grid,
+  #policy .v2c-grid,
+  #verdicts .v2c-grid {
+    gap: 16px;
+  }
+  .v2c-fig,
+  .v2c--stack .v2c-fig,
+  .v2c--meet .v2c-fig {
+    height: 150px;
+    min-height: 0;
+  }
+  .v2c-copy {
+    gap: 12px;
+  }
+  .v2c-h2 {
+    font-size: 30px;
+  }
+  .v2c-lede {
+    font-size: 16px;
+  }
+  .v2c-foot,
+  .v2c-detail-p,
+  .v2c-exp-say,
+  .v2c-cite-line,
+  .v2c-strip-cap,
+  .v2c-approve-q,
+  .v2c-q-note,
+  .v2c-next,
+  .v2c-dl dd {
+    font-size: 14px;
+  }
+  .v2c-q-cite {
+    font-size: 12px;
+  }
+  .v2c-card-k {
+    font-size: 16px;
+  }
+  /* policy compile, stacked: the paper, the compiler line, then the rules two by two */
+  .v2c-cgrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+  .v2c-cgut {
+    writing-mode: horizontal-tb;
+    transform: none;
+    padding: 6px 0 0;
+    border-right: 0;
+    border-top: 1px solid var(--ink);
+  }
+  .v2c-paper {
+    font-size: 15px;
+  }
+  .v2c-rcs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .v2c-rf {
+    grid-template-columns: minmax(0, 1fr);
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+  .v2c-rf-k {
+    font-size: 11px;
+  }
+  .v2c-cstatus {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  /* "Compile again" holds its place before it is offered, so the row never re-flows when it appears */
+  .v2c-cstage:not(.is-timed) .v2c-crun {
+    display: inline-flex;
+    flex: none;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid transparent;
+    visibility: hidden;
+  }
+  .v2c-cstatus-t {
+    min-width: 0;
+    /* one line always: its text changes as the compile runs, and a wrap flip moved the row below */
+    flex: 1 1 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .v2c-cbar {
+    order: 3;
+    flex: 1 0 100%;
+  }
+  /* the report: merchant, amount, verdict; the line number steps aside */
+  .v2c-rt th:first-child,
+  .v2c-rt td:first-child {
+    display: none;
+  }
+  .v2c-rt td {
+    height: 44px;
+    padding: 0 6px;
+  }
+  .v2c-rt-b {
+    min-height: 44px;
+  }
+  .v2c-rt .v2s-chip {
+    font-size: 11px;
+    padding: 2px 7px;
+  }
+  .v2c-exports {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .v2c-pick-b {
+    min-height: 88px;
+  }
+  /* questions and close */
+  .v2s .v2s-qa summary {
+    min-height: 56px;
+    font-size: 16.5px;
+  }
+  .v2s .v2s-qa p {
+    font-size: 15px;
+  }
+  .v2s .v2s-close-copy .v2s-h2 {
+    font-size: 32px;
+  }
+  .v2s .v2s-close-in .v2s-price {
+    display: none;
+  }
+  .v2s-price-m {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .v2s-price-m-cap {
+    font-size: 14px;
+    color: var(--ink-3);
+  }
+  .v2s-price-m-plan {
+    padding: 14px 16px;
+    border: 1px solid var(--hair-2);
+    border-radius: 12px;
+    background: var(--bg);
+  }
+  .v2s-price-m-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  .v2s-price-m-name span {
+    font-size: 14px;
+    color: var(--ink-3);
+  }
+  .v2s-price-m-plan dl {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .v2s-price-m-plan dl > div {
+    padding-top: 8px;
+    border-top: 1px solid var(--hair-2);
+  }
+  .v2s-price-m-plan .is-both {
+    border-top: 1.5px solid var(--ink);
+  }
+  .v2s-price-m-plan dt {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+  .v2s-price-m-plan dd {
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+
+/* ---------- the seams between scenes (round 6, courier track) ----------
+   Designed space, not padding: a frame of ink hairlines (top, bottom, and the dividing line down the
+   middle) that the charge crosses on its way to the next scene. White ground, so every scene's own
+   ground (white, band, deep green) meets a clear edge. */
+.v2c-seam {
+  height: clamp(250px, 40svh, 400px);
+  background: var(--bg);
+}
+.v2c-seam-in {
+  position: relative;
+  height: 100%;
+}
+.v2c-seam-in::before,
+.v2c-seam-in::after {
+  content: "";
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: var(--ink);
+}
+.v2c-seam-in::before {
+  top: 0;
+}
+.v2c-seam-in::after {
+  bottom: 0;
+}
+.v2c-seam-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--ink);
+}
+/* into month end the two sides meet: the dividing line stops at the card */
+.v2c-seam--dana-both .v2c-seam-line {
+  bottom: 50%;
+}
+.v2c-seam-tag {
+  position: absolute;
+}
+.v2c-seam-tag--top {
+  top: 18px;
+}
+.v2c-seam-tag--bottom {
+  bottom: 18px;
+}
+.v2c-seam-tag--priya {
+  left: var(--gutter);
+}
+.v2c-seam-tag--dana {
+  right: var(--gutter);
+}
+.v2c-seam-tag--both {
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  background: var(--bg);
+}
+.v2c-seam-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 18px;
+  border: 1px solid var(--ink);
+  border-radius: 14px;
+  background: var(--bg);
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+.v2c-seam-card b {
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+.v2c-seam-card span {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+@media (max-width: 760px) {
+  .v2c-seam {
+    height: clamp(170px, 26svh, 230px);
+  }
+  .v2c-seam-card {
+    padding: 9px 14px;
+  }
+  .v2c-seam-card b {
+    font-size: 22px;
+  }
+  .v2c-seam-card span {
+    font-size: 15px;
+  }
+  .v2c-seam-tag--top {
+    top: 12px;
+  }
+  .v2c-seam-tag--bottom {
+    bottom: 12px;
+  }
+}
+
+/* Dana's answer takes the place of her two buttons at the same height, so filing the charge never
+   shifts the page below (CLS) */
+@media (pointer: coarse), (max-width: 760px) {
+  .v2c-q-status {
+    min-height: 44px;
+  }
+}

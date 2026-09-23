@@ -1,13 +1,23 @@
 import type { Metadata } from "next";
-import "@/components/custom/site/site.css";
 import { siteFonts } from "@/components/custom/site/fonts";
-import { SiteNav, SiteFooter, SmoothScroll, Hero, Bento, Start, Next, Close, LoopGate } from "@/components/custom/site";
-import { ReceiptJourney } from "@/components/custom/site/receipt-journey";
-import { How } from "@/components/custom/site/how";
+/* site.css styles the reused bento panels; every rule in it is scoped to .site (plus two html
+   rules for Lenis, which this page mounts through SidesScroll), so it only reaches the .site wrappers inside tiles. */
+import "@/components/custom/site/site.css";
+import "@/components/custom/v2-sides/sides.css";
+import { SidesNav } from "@/components/custom/v2-sides/nav";
+import { SidesHero } from "@/components/custom/v2-sides/hero";
+import { Receipts, Policy, Verdicts, Desk, MonthEnd, Seam } from "@/components/custom/v2-sides/chapters";
+import { Questions, SidesClose, SidesFooter } from "@/components/custom/v2-sides/closing";
+import { Reveal } from "@/components/custom/v2-sides/reveal";
+import { SidesScroll } from "@/components/custom/v2-sides/scroll";
+import { Courier } from "@/components/custom/v2-sides/courier";
+import { YourMonth } from "@/components/custom/v2-sides/your-month";
 
-const TITLE = "Sylph: stop chasing receipts";
+/* The landing: "Two sides" (direction C of the 2026-09-22 V2 exploration, promoted to the root the same day;
+   docs/plans/2026-09-22-landing-v2-directions.md). The social card is app/opengraph-image.jpg. */
+const TITLE = "Sylph: one charge, two people, nothing to chase";
 const DESCRIPTION =
-  "Every card charge finds its receipt, gets checked against your rules and lands on the report, coded and ready for your accountant. No policy document needed to start. Works with the cards and banks you already use.";
+  "The person who spent it texts a receipt and gets an answer that names the rule. The person who closes the books sees only the exceptions. At month end the report is already there. Works on the cards and banks you already use.";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph-product.com";
 
@@ -44,23 +54,32 @@ const JSON_LD = {
 
 export default function LandingPage() {
   return (
-    <main className={`site ${siteFonts}`} id="main">
+    <main className={`v2s ${siteFonts}`} id="main">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
-      <a href="#hero" className="skip">
+      <a href="#top" className="v2s-skip">
         Skip to content
       </a>
-      <SmoothScroll>
-        <LoopGate />
-        <SiteNav watchNight />
-        <Hero />
-        <ReceiptJourney />
-        <Bento />
-        <Start />
-        <How />
-        <Next />
-        <Close />
-        <SiteFooter sampleNote />
-      </SmoothScroll>
+      <SidesScroll />
+      <Reveal />
+      <SidesNav />
+      <SidesHero />
+      {/* between scenes, a seam the charge crosses (round 6) */}
+      <Seam leg={0} />
+      <Receipts />
+      <Seam leg={1} />
+      <Policy />
+      <Seam leg={2} />
+      <Verdicts />
+      <Seam leg={3} />
+      <Desk />
+      <Seam leg={4} />
+      <MonthEnd />
+      <YourMonth />
+      <Questions />
+      <SidesClose />
+      <SidesFooter sampleNote />
+      {/* last: its effect runs after the chapters' and cast's listeners exist */}
+      <Courier />
     </main>
   );
 }

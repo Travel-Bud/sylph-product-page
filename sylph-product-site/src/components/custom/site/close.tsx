@@ -20,6 +20,10 @@ export function Close() {
               Pricing
             </Link>
           </div>
+          <p className="close-price">
+            $25 per active employee a month for Expense, $40 with Flights, for teams up to 100.{" "}
+            <Link href={PRICING}>See every plan</Link>
+          </p>
         </div>
       </div>
     </section>
