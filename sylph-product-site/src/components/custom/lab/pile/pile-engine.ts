@@ -153,7 +153,7 @@ export class PileEngine {
       this.phaseAt = undefined;
       this.end = Math.max(...intro.moves.map((m) => m[0].t + m[0].dur));
     } else {
-      const dur = instant || this.reduce ? 0 : 800;
+      const dur = instant || this.reduce ? 0 : 450;
       this.moves = sc.settle.box.map((b) => [{ t: 0, box: b, dur }]);
       this.looks = sc.settle.look.map((l) => [{ t: 0, look: l }]);
       this.guides = sc.guides.filter((g) => g.k !== "sweep" && g.phase !== "a").map((g) => ({ ...g, t: 0 }));
@@ -162,6 +162,7 @@ export class PileEngine {
       this.end = dur;
     }
     this.kick();
+    this.report(now);
   }
 
   kick() {
@@ -199,12 +200,12 @@ export class PileEngine {
     this.sample(now);
     this.draw(now);
     this.report(now);
-    if (now - this.t0 < this.end + 450 || now - this.oldT < 300) this.kick();
+    if (now - this.t0 < this.end + 300 || now - this.oldT < 300) this.kick();
   };
 
   private sample(now: number) {
     const el = now - this.t0;
-    const lookDur = this.reduce ? 0 : 320;
+    const lookDur = this.reduce ? 0 : 200;
     for (let i = 0; i < N; i++) {
       let b = this.from[i] ?? this.cur[i];
       for (const mv of this.moves[i] ?? []) {
@@ -230,7 +231,7 @@ export class PileEngine {
   }
 
   private guideAlpha(g: Guide, el: number) {
-    const fade = this.reduce ? 0 : 380;
+    const fade = this.reduce ? 0 : 240;
     let a = fade ? clamp((el - g.t) / fade) : el >= g.t ? 1 : 0;
     if (g.phase === "a" && this.phaseAt !== undefined) a *= fade ? 1 - clamp((el - this.phaseAt) / fade) : el >= this.phaseAt ? 0 : 1;
     return a;
@@ -272,7 +273,7 @@ export class PileEngine {
         if (g.k === "sweep" || !!g.over !== over) continue;
         const a = this.guideAlpha(g, el);
         if (a <= 0.01) continue;
-        const draw = "draw" in g && g.draw && !this.reduce ? easeInOut(clamp((el - g.t) / 650)) : 1;
+        const draw = "draw" in g && g.draw && !this.reduce ? easeInOut(clamp((el - g.t) / 400)) : 1;
         this.drawGuide(g, a, draw);
       }
     };

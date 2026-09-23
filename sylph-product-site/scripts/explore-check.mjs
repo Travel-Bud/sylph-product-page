@@ -2,7 +2,8 @@
 // Loads the page at 1440 (desktop), 390 (mobile, touch) and 1440 under reduced motion in real-time
 // headless Chrome, scrolls it top to bottom, and reports exceptions, console errors and warnings,
 // failed requests (4xx, 5xx, network) and the widest horizontal overflow seen at any scroll step.
-// Exit code 1 when anything is found. Same CDP approach as shot.mjs.
+// Exit code 1 when anything is found. Same CDP approach as shot.mjs. Vercel Web Analytics (root layout) is
+// ignored: its script only exists on Vercel deployments and the dev build's debug script is blocked headless.
 import { spawn } from "node:child_process";
 
 const url = process.argv[2];
@@ -51,6 +52,7 @@ const RUNS = [
   { name: "1440-reduced", w: 1440, h: 900, mobile: false, reduce: true },
 ];
 
+const IGNORED = /va\.vercel-scripts\.com|\/_vercel\/insights/;
 let bad = false;
 for (const run of RUNS) {
   events = [];
@@ -97,6 +99,17 @@ for (const run of RUNS) {
   if (px > worst.px) worst = { px, at: y };
   const height = await evalv(`document.documentElement.scrollHeight`);
 
+  const ignoredIds = new Set(
+    events.filter((e) => e.method === "Network.requestWillBeSent" && IGNORED.test(e.params.request.url)).map((e) => e.params.requestId),
+  );
+  const knownIds = new Set(events.filter((e) => e.method === "Network.requestWillBeSent").map((e) => e.params.requestId));
+  // An ORB-blocked script whose request start was not recorded is the analytics debug script (the pages load no
+  // other cross-origin script).
+  const orbUnknown = (e) =>
+    e.method === "Network.loadingFailed" && e.params.type === "Script" && /ORB/.test(e.params.errorText) && !knownIds.has(e.params.requestId);
+  events = events.filter(
+    (e) => !IGNORED.test(JSON.stringify(e.params ?? {})) && !ignoredIds.has(e.params?.requestId) && !orbUnknown(e),
+  );
   const exceptions = events
     .filter((e) => e.method === "Runtime.exceptionThrown")
     .map((e) => (e.params.exceptionDetails.exception?.description || e.params.exceptionDetails.text || "").slice(0, 240));

@@ -419,6 +419,9 @@
   .dp-intro {
     order: 1;
     padding-top: 10px;
+    width: 100%;
+    max-width: 560px;
+    justify-self: center;
   }
   .dp-hand-head {
     order: 2;
@@ -500,7 +503,7 @@
 }
 .dp-hand {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
   gap: 12px 10px;
 }
 .dp-card {
@@ -565,10 +568,8 @@
 .dp-card-m {
   font-size: 14px;
   font-weight: 600;
+  line-height: 1.2;
   letter-spacing: -0.01em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .dp-card-a {
   font-size: 16px;
@@ -582,7 +583,7 @@
 }
 .dp-card-b {
   position: absolute;
-  top: -8px;
+  top: -14px;
   right: -5px;
   display: inline-flex;
   align-items: center;
@@ -630,6 +631,7 @@
     margin-bottom: 10px;
   }
   .dp-hand {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 10px 7px;
   }
   .dp-card-paper {
@@ -1637,9 +1639,6 @@
   .dp-compile-head > span {
     padding: 14px 14px 10px;
   }
-  .dp-compile-arrow {
-    display: none;
-  }
   .dp-compile-board {
     padding-left: 14px !important;
   }
@@ -1668,8 +1667,17 @@
     padding: 12px 14px;
     font-size: 12.5px;
   }
-  .dp-compile-foot > span {
+  .dp-compile-note {
     flex: 1 1 200px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .dp-compile-arrow {
+    display: none;
+  }
+  .dp-compile-board {
+    padding-left: 20px !important;
   }
 }
 
@@ -1864,6 +1872,15 @@
   height: 100%;
   object-fit: contain;
 }
+@media (max-width: 1300px) {
+  .dp-latch-in,
+  .dp-latch-foot {
+    margin-right: 0;
+  }
+  .dp-latch-fig {
+    display: none;
+  }
+}
 @media (max-width: 640px) {
   .dp-latch-in {
     margin-right: 0;
@@ -1935,6 +1952,7 @@
 .dp-same-card figcaption {
   display: grid;
   gap: 3px;
+  padding-right: 112px;
   font-size: 13.5px;
   color: var(--bone-3);
 }
@@ -2027,6 +2045,9 @@
   .dp-same-card {
     padding: 18px 16px 16px;
   }
+  .dp-same-card figcaption {
+    padding-right: 0;
+  }
   .dp-same-card .dp-sample {
     position: static;
     justify-self: start;
@@ -2083,13 +2104,11 @@
 .dp-queue-top strong {
   font-weight: 600;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .dp-queue-top .mono {
   margin-left: auto;
   font-size: 13px;
+  white-space: nowrap;
 }
 .dp-queue-cite {
   margin-top: 4px;
@@ -2141,11 +2160,16 @@
   box-shadow: inset 0 0 0 1px var(--hair-2);
   font: 500 11px/1 var(--mono);
 }
+.dp-month-side {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 .dp-month-fig {
-  position: absolute;
-  right: 8px;
-  bottom: -36px;
-  width: 104px;
+  display: block;
+  align-self: flex-end;
+  width: 84px;
+  margin: 12px 10px 0 0;
   aspect-ratio: 619 / 1388;
 }
 .dp-month-fig img {

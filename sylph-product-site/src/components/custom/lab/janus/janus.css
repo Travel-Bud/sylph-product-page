@@ -40,13 +40,16 @@
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   --nav-h: 64px;
+  --z: 1;
+  --h1-max: 152px;
+  --pill-gap: 350px;
   --seam-pad: clamp(30px, 3.4vw, 56px);
   --top: clamp(118px, 15.5svh, 146px);
   --colw: clamp(340px, 29vw, 440px);
   --clock-y: 84px;
   --clock-x: 50%;
   --h1-y: clamp(96px, 13svh, 128px);
-  --pill-y: calc(var(--h1-y) + clamp(280px, 21.4vw, 350px));
+  --pill-y: calc(var(--h1-y) + clamp(280px, 21.4vw, var(--pill-gap)));
   --pill-x: 50%;
   --meet-h-y: clamp(118px, 14.5svh, 138px);
   --report-y: clamp(282px, 33.5svh, 318px);
@@ -346,8 +349,10 @@
   position: absolute;
   bottom: 0;
   z-index: 1;
-  height: min(60%, 600px);
+  height: min(60%, calc(600px * var(--z)));
   aspect-ratio: var(--ar);
+  /* never under the column: the box is capped to the space outside it, the image contained */
+  max-width: calc(100% - (var(--seam-pad) + var(--colw)) * var(--z) - clamp(0px, 1.6vw, 36px) - 20px);
   pointer-events: none;
 }
 .jn-half--p .jn-fig {
@@ -372,7 +377,7 @@
   right: clamp(-60px, -2vw, 0px);
 }
 .jn-fig--hero {
-  height: min(56%, 560px);
+  height: min(56%, calc(560px * var(--z)));
 }
 
 /* ---------- the charge ---------- */
@@ -427,7 +432,11 @@
 .jn-berth.is-gone {
   visibility: hidden;
 }
-.jn.is-live .jn-berth.is-land .jn-pill {
+.jn-berth.is-await > * {
+  opacity: 0;
+}
+.jn.is-live .jn-berth.is-land .jn-pill,
+.jn.is-stack .jn-berth.is-land .jn-pill {
   animation: jn-land 0.5s var(--ease);
 }
 @keyframes jn-land {
@@ -484,7 +493,7 @@
 }
 .jn-h1 {
   margin: 0;
-  font-size: clamp(64px, 9.4vw, 152px);
+  font-size: clamp(64px, 9.4vw, var(--h1-max));
   line-height: 0.92;
   letter-spacing: -0.048em;
   font-weight: 600;
@@ -500,7 +509,7 @@
 }
 .jn-col--hero {
   position: absolute;
-  top: calc(var(--pill-y) + 112px);
+  top: calc((var(--pill-y) + 112px) / var(--z));
   right: 0;
   padding: 0;
   width: min(var(--colw), calc(100% - var(--seam-pad) - 24px));
@@ -1003,6 +1012,7 @@
 }
 .jn-appr {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -1060,7 +1070,8 @@
   color: var(--bone-2);
 }
 .jn-fig--meet {
-  height: min(52%, 500px);
+  height: min(52%, calc(500px * var(--z)));
+  max-width: calc(100% - min(300px, 22vw) * var(--z) - clamp(0px, 1.6vw, 36px) - 28px);
 }
 .jn-report {
   width: min(600px, 44vw);
@@ -1361,15 +1372,15 @@
 }
 .jn.is-live [data-at] {
   transition:
-    opacity 0.42s var(--ease),
-    transform 0.42s var(--ease);
+    opacity 0.26s var(--ease),
+    transform 0.26s var(--ease);
 }
 .jn.is-live [data-at]:not(.is-on) {
   opacity: 0;
   transform: translateY(6px);
 }
 .jn.is-live [data-until] {
-  transition: opacity 0.3s var(--ease);
+  transition: opacity 0.2s var(--ease);
 }
 .jn.is-live [data-until].is-off {
   opacity: 0;
@@ -1447,6 +1458,12 @@
   top: 0;
   overflow: visible;
 }
+.jn-fly-stack {
+  position: absolute;
+  z-index: 30;
+  pointer-events: none;
+  will-change: transform;
+}
 .jn-trace path {
   fill: none;
   stroke: var(--fg);
@@ -1508,18 +1525,63 @@
   }
 }
 
-/* ==================== phone: the seam turns horizontal ==================== */
+/* ---------- desktop widths between tablet and laptop: a narrower column, figures only with room ---------- */
+@media (min-width: 861px) and (max-width: 1100px) {
+  .jn {
+    --colw: 300px;
+  }
+}
+@media (min-width: 861px) and (max-width: 979px) {
+  .jn-fig {
+    display: none;
+  }
+}
+
+/* the close fills the screen on desktop, so the page can settle on it whole */
+@media (min-width: 861px) {
+  .jn-close {
+    min-height: calc(100svh - 76px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+/* ---------- large screens: the same page, a size up ---------- */
+@media (min-width: 1680px) and (min-height: 960px) {
+  .jn {
+    --z: 1.2;
+    --h1-max: 190px;
+    --pill-gap: 404px;
+  }
+  .jn-col,
+  .jn-clock,
+  .jn-report,
+  .jn-fly > .jn-pill {
+    zoom: var(--z);
+  }
+  .jn-h2--one {
+    font-size: 80px;
+  }
+  .jn-one-sub {
+    font-size: 19px;
+  }
+}
+
+/* ==================== below the desktop: the faces stack ====================
+   Priya's half above, Dana's below, every beat a row in the flow: nothing pinned, nothing
+   clipped. The seam is the edge between the two grounds; the clock and the charge sit on it as
+   solid chips (a horizontal cut through small type reads as a strikethrough). */
 @media (max-width: 860px) {
   .jn {
-    --seam-pad: 26px;
-    --top: 20px;
-    --clock-x: 16px;
-    --pill-x: auto;
+    --gut: max(16px, calc((100vw - 660px) / 2));
+    --h1-above: 116px;
+    --h1-below: 74px;
   }
   .jn-nav {
     position: absolute;
     height: 58px;
-    padding: 0 16px;
+    padding: 0 var(--gut);
   }
   .jn-nav-r > a:not(.jn-btn) {
     display: none;
@@ -1531,15 +1593,88 @@
     background: var(--ink);
     color: var(--bone) !important;
   }
+
   .jn-beat {
     display: block;
   }
-  .jn-half {
-    min-height: max(50svh, 380px);
-  }
+  .jn-half,
   .jn-beat--meet .jn-half {
-    min-height: max(50svh, 400px);
+    min-height: 0;
+    display: grid;
+    align-items: end;
+    column-gap: 14px;
+    padding: 38px var(--gut) 40px;
   }
+  .jn-half--p {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "who who" "h h" "b b" "panel fig";
+  }
+  .jn-half--d {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: "who who" "h h" "b b" "fig panel";
+  }
+  .jn-col,
+  .jn-half--p .jn-col {
+    display: contents;
+    text-align: left;
+  }
+  .jn-who {
+    grid-area: who;
+    margin: 0 0 10px;
+    font-size: 13px;
+  }
+  .jn-half--p .jn-who {
+    flex-direction: row;
+  }
+  .jn-who .jn-head {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  .jn-h2 {
+    grid-area: h;
+    font-size: clamp(25px, 5.8vw, 36px);
+    line-height: 1.06;
+  }
+  .jn-body {
+    grid-area: b;
+    margin: 8px 0 0 !important;
+    font-size: clamp(13.5px, 3.4vw, 16px);
+    line-height: 1.45;
+    max-width: 44ch;
+  }
+  .jn-phone,
+  .jn-panel {
+    grid-area: panel;
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+    margin-top: 18px;
+  }
+  .jn-half--p .jn-phone {
+    margin-left: 0;
+    justify-self: start;
+  }
+  .jn-half--d .jn-panel {
+    justify-self: end;
+  }
+  .jn-fig,
+  .jn-fig--meet {
+    grid-area: fig;
+    position: relative;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto;
+    height: clamp(150px, 40vw, 290px);
+    max-width: none;
+    /* stands on its half's floor */
+    margin-bottom: -40px;
+    align-self: end;
+  }
+  .jn-fig--desk {
+    height: clamp(104px, 27vw, 200px);
+  }
+
+  /* the seam carriers */
   .jn-st {
     left: var(--sx) !important;
     transform: translate(-50%, -50%);
@@ -1551,29 +1686,9 @@
     top: calc(0% + var(--my, 0px));
   }
   .jn-st--clock {
+    left: var(--gut) !important;
     transform: translate(0, -50%);
   }
-  .jn-col {
-    width: auto;
-    margin: 0 !important;
-    padding: var(--top) 16px var(--seam-pad);
-    text-align: left !important;
-  }
-  .jn-half--d .jn-col {
-    padding-top: calc(var(--seam-pad) + 6px);
-    padding-bottom: 16px;
-  }
-  .jn-half--p .jn-who {
-    flex-direction: row;
-  }
-  .jn-beat:not(.jn-beat--hero) .jn-who {
-    display: none;
-  }
-  .jn-m-hide {
-    display: none !important;
-  }
-  /* a horizontal cut through small type reads as a strikethrough, so on a phone the clock and the
-     charge sit on the seam as one solid chip: both copies wear the same face */
   .jn-seam--d .jn-st--clock,
   .jn-seam--d .jn-st--pill {
     --ground: var(--light);
@@ -1583,35 +1698,210 @@
     --pill-bg: var(--ink);
     --pill-fg: var(--bone);
   }
-  .jn-who {
-    margin-bottom: 8px;
-    font-size: 13px;
+
+  /* first screen: Priya's half, the headline on the seam, Dana's half */
+  .jn-beat--hero .jn-half--p {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "who fig" "lede fig" "follow fig";
+    align-items: start;
+    align-content: end;
+    padding-top: 84px;
+    padding-bottom: var(--h1-above);
   }
-  .jn-who .jn-head {
-    width: 28px !important;
-    height: 28px !important;
+  .jn-beat--hero .jn-half--d {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: "fig lede" "fig btn" "fig who";
+    align-items: start;
+    align-content: start;
+    padding-top: var(--h1-below);
+    padding-bottom: 40px;
   }
-  .jn-h2 {
-    font-size: 25px;
-    line-height: 1.06;
+  .jn-col--hero {
+    display: contents;
   }
-  .jn-body {
-    margin: 6px 0 0 !important;
-    font-size: 13px;
-    line-height: 1.42;
-    max-width: 40ch;
+  .jn-lede {
+    grid-area: lede;
+    font-size: clamp(16.5px, 3.6vw, 21px);
+    max-width: 22ch;
   }
-  .jn-phone,
-  .jn-panel {
-    margin-top: 12px;
-    width: calc(100% - 118px);
-    min-width: 232px;
-  }
-  .jn-half--p .jn-phone {
+  .jn-half--p .jn-lede {
     margin-left: 0;
   }
-  .jn-half--d .jn-panel {
-    margin-left: auto;
+  .jn-half--d .jn-lede {
+    justify-self: end;
+    text-align: right;
+  }
+  .jn-follow {
+    grid-area: follow;
+    justify-self: start;
+    margin-top: 14px;
+    font-size: 15px;
+  }
+  .jn-btn--face {
+    grid-area: btn;
+    justify-self: end;
+    margin-top: 14px;
+    height: 46px;
+  }
+  .jn-half--d .jn-col--hero .jn-who {
+    flex-direction: row-reverse;
+    justify-self: end;
+    margin: 16px 0 0;
+  }
+  .jn-fig--hero {
+    grid-row: 1 / -1;
+    height: clamp(180px, 44vw, 320px);
+    margin: 0;
+  }
+  .jn-beat--hero .jn-half--p .jn-fig--hero {
+    align-self: end;
+  }
+  .jn-beat--hero .jn-half--d .jn-fig--hero {
+    align-self: start;
+  }
+  .jn-h1 {
+    font-size: clamp(40px, 11.3vw, 50px);
+    line-height: 0.96;
+    text-align: left;
+  }
+  .jn-h1-wide {
+    display: none;
+  }
+  .jn-h1-narrow {
+    display: block;
+  }
+  /* the seam runs between two lines of the headline, never through a glyph */
+  .jn-st--h1 {
+    left: var(--gut) !important;
+    transform: translate(0, -66.7%);
+  }
+  .jn-st--pill {
+    left: auto !important;
+    right: var(--gut);
+    transform: translate(0, -50%);
+    flex-direction: row;
+  }
+  .jn-st--pill .jn-pill {
+    height: 34px;
+    padding: 0 13px;
+    font-size: 13.5px;
+  }
+  .jn-st--pill .jn-pill-a {
+    font-size: 12px;
+  }
+  .jn-st--pill .jn-pill-note {
+    display: none;
+  }
+
+  /* month end: one green block in the flow, the report whole */
+  .jn-beat--meet .jn-half--d {
+    display: none;
+  }
+  .jn-beat--meet .jn-half--p {
+    display: block;
+    padding: 44px var(--gut) 56px;
+  }
+  .jn-half--p .jn-flood {
+    clip-path: none;
+  }
+  .jn-beat--meet .jn-fig--meet {
+    display: none;
+  }
+  .jn-beat--meet .jn-seam--p {
+    position: relative;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .jn-beat--meet .jn-seam--p .jn-st {
+    position: relative;
+    top: auto !important;
+    left: auto !important;
+    transform: none;
+  }
+  .jn-beat--meet .jn-clock {
+    background: var(--one);
+    border-color: rgba(244, 247, 245, 0.3);
+    color: var(--bone-2);
+  }
+  .jn-beat--meet .jn-clock b {
+    color: var(--bone);
+  }
+  .jn-st--meet-h {
+    width: 100%;
+  }
+  .jn-h2--one {
+    font-size: clamp(30px, 7.4vw, 48px);
+  }
+  .jn-one-sub {
+    font-size: clamp(13.5px, 3.4vw, 16px);
+    margin-top: 10px;
+  }
+  .jn-st--report {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .jn-report {
+    width: 100%;
+    max-width: 580px;
+  }
+
+  .jn-close h2 {
+    font-size: clamp(40px, 9vw, 64px);
+  }
+  .jn-foot {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* tablets: the two-line headline, more of each panel */
+@media (min-width: 600px) and (max-width: 860px) {
+  .jn {
+    --h1-above: 108px;
+    --h1-below: 108px;
+  }
+  .jn-h1 {
+    font-size: clamp(56px, 9.6vw, 82px);
+    line-height: 0.92;
+  }
+  .jn-h1-wide {
+    display: block;
+  }
+  .jn-h1-narrow {
+    display: none;
+  }
+  .jn-st--h1 {
+    transform: translate(0, -50%);
+  }
+}
+
+/* phones: the essentials of each panel */
+@media (max-width: 599px) {
+  .jn-beat:not(.jn-beat--hero) .jn-who {
+    display: none;
+  }
+  .jn-m-hide {
+    display: none !important;
+  }
+  .jn-half,
+  .jn-beat--meet .jn-half {
+    padding-top: 34px;
+    padding-bottom: 36px;
+  }
+  .jn-fig,
+  .jn-fig--meet {
+    margin-bottom: -36px;
+  }
+  .jn-beat--hero .jn-half--p {
+    padding-top: 80px;
+    padding-bottom: var(--h1-above);
+  }
+  .jn-beat--hero .jn-half--d {
+    padding-top: var(--h1-below);
   }
   .jn-phone {
     padding: 4px 10px 10px;
@@ -1670,6 +1960,10 @@
   .jn-row-a {
     font-size: 11.5px;
   }
+  /* the tick says it; the words would squeeze the merchant */
+  .jn-rin {
+    font-size: 0;
+  }
   .jn-chip {
     height: 20px;
     font-size: 11px;
@@ -1702,165 +1996,26 @@
     width: 100%;
     font-size: 11px;
   }
-  .jn-fig {
-    height: min(56%, 250px);
-  }
-  .jn-half--p .jn-fig {
-    left: auto;
-    right: 6px;
-  }
-  .jn-half--d .jn-fig {
-    right: auto;
-    left: 6px;
-  }
-  .jn-fig--desk {
-    height: min(40%, 170px);
-  }
-  .jn-half--d .jn-fig--desk {
-    left: -24px;
-  }
-  .jn-fig--meet {
-    display: none;
-  }
-
-  /* first screen */
-  .jn {
-    --h1-y: 0px;
-  }
-  .jn-h1 {
-    font-size: clamp(40px, 11.3vw, 50px);
-    line-height: 0.96;
-    text-align: left;
-  }
-  .jn-h1-wide {
-    display: none;
-  }
-  .jn-h1-narrow {
-    display: block;
-  }
-  /* the seam runs between the second and third lines, never through a glyph */
-  .jn-st--h1 {
-    left: 16px !important;
-    transform: translate(0, -66.7%);
-  }
-  .jn-st--pill {
-    left: auto !important;
-    right: 16px;
-    transform: translate(0, -50%);
-    flex-direction: row;
-    align-items: center;
-  }
-  .jn-st--pill .jn-pill {
-    height: 34px;
-    padding: 0 13px;
-    font-size: 13.5px;
-  }
-  .jn-st--pill .jn-pill-a {
-    font-size: 12px;
-  }
-  .jn-st--pill .jn-pill-note {
-    display: none;
-  }
-  .jn-beat--hero .jn-half--p .jn-col--hero {
-    position: absolute;
-    top: 72px;
-    bottom: auto;
-    left: 16px;
-    right: 16px;
-    width: auto;
-  }
-  .jn-beat--hero .jn-half--d .jn-col--hero {
-    position: absolute;
-    top: auto;
-    bottom: 22px;
-    left: 16px;
-    right: 16px;
-    width: auto;
-  }
-  .jn-lede {
-    font-size: 16.5px;
-    max-width: 22ch;
-  }
-  .jn-half--p .jn-lede {
-    margin-left: 0;
-  }
-  .jn-half--d .jn-lede {
-    margin-left: auto;
-    text-align: right;
-  }
-  .jn-half--d .jn-col--hero {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    text-align: right;
-  }
-  .jn-half--d .jn-col--hero .jn-who {
-    flex-direction: row-reverse;
-    order: 3;
-    margin: 14px 0 0;
-  }
-  .jn-btn--face {
-    margin-top: 12px;
-    height: 44px;
-  }
-  .jn-follow {
-    margin-top: 12px;
-    font-size: 15px;
-  }
-  .jn-fig--hero {
-    height: min(46%, 200px);
-  }
-  .jn-beat--hero .jn-half--p .jn-fig--hero {
-    bottom: calc(var(--h1-band, 96px));
-  }
-  .jn-beat--hero .jn-half--d .jn-fig--hero {
-    bottom: auto;
-    top: calc(var(--h1-band, 96px));
-  }
-
-  /* month end */
-  .jn {
-    --meet-h-y: 0px;
-  }
-  .jn-seam--p .jn-st--meet-h {
-    top: 76px;
-    transform: translate(-50%, 0);
-    width: calc(100% - 32px);
-  }
-  .jn-seam--d .jn-st--meet-h {
-    display: none;
-  }
-  .jn-h2--one {
-    font-size: 32px;
-  }
-  .jn-one-sub {
-    font-size: 13.5px;
-    margin-top: 8px;
-  }
-  .jn-st--report {
-    --my: 64px;
-  }
   .jn-report {
-    width: calc(100vw - 32px);
-    padding: 12px 14px 12px;
+    padding: 12px 14px;
     font-size: 12.5px;
   }
   .jn-report-rows li {
-    grid-template-columns: 1fr 64px 70px;
+    grid-template-columns: minmax(0, 1fr) 64px 70px;
     gap: 8px;
     padding: 6px 0;
   }
   .jn-report-c {
     display: none;
   }
+  .jn-report-head {
+    flex-wrap: wrap;
+  }
   .jn-report-t b {
     font-size: 15px;
   }
   .jn-report-t span {
     font-size: 11px;
-  }
-  .jn-report-head .jn-sample {
-    display: none;
   }
   .jn-report-rows .jn-chip {
     font-size: 10.5px;
@@ -1872,62 +2027,5 @@
     font-size: 10px;
     height: 22px;
     padding: 0 7px;
-  }
-  .jn-cap {
-    top: auto;
-    font-size: 22px;
-  }
-  .jn-half--p .jn-cap {
-    left: 16px;
-    right: auto;
-    text-align: left;
-    top: 96px;
-  }
-  .jn-half--d .jn-cap {
-    left: auto;
-    right: 16px;
-    text-align: right;
-    bottom: 26px;
-  }
-  .jn-half--p .jn-flood {
-    clip-path: inset(calc((1 - var(--f, 1)) * 100%) 0 0 0);
-  }
-  .jn-half--d .jn-flood {
-    clip-path: inset(0 0 calc((1 - var(--f, 1)) * 100%) 0);
-  }
-
-  /* live, phone: Priya's strip above, Dana's below, moving against each other sideways */
-  .jn.is-live .jn-half {
-    left: 0;
-    width: 100%;
-    height: 50%;
-    bottom: auto;
-  }
-  .jn.is-live .jn-half--p {
-    top: 0;
-  }
-  .jn.is-live .jn-half--d {
-    top: 50%;
-  }
-  .jn-over-side {
-    left: 0 !important;
-    width: 100%;
-    height: 50%;
-    bottom: auto;
-  }
-  .jn-over-side--d {
-    top: 50%;
-  }
-  .jn-close h2 {
-    font-size: 44px;
-  }
-  .jn-foot {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-@media (max-width: 860px) and (max-height: 760px) {
-  .jn-body {
-    display: none;
   }
 }

@@ -154,7 +154,7 @@ export function Beat1() {
                   <Berth id="1d" slot="No receipt yet" gone={false} />
                 </div>
                 <Swap
-                  at={1.64}
+                  at={1.54}
                   className="jn-match-s"
                   before={<span className="jn-wait">Waiting for its receipt</span>}
                   after={
@@ -212,7 +212,7 @@ export function Beat2() {
                 <span className="jn-berth-row">
                   <Berth id="2p" slot="Checking" gone={false} />
                 </span>
-                <span className="jn-answer" data-at={2.66}>
+                <span className="jn-answer" data-at={2.54}>
                   <span>Matched to your card.</span>
                   <Chip v="note" />
                   <span className="mono jn-cite">M-041, $9.20 over the $75 dinner cap.</span>
@@ -221,7 +221,7 @@ export function Beat2() {
               </Msg>
             </Phone>
           </div>
-          <Fig pose="priya-snap" swap="priya-read" at={2.64} />
+          <Fig pose="priya-snap" swap="priya-read" at={2.52} />
         </>
       }
       d={
@@ -307,13 +307,13 @@ export function Beat3() {
             <Panel
               title={
                 <>
-                  Needs you <Swap at={3.62} className="jn-count" before="0" after="1" />
+                  Needs you <Swap at={3.52} className="jn-count" before="0" after="1" />
                 </>
               }
             >
               <div className="jn-exc">
                 <Berth id="3d" slot="Nothing waiting" gone={false} />
-                <div className="jn-exc-body" data-at={3.68}>
+                <div className="jn-exc-body" data-at={3.56}>
                   <span className="jn-exc-top">
                     <Chip v="note" />
                     <span className="mono jn-cite">M-041, $9.20 over the $75 dinner cap</span>
@@ -334,7 +334,7 @@ export function Beat3() {
               </p>
             </Panel>
           </div>
-          <Fig pose="dana-desk" swap="dana-desk-look" at={3.64} className="jn-fig--desk" />
+          <Fig pose="dana-desk" swap="dana-desk-look" at={3.53} className="jn-fig--desk" />
         </>
       }
       seam={<Clock day="Sep 12" time="8:05 pm" />}
@@ -363,7 +363,7 @@ export function Beat4() {
                 <span className="jn-berth-row">
                   <Berth id="4p" slot="" gone={false} />
                 </span>
-                <span className="jn-answer" data-at={4.66}>
+                <span className="jn-answer" data-at={4.54}>
                   <Chip v="done" />
                   <span>Approved by Dana. On your September report.</span>
                 </span>
