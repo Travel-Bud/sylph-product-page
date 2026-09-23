@@ -35,6 +35,9 @@ export function Director() {
       root.dataset.motion = "on";
       const all = <T extends Element = HTMLElement>(sel: string, el: ParentNode = root) => Array.from(el.querySelectorAll<T>(sel));
       const one = (sel: string, el: ParentNode = root) => el.querySelector<HTMLElement>(sel);
+      /* Every demonstration starts as its element enters (ENTER) and lands within about a second, so a
+         reader who stops on a panel never sees it empty, half faded or waiting for more scroll. */
+      const ENTER = "top 90%";
       const once = (trigger: Element, start: string, tl: gsap.core.Timeline) =>
         ScrollTrigger.create({ trigger, start, once: true, onEnter: () => void tl.play() });
 
@@ -53,14 +56,14 @@ export function Director() {
           gsap.set(panel, { autoAlpha: 0 });
           tl.set(panel, { autoAlpha: 1 });
         } else {
-          tl.fromTo(panel, { clipPath: WIPE[wipe] }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.95, ease: "power3.inOut", clearProps: "clipPath" });
+          tl.fromTo(panel, { clipPath: WIPE[wipe] }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7, ease: "power3.inOut", clearProps: "clipPath" });
         }
-        /* Dana's close-up letters its lines only once the exception is approved (step 7) */
-        const caps = "react" in panel.dataset ? [] : all("[data-cap]", panel);
+        /* Dana's close-up letters his balloon on entry and its caption only once the exception is approved (step 7) */
+        const caps = all("react" in panel.dataset ? ".cx-balloon" : "[data-cap]", panel);
         const sfx = all("[data-sfx]", panel);
-        if (caps.length) tl.from(caps, { y: 12, autoAlpha: 0, duration: 0.45, stagger: 0.16, ease: "power2.out" }, wipe === "cut" ? 0.35 : "-=0.2");
-        if (sfx.length) tl.from(sfx, { scale: 0.3, autoAlpha: 0, duration: 0.5, ease: "back.out(3)" }, "<0.1");
-        once(panel, "top 82%", tl);
+        if (caps.length) tl.from(caps, { y: 12, autoAlpha: 0, duration: 0.35, stagger: 0.1, ease: "power2.out" }, wipe === "cut" ? 0.2 : 0.45);
+        if (sfx.length) tl.from(sfx, { scale: 0.3, autoAlpha: 0, duration: 0.4, ease: "back.out(3)" }, "<0.1");
+        once(panel, ENTER, tl);
       }
 
       /* 3. cameras, scrubbed to the scroll */
@@ -88,48 +91,55 @@ export function Director() {
       if (phone) {
         const typing = one("[data-typing]", phone);
         const tl = gsap
-          .timeline({ paused: true, delay: 0.35 })
-          .from(phone, { yPercent: 14, rotate: 5, duration: 0.8, ease: "power3.out" })
-          .from(all('[data-msg="1"]', phone), { y: 26, autoAlpha: 0, duration: 0.45, ease: "power2.out" }, "-=0.25")
-          .to(typing, { autoAlpha: 1, duration: 0.2 }, "+=0.25")
-          .to(typing, { autoAlpha: 0, duration: 0.15 }, "+=0.9")
-          .from(all('[data-msg="2"]', phone), { y: 18, scale: 0.94, autoAlpha: 0, transformOrigin: "0% 100%", duration: 0.5, ease: "back.out(1.7)" })
+          .timeline({ paused: true })
+          .from(phone, { yPercent: 10, rotate: 5, duration: 0.55, ease: "power3.out" })
+          .from(all('[data-msg="1"]', phone), { y: 22, autoAlpha: 0, duration: 0.3, ease: "power2.out" }, 0.1)
+          .to(typing, { autoAlpha: 1, duration: 0.1 }, 0.4)
+          .to(typing, { autoAlpha: 0, duration: 0.1 }, 0.7)
+          .from(all('[data-msg="2"]', phone), { y: 16, scale: 0.94, autoAlpha: 0, transformOrigin: "0% 100%", duration: 0.35, ease: "back.out(1.7)" }, 0.75)
           .from(all("[data-sfx-late]"), { scale: 0.3, rotate: -20, autoAlpha: 0, duration: 0.45, ease: "back.out(3)" }, "<");
-        once(phone, "top 72%", tl);
+        once(phone, ENTER, tl);
       }
 
       /* 5. the cab: one line typed, then sent */
       const note = one("[data-note]");
       if (note) {
         const tl = gsap
-          .timeline({ paused: true, delay: 0.6 })
-          .fromTo(one(".cx-textnote-b", note), { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "steps(26)" })
-          .from(one("[data-note-sent]", note), { y: 6, autoAlpha: 0, duration: 0.35 }, "+=0.25");
-        once(note, "top 75%", tl);
+          .timeline({ paused: true, delay: 0.2 })
+          .fromTo(one(".cx-textnote-b", note), { clipPath: "inset(0% 100% 0% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.75, ease: "steps(20)" })
+          .from(one("[data-note-sent]", note), { y: 6, autoAlpha: 0, duration: 0.25 }, "+=0.1");
+        once(note, ENTER, tl);
       }
 
       /* 6. the cut to morning is lettered, not faded */
       const cut = one("[data-cut]");
       if (cut) {
         const tl = gsap.timeline({ paused: true }).from(cut.children, { scale: 1.25, autoAlpha: 0, duration: 0.35, stagger: 0.2, ease: "back.out(2.2)" });
-        once(cut, "top 80%", tl);
+        once(cut, ENTER, tl);
       }
 
-      /* 7. the queue files itself; Dana approves if the reader moves on without tapping */
+      /* 7. the queue: the exception lands as it enters and the filed rows tick themselves off. If the reader
+         has not tapped Approve a few seconds later, or scrolls past, Dana taps it himself. */
       const queue = one("[data-queue]");
+      let approveLater: gsap.core.Tween | null = null;
       if (queue) {
-        const tl = gsap
-          .timeline({ paused: true, delay: 0.5 })
-          .from(all("[data-filed]", queue), { autoAlpha: 0.2, duration: 0.3, stagger: 0.14 })
-          .from(all("[data-filed] .cx-tick", queue), { scale: 0, duration: 0.3, stagger: 0.14, ease: "back.out(3)" }, "<")
-          .from(all("[data-exc]", queue), { y: 18, autoAlpha: 0, duration: 0.5, ease: "power3.out" }, "-=0.1");
-        once(queue, "top 70%", tl);
-        ScrollTrigger.create({ trigger: queue, start: "bottom 40%", once: true, onEnter: () => void window.dispatchEvent(new Event("cx-approve")) });
+        const approve = () => void window.dispatchEvent(new Event("cx-approve"));
+        const exc = one("[data-exc]", queue);
+        if (exc) {
+          const tl = gsap
+            .timeline({ paused: true, onComplete: () => void (approveLater = gsap.delayedCall(2.4, approve)) })
+            .from(exc, { y: 14, autoAlpha: 0, duration: 0.4, ease: "power3.out" });
+          once(exc, ENTER, tl);
+        }
+        const ticks = all("[data-filed] .cx-tick", queue);
+        const filed = one(".cx-filed", queue);
+        if (filed && ticks.length) once(filed, ENTER, gsap.timeline({ paused: true }).from(ticks, { scale: 0, duration: 0.25, stagger: 0.08, ease: "back.out(3)" }));
+        ScrollTrigger.create({ trigger: queue, start: "bottom 40%", once: true, onEnter: approve });
       }
       const react = one("[data-react]");
       let onApproved: (() => void) | null = null;
       if (react) {
-        const caps = all("[data-cap]", react);
+        const caps = all(".cx-cap", react);
         gsap.set(caps, { autoAlpha: 0 });
         onApproved = () => void gsap.fromTo(caps, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45, delay: 0.3, stagger: 0.2, ease: "back.out(2)" });
         window.addEventListener("cx-approved", onApproved, { once: true });
@@ -151,6 +161,7 @@ export function Director() {
       document.fonts?.ready.then(() => ScrollTrigger.refresh());
       return () => {
         if (onApproved) window.removeEventListener("cx-approved", onApproved);
+        approveLater?.kill();
         delete root.dataset.motion;
       };
     });

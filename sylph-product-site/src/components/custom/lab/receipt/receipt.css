@@ -216,6 +216,13 @@
   position: relative;
   min-width: 0;
 }
+/* the world stays off the paper: a margin clips at the paper's edge and nowhere else */
+.rcp-side--l {
+  clip-path: inset(-100vh 0 -100vh -100vw);
+}
+.rcp-side--r {
+  clip-path: inset(-100vh -100vw -100vh 0);
+}
 .rcp-inline {
   display: none;
 }
@@ -561,8 +568,8 @@
 .rcp-life {
   position: absolute;
   top: 28px;
-  right: 56px;
-  width: 280px;
+  right: clamp(24px, 3.5vw, 56px);
+  width: min(280px, calc(100% - 48px));
   color: var(--bone-2);
   font-family: var(--mono);
   font-size: 12px;
@@ -599,8 +606,8 @@
 .rcp-copy {
   position: absolute;
   top: 28px;
-  left: 56px;
-  width: 260px;
+  left: clamp(24px, 3.5vw, 56px);
+  width: min(260px, calc(100% - 48px));
   color: var(--bone-2);
 }
 .rcp-copy .rcp-life-h {
@@ -643,19 +650,24 @@
   width: 100%;
   height: auto;
 }
-/* the renders are cropped where the body meets the frame; those edges fade instead of cutting */
+/* the renders are cropped where the body meets the frame (the bottom, and one or both sides); those
+   edges fade into the ground instead of cutting, at any margin width */
 .rcp-pov--priya img {
-  -webkit-mask-image: linear-gradient(to left, transparent 0, #000 24%);
-  mask-image: linear-gradient(to left, transparent 0, #000 24%);
+  -webkit-mask-image: linear-gradient(to left, transparent 0, #000 24%), linear-gradient(to top, transparent 0, #000 30%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to left, transparent 0, #000 24%), linear-gradient(to top, transparent 0, #000 30%);
+  mask-composite: intersect;
 }
 .rcp-pov--dana img {
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 20%, #000 80%, transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0, #000 20%, #000 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 20%, #000 80%, transparent 100%), linear-gradient(to top, transparent 0, #000 30%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent 0, #000 20%, #000 80%, transparent 100%), linear-gradient(to top, transparent 0, #000 30%);
+  mask-composite: intersect;
 }
 /* Priya leans in over the right edge of the table: her head toward the paper, her body off the screen */
 .rcp-side--r .rcp-pov--priya {
   top: -120px;
-  left: 44px;
+  left: 84px;
   transform: rotate(-90deg) translateY(-8%);
   transform-origin: 50% 50%;
 }
@@ -666,7 +678,7 @@
 /* Dana leans over his desk from the right as well, stamp first */
 .rcp-side--r .rcp-pov--dana {
   top: -80px;
-  left: 36px;
+  left: 76px;
   transform: rotate(-90deg) translateY(-6%);
 }
 .rcp--js .rcp-side--r .rcp-pov--dana:not(.is-live) {
@@ -683,8 +695,8 @@
 .rcp-sms--photo {
   position: absolute;
   top: 4px;
-  right: 56px;
-  width: 210px;
+  right: clamp(24px, 3.5vw, 56px);
+  width: min(210px, calc(100% - 48px));
   transition:
     transform 0.8s var(--ease),
     opacity 0.5s ease;
@@ -847,8 +859,8 @@
 .rcp-feedslip {
   position: absolute;
   top: 50%;
-  right: 44px;
-  width: 300px;
+  right: clamp(24px, 3vw, 44px);
+  width: min(300px, calc(100% - 48px));
   margin-top: -110px;
   padding: 14px 16px 12px;
   background: #e8edf1;
@@ -948,8 +960,8 @@
 .rcp-policy {
   position: absolute;
   top: 10px;
-  right: 44px;
-  width: 300px;
+  right: clamp(24px, 3vw, 44px);
+  width: min(300px, calc(100% - 48px));
   margin: 0;
   padding: 22px 22px 18px;
   background: #fbfbf8;
@@ -1122,8 +1134,8 @@
 .rcp-sms--thread {
   position: absolute;
   top: -16px;
-  left: 44px;
-  width: 310px;
+  left: clamp(24px, 3vw, 44px);
+  width: min(310px, calc(100% - 48px));
   padding: 16px 14px 18px;
   background: #151b18;
   border: 1px solid var(--bone-hair);
@@ -1895,22 +1907,46 @@
   .rcp-inline .rcp-sms--thread .rcp-sms-to {
     color: var(--bone-3);
   }
-  /* people peek in over the paper's edge */
+  /* People peek in at the paper's right edge. Each gets a column of its own beside the text: the
+     column clips at its left edge and at the row's top and bottom, so a figure can run off the
+     screen to the right but never over a line of print. */
+  .rcp-row--pov {
+    --pk: 180px;
+    --peek-col: 150px;
+  }
   .rcp-row--pov .rcp-c {
-    padding-right: 150px;
+    min-height: calc(var(--pk) + 12px);
+    padding-right: calc(var(--pad) + var(--peek-col) + 14px);
+  }
+  .rcp-row--pov .rcp-inline {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: var(--pad);
+    width: var(--peek-col);
+    clip-path: inset(0 -100vw 0 0);
   }
   .rcp-inline .rcp-pov--peek {
     position: absolute;
     display: block;
-    top: -30px;
-    right: -64px;
-    width: 250px;
-    z-index: 1;
-    transform: rotate(-90deg);
+    left: 0;
+    top: 50%;
+    width: calc(var(--pk) * 1.5);
+    height: var(--pk);
+    margin-top: calc(var(--pk) / -2);
+    transform: none;
+  }
+  .rcp-inline .rcp-pov--peek img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--pk);
+    height: auto;
+    transform: translate(-50%, -50%) rotate(-90deg);
   }
   .rcp--js .rcp-inline .rcp-pov--peek:not(.is-live) {
     opacity: 0;
-    transform: rotate(-90deg) translateY(50px);
+    transform: translateX(40px);
   }
 }
 
@@ -1986,13 +2022,9 @@
   .rcp-close-h {
     font-size: 30px;
   }
-  .rcp-row--pov .rcp-c {
-    padding-right: 128px;
-  }
-  .rcp-inline .rcp-pov--peek {
-    width: 190px;
-    right: -96px;
-    top: -36px;
+  .rcp-row--pov {
+    --pk: 140px;
+    --peek-col: 104px;
   }
   .rcp-stamp--note {
     right: 8px;
