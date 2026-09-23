@@ -214,22 +214,18 @@
 
 .pl-story {
   display: grid;
-  grid-template-columns: minmax(320px, 430px) minmax(0, 1fr);
+  grid-template-columns: minmax(300px, 430px) minmax(0, 1fr);
   column-gap: clamp(32px, 4vw, 72px);
   max-width: 1440px;
   margin: 0 auto;
   padding: var(--nav) var(--gutter) 0;
 }
+/* the phone hero; wide screens show the hero as step 0 of the panel */
 .pl-hero {
-  grid-column: 1;
-  grid-row: 1;
-  min-height: calc(100svh - var(--nav));
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 32px 0 64px;
+  display: none;
 }
-.pl-hero h1 {
+.pl-hero h1,
+.pl-copy0-wide h1 {
   margin: 0;
   font-size: clamp(44px, 4.3vw, 64px);
   line-height: 0.98;
@@ -277,7 +273,8 @@
 
 .pl-graphic {
   grid-column: 2;
-  grid-row: 1 / span 2;
+  grid-row: 1;
+  container-type: inline-size;
   position: sticky;
   top: var(--nav);
   height: calc(100svh - var(--nav));
@@ -295,9 +292,22 @@
   border-bottom: 1px solid var(--hair);
 }
 .pl-big {
+  flex: none;
   display: inline-flex;
   align-items: baseline;
   gap: 10px;
+  white-space: nowrap;
+}
+@container (max-width: 780px) {
+  .pl-tally {
+    flex-wrap: wrap;
+    align-items: baseline;
+  }
+  .pl-sub {
+    order: 3;
+    width: 100%;
+    padding-bottom: 0;
+  }
 }
 .pl-big-n {
   font-family: var(--mono);
@@ -354,18 +364,49 @@
   cursor: pointer;
 }
 
-.pl-steps {
+/* the rail: empty spacers set the pace; the sticky panel shows the active step's copy and nothing else */
+.pl-rail {
   grid-column: 1;
-  grid-row: 2;
+  grid-row: 1;
+  position: relative;
+  min-width: 0;
 }
-.pl-step {
-  min-height: 92svh;
-  padding: 0 0 12vh;
+.pl-panel-track {
+  position: absolute;
+  inset: 0;
 }
-.pl-step--last {
-  min-height: 118svh;
+.pl-panel {
+  position: sticky;
+  top: var(--nav);
+  height: calc(100svh - var(--nav));
 }
-.pl-step h2 {
+.pl-copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease);
+}
+.pl-copy.is-on {
+  opacity: 1;
+  pointer-events: auto;
+}
+.pl-copy0-narrow {
+  display: none;
+}
+.pl-spacer {
+  height: 100svh;
+}
+.pl-spacer--0 {
+  height: calc(100svh - var(--nav));
+}
+.pl-spacer--5 {
+  height: 130svh;
+}
+.pl-copy h2 {
   margin: 0 0 16px;
   font-size: 30px;
   line-height: 1.1;
@@ -373,7 +414,7 @@
   font-weight: 600;
   text-wrap: balance;
 }
-.pl-step p {
+.pl-copy p {
   margin: 0 0 14px;
   font-family: var(--serif);
   font-size: 19px;
@@ -424,7 +465,7 @@
   position: absolute;
   white-space: nowrap;
   transform: translate(var(--tx, 0), var(--ty, 0));
-  animation: pl-in 0.5s var(--ease) both;
+  animation: pl-in 0.3s var(--ease) both;
   font-size: 12px;
   line-height: 1.25;
   color: var(--ink-2);
@@ -966,11 +1007,12 @@
     display: none;
   }
   .pl-story {
+    --gh: 58svh;
     display: block;
     padding: var(--nav) 0 0;
   }
   .pl-hero {
-    min-height: 0;
+    display: block;
     padding: 20px 16px 14px;
   }
   .pl-hero h1 {
@@ -996,7 +1038,7 @@
   .pl-graphic {
     position: sticky;
     top: var(--nav);
-    height: 62svh;
+    height: var(--gh);
     z-index: 3;
     background: var(--bg);
     border-bottom: 1px solid var(--hair-2);
@@ -1022,29 +1064,45 @@
   .pl-tally .pl-sample {
     margin-bottom: 0;
   }
-  .pl-steps {
-    position: relative;
-    z-index: 1;
-    padding: 24svh 16px 0;
+  .pl-panel {
+    top: calc(var(--nav) + var(--gh));
+    height: calc(100svh - var(--nav) - var(--gh));
+    background: var(--bg);
+    overflow: hidden;
   }
-  .pl-step {
-    min-height: 72svh;
-    padding: 0;
+  .pl-copy {
+    top: 14px;
+    left: 16px;
+    right: 16px;
+    transform: none;
   }
-  .pl-step--last {
-    min-height: 92svh;
+  .pl-copy0-wide {
+    display: none;
   }
-  .pl-step h2 {
-    font-size: 23px;
-    margin-bottom: 10px;
+  .pl-copy0-narrow {
+    display: block;
   }
-  .pl-step p {
-    font-size: 16.5px;
-    line-height: 1.48;
-    margin-bottom: 10px;
+  .pl-spacer {
+    height: 90svh;
   }
+  .pl-spacer--0 {
+    height: 45svh;
+  }
+  .pl-spacer--5 {
+    height: 110svh;
+  }
+  .pl-copy h2 {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .pl-copy p {
+    font-size: 16px;
+    line-height: 1.42;
+    margin-bottom: 8px;
+  }
+  /* on a phone the tally above carries the counts */
   .pl-counts {
-    margin-top: 12px !important;
+    display: none !important;
   }
   .pl-count {
     font-size: 13px;
@@ -1152,6 +1210,9 @@
 @media (prefers-reduced-motion: reduce) {
   .pl-l {
     animation: none;
+  }
+  .pl-copy {
+    transition: none;
   }
   .pl-btn {
     transition: none;

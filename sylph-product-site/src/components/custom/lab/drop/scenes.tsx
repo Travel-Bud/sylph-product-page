@@ -55,7 +55,7 @@ export function GatesScene() {
           </ol>
           <figcaption className="dp-compile-foot">
             <Head who="dana" size={30} />
-            <span>
+            <span className="dp-compile-note">
               <strong>Approved by Dana, Sep 1.</strong> Drafted by Sylph from the policy PDF, six rules, each one read
               and signed off.
             </span>
@@ -261,28 +261,30 @@ export function MonthScene() {
               ))}
             </ul>
           </figure>
-          <figure className="dp-report-card">
-            <span className="dp-report-obj" aria-hidden="true">
-              <Image src="/site/objects/report.webp" alt="" width={240} height={240} sizes="120px" />
-            </span>
-            <figcaption>
-              <strong>September report</strong>
-              <span>
-                {WEEK_CLEARED.length} cleared charges, <span className="mono">{money(cleared)}</span>, filed as they
-                landed
+          <div className="dp-month-side">
+            <figure className="dp-report-card">
+              <span className="dp-report-obj" aria-hidden="true">
+                <Image src="/site/objects/report.webp" alt="" width={240} height={240} sizes="120px" />
               </span>
-            </figcaption>
-            <ul className="dp-formats" aria-label="Formats">
-              <li>PDF</li>
-              <li>XLSX</li>
-              <li>GL journal CSV</li>
-              {QBO_LIVE && <li>QuickBooks Online</li>}
-            </ul>
-            <Sample />
-          </figure>
-          <span className="dp-month-fig" aria-hidden="true">
-            <Image src="/site/characters/dana-review.webp" alt="" width={619} height={1388} sizes="170px" />
-          </span>
+              <figcaption>
+                <strong>September report</strong>
+                <span>
+                  {WEEK_CLEARED.length} cleared charges, <span className="mono">{money(cleared)}</span>, filed as they
+                  landed
+                </span>
+              </figcaption>
+              <ul className="dp-formats" aria-label="Formats">
+                <li>PDF</li>
+                <li>XLSX</li>
+                <li>GL journal CSV</li>
+                {QBO_LIVE && <li>QuickBooks Online</li>}
+              </ul>
+              <Sample />
+            </figure>
+            <span className="dp-month-fig" aria-hidden="true">
+              <Image src="/site/characters/dana-review.webp" alt="" width={619} height={1388} sizes="170px" />
+            </span>
+          </div>
         </div>
       </div>
     </section>

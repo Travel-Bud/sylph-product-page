@@ -64,18 +64,51 @@ function Lab({ l, d }: { l: Label; d: number }) {
   );
 }
 
-function Tally({ step, bigRef, subRef }: { step: number; bigRef: React.RefObject<HTMLSpanElement | null>; subRef: React.RefObject<HTMLSpanElement | null> }) {
+type Tal = { step: number; big: number; a: number; b: number; c: number };
+
+/** What the tally reads once a step has settled. */
+const settledTal = (step: number): Tal => ({
+  step,
+  big: step >= 4 ? COUNTS.exceptions : COUNTS.charges,
+  a: step === 1 ? COUNTS.receipts : step >= 4 ? COUNTS.cleared : COUNTS.charges,
+  b: COUNTS.note,
+  c: COUNTS.block,
+});
+
+/** The tally from a frame: counts of the marks as drawn. */
+function talOf(f: FrameInfo): Tal {
+  const t = settledTal(f.step);
+  if (f.step === 0 && f.mode === "intro") return { ...t, big: f.landed, a: f.landed };
+  if (f.step === 1) return { ...t, a: f.by.matched ?? 0 };
+  if (f.step === 4) {
+    const ok = f.by.ok ?? 0;
+    return { ...t, big: COUNTS.charges - ok, a: ok, b: f.by.note ?? 0, c: f.by.block ?? 0 };
+  }
+  return t;
+}
+
+type FeedRef = React.RefObject<((t: Tal) => void) | null>;
+
+function Tally({ step, feedRef }: { step: number; feedRef: FeedRef }) {
+  const [t, setT] = useState<Tal>(() => settledTal(step));
+  useEffect(() => {
+    feedRef.current = (n) => setT((o) => (o.step === n.step && o.big === n.big && o.a === n.a && o.b === n.b && o.c === n.c ? o : n));
+    return () => {
+      feedRef.current = null;
+    };
+  }, [feedRef]);
+  const v = t.step === step ? t : settledTal(step);
   let sub: React.ReactNode;
-  if (step === 0) sub = <><b data-k="landed">{COUNTS.charges}</b> charges, {usd(COUNTS.total)}, none checked yet</>;
-  else if (step === 1) sub = <>Receipts matched <b data-k="matched">{COUNTS.receipts}</b> of {COUNTS.charges}</>;
+  if (step === 0) sub = <><b>{v.a}</b> charges, {usd(COUNTS.total)}, none checked yet</>;
+  else if (step === 1) sub = <>Receipts matched <b>{v.a}</b> of {COUNTS.charges}</>;
   else if (step === 2) sub = <><b>{COUNTS.foreign}</b> of {COUNTS.charges} charged in another currency</>;
   else if (step === 3) sub = <><b>{COUNTS.dupes}</b> flagged as duplicates, <b>{COUNTS.lookalikes}</b> look-alikes pass</>;
   else if (step === 4)
     sub = (
       <>
-        <i className="pl-sw pl-sw--ok" /> Cleared <b data-k="ok">{COUNTS.cleared}</b>
-        <i className="pl-sw pl-sw--note" /> Needs a note <b data-k="note">{COUNTS.note}</b>
-        <i className="pl-sw pl-sw--block" /> Blocked <b data-k="block">{COUNTS.block}</b>
+        <i className="pl-sw pl-sw--ok" /> Cleared <b>{v.a}</b>
+        <i className="pl-sw pl-sw--note" /> Needs a note <b>{v.b}</b>
+        <i className="pl-sw pl-sw--block" /> Blocked <b>{v.c}</b>
       </>
     );
   else
@@ -87,12 +120,10 @@ function Tally({ step, bigRef, subRef }: { step: number; bigRef: React.RefObject
   return (
     <div className="pl-tally">
       <span className="pl-big">
-        <span className="pl-big-n" ref={bigRef}>
-          {step === 5 ? COUNTS.exceptions : COUNTS.charges}
-        </span>
+        <span className="pl-big-n">{v.big}</span>
         <span className="pl-big-l">left for a person</span>
       </span>
-      <span className="pl-sub" ref={subRef}>
+      <span className="pl-sub" key={step}>
         {sub}
       </span>
       <span className="pl-sample">Sample data</span>
@@ -105,8 +136,7 @@ export function PileGraphic({ step }: { step: number }) {
   const stage = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const engine = useRef<PileEngine | null>(null);
-  const bigRef = useRef<HTMLSpanElement>(null);
-  const subRef = useRef<HTMLSpanElement>(null);
+  const feedRef = useRef<((t: Tal) => void) | null>(null);
   const prevStep = useRef(-1);
   const reduce = useRef(false);
   const [geo, setGeo] = useState<Geo | null>(null);
@@ -157,31 +187,12 @@ export function PileGraphic({ step }: { step: number }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scenes, geo]);
 
-  /* per-frame counts into the tally, without re-rendering */
+  /* per-frame counts into the tally (a state update only when a count changes) */
   useEffect(() => {
     const e = engine.current;
     if (!e) return;
-    e.onFrame = (f: FrameInfo) => {
-      const big = bigRef.current;
-      const sub = subRef.current;
-      if (!big || !sub || f.step !== step) return;
-      let n = f.step === 5 ? COUNTS.exceptions : COUNTS.charges;
-      if (f.step === 0 && f.mode === "intro") n = f.landed;
-      if (f.step === 4) n = COUNTS.charges - (f.by.ok ?? 0);
-      big.textContent = String(n);
-      const set = (k: string, v: number) => {
-        const el = sub.querySelector<HTMLElement>(`[data-k="${k}"]`);
-        if (el) el.textContent = String(v);
-      };
-      if (f.step === 0) set("landed", f.mode === "intro" ? f.landed : COUNTS.charges);
-      if (f.step === 1) set("matched", f.by.matched ?? 0);
-      if (f.step === 4) {
-        set("ok", f.by.ok ?? 0);
-        set("note", f.by.note ?? 0);
-        set("block", f.by.block ?? 0);
-      }
-    };
-  }, [step, scenes]);
+    e.onFrame = (f: FrameInfo) => feedRef.current?.(talOf(f));
+  }, [scenes]);
 
   /* step changes: forward plays, back settles */
   useEffect(() => {
@@ -237,7 +248,7 @@ export function PileGraphic({ step }: { step: number }) {
 
   return (
     <div className="pl-graphic" ref={wrap}>
-      <Tally step={shown.step} bigRef={bigRef} subRef={subRef} />
+      <Tally step={shown.step} feedRef={feedRef} />
       <div className="pl-stage" ref={stage}>
         <canvas
           ref={canvas}
