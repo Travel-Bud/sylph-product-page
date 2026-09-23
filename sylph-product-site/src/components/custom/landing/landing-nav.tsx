@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { LandingBird } from "./landing-bird";
+import { DEMO } from "@/components/custom/site/anchors";
 
 /* one vocabulary — nav and footer agree */
 const ANCHORS = [
@@ -83,7 +84,7 @@ export function LandingNav({ overDark = false }: { overDark?: boolean }) {
           <Link href="https://app.sylph-product.com/login" className="btn btn-ghost nav-login">
             Log in
           </Link>
-          <Link href="/demo" className="btn btn-primary">
+          <Link href={DEMO} className="btn btn-primary">
             Book a demo
           </Link>
           <button
@@ -113,7 +114,7 @@ export function LandingNav({ overDark = false }: { overDark?: boolean }) {
         <Link href="https://app.sylph-product.com/login" className="btn btn-ghost btn-lg" onClick={close}>
           Log in
         </Link>
-        <Link href="/demo" className="btn btn-primary btn-lg" onClick={close}>
+        <Link href={DEMO} className="btn btn-primary btn-lg" onClick={close}>
           Book a demo
         </Link>
       </div>

@@ -100,5 +100,5 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 ## Non-goals (for now)
 
 - No SEO files (`robots.ts`, `sitemap.ts`, per-route metadata).
-- No analytics or telemetry SDK.
+- No analytics beyond Vercel Web Analytics (`<Analytics />` in the root layout, PR #7).
 - No legal-document rendering; the legal host owns that.

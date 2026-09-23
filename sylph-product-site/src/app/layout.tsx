@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 /* No faces here: each surface loads its own (the landing and marketing pages through their <main>,
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <div className="relative min-h-screen">{children}</div>
+        <Analytics />
       </body>
     </html>
   );

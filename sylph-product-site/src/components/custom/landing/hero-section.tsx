@@ -12,6 +12,7 @@ import { buildFlightTimeline, resetFlight, type FlightStage } from "./flight/orc
 import { AURORA_ART, DEFAULT_PARAMS } from "./flight/params";
 import type { SheetsApi } from "./flight/hero-flight";
 import type { RowAtlas } from "./flight/capture";
+import { DEMO } from "@/components/custom/site/anchors";
 
 /* three.js enters only through this — zero GL bytes on first paint, nothing
    at all on the fade tier. (The living-vortex bg shader is parked in the lab
@@ -387,7 +388,7 @@ export function HeroSection() {
             actually needs a decision.
           </p>
           <div className="wh-ctas">
-            <Link href="/demo" className="btn btn-aurora btn-lg">
+            <Link href={DEMO} className="btn btn-aurora btn-lg">
               Book a demo
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
