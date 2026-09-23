@@ -35,7 +35,7 @@ function SoundToggle() {
       title={on ? "Sound on" : "Sound off"}
       onClick={() => {
         setOn(!on);
-        if (!on) play("tap");
+        if (!on) play("toggle");
       }}
     >
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

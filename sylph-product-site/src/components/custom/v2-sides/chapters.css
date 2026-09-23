@@ -393,7 +393,7 @@
 /* ---------- 2. policy: the compile ---------- */
 /* the pin: the section is a scroll track, the chapter screen sticks inside it while the compile runs */
 .v2s .v2c--pin {
-  height: calc(100svh + 150svh);
+  height: calc(100svh + 80svh);
   padding: 0;
 }
 .v2c-pin {
@@ -607,6 +607,11 @@
 .v2c-cstage.is-live .v2c-rc:not(.is-locked) .v2c-kind {
   opacity: 0;
   transform: scale(1.7) rotate(-6deg);
+}
+/* while live, the script drives fields and chips frame by frame: no transitions fighting it */
+.v2c-cstage.is-live .v2c-rf-v,
+.v2c-cstage.is-live .v2c-kind {
+  transition: none;
 }
 .v2c-cstage.is-live .v2c-rf-v:not(.is-in) {
   opacity: 0;
@@ -1007,6 +1012,33 @@
   color: var(--ink-2);
 }
 
+/* round 5: the charge waits in the queue as itself, and Dana's answer shows in its row */
+.v2c-q.is-approved {
+  border-color: var(--green);
+}
+.v2c-q.is-returned {
+  border-color: var(--hair-2);
+}
+.v2c-q-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.v2c-q-status--approved {
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.v2c-q-status--returned {
+  background: var(--band);
+  color: var(--ink-2);
+}
+
 /* ---------- 5. month end ---------- */
 .v2c--meet .v2c-h2 {
   color: var(--bone);
@@ -1065,6 +1097,16 @@
   border: 0;
   background: none;
   text-align: left;
+}
+/* courier stop 5: the charge's own line on the report, a compact cleared pill */
+.v2c-rt .v2s-token-pill {
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-color: var(--green);
+}
+.v2c-rt .v2s-token-pill .mono {
+  font-size: 11px;
 }
 .v2c-rt tfoot td {
   border-top: 1.5px solid var(--ink);

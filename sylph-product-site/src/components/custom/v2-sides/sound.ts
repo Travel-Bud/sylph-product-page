@@ -1,27 +1,77 @@
 /*
- * The page's sound (round 4, contract 1). Every sound is synthesized with WebAudio; there are no
- * audio files. Sound is off by default, and the nav toggle is the only way to turn it on. The
- * choice is remembered in localStorage. Nothing plays before the visitor's first gesture (sticky
- * user activation). Reduced motion never plays anything unless the visitor switched sound on
- * themselves, and switching it on is the only way anything plays, so that rule holds by
- * construction.
+ * The page's sound (round 5b). Six short recorded clicks (CC0, Kenney "Interface Sounds" and
+ * SFXMint; trimmed, warmed and normalised to about -24 LUFS, clicks -22; public/site/sound/, see
+ * its README) played through WebAudio with a little pitch and gain variation so repeats don't
+ * sound mechanical. /v2/sounds auditions alternatives: a pick saved there (localStorage
+ * PICKS_KEY) replaces a slot's file here, at once.
+ *
+ * The policy, enforced here rather than at the call sites:
+ *  - Off by default. The nav toggle is the only switch, and the choice is remembered.
+ *  - play() is a no-op unless it runs during, or within WINDOW ms of, a trusted pointerdown,
+ *    click or keydown on a control. Scroll, courier landings, timers and animation ends never
+ *    make a sound, whoever calls play().
+ *  - A click may schedule a short consequence (the hero's charge landing a few seconds later)
+ *    with play(name, { delay }). It is booked on the audio clock at the moment of the click,
+ *    and hush() cancels anything still pending.
+ *  - Nothing is fetched until sound is switched on.
  *
  *   import { play } from "./sound";
- *   play("tap");   // "tap" | "send" | "land" | "stamp" | "swish" | "approve"
- *
- * Call play() only on the visitor's own actions or when the courier lands. It is safe to call
- * anywhere, any time: on the server, before hydration or while sound is off, it does nothing.
+ *   play("tap");   // "tap" | "send" | "land" | "stamp" | "swish" | "approve" | "toggle"
  */
 
-export type SoundName = "tap" | "send" | "land" | "stamp" | "swish" | "approve";
+export type SoundName = "tap" | "send" | "land" | "stamp" | "swish" | "approve" | "toggle";
+
+/* Six slots, one file each: tap (tabs and pickers), send (the hero's receipt), approve (Dana's
+   Approve), stamp (the policy approval), toggle (the sound switch), land (the hero's charge
+   landing, booked from its click). `swish` shares send's file. */
+export type Slot = "tap" | "send" | "approve" | "stamp" | "toggle" | "land";
+export const SLOTS: Slot[] = ["tap", "send", "approve", "stamp", "toggle", "land"];
+const FILE: Record<SoundName, Slot> = {
+  tap: "tap",
+  send: "send",
+  swish: "send",
+  land: "land",
+  stamp: "stamp",
+  approve: "approve",
+  toggle: "toggle",
+};
+/* per-slot trim on top of the files' own normalisation */
+const LEVEL: Record<Slot, number> = { tap: 1, send: 0.95, approve: 1, stamp: 1, toggle: 0.9, land: 0.8 };
+type File = Slot;
+const FILES = SLOTS;
+
+/** Where /v2/sounds keeps the visitor's chosen file per slot: { [slot]: "<name>" } under audition/. */
+export const PICKS_KEY = "v2s-sound-picks";
+function picks(): Partial<Record<Slot, string>> {
+  try {
+    return JSON.parse(window.localStorage.getItem(PICKS_KEY) ?? "{}") ?? {};
+  } catch {
+    return {};
+  }
+}
+/** Forget decoded files so the next play loads the current picks (the audition page calls this). */
+export function reloadPicks() {
+  buffers.clear();
+  loading = null;
+}
 
 const KEY = "v2s-sound";
+const WINDOW = 150;
+const CONTROL = "button, a[href], [role='button'], [role='tab'], [role='switch'], [role='checkbox'], input, select, textarea, summary, label";
+
 let pref: boolean | null = null;
 let ctx: AudioContext | null = null;
 let out: GainNode | null = null;
-let noise: AudioBuffer | null = null;
-let gestured = false;
+let loading: Promise<void> | null = null;
+const buffers = new Map<File, AudioBuffer>();
+const pending = new Set<AudioBufferSourceNode>();
 const subs = new Set<(on: boolean) => void>();
+let gestureAt = -Infinity;
+let last = { file: "", at: 0 };
+/* a click that arrived before the files were decoded (the very first one) still sounds, late by
+   the decode, as long as that is still plainly its answer */
+let queued: { name: SoundName; at: number } | null = null;
+const LATE = 600;
 
 function read(): boolean {
   if (pref !== null) return pref;
@@ -31,6 +81,22 @@ function read(): boolean {
     pref = false;
   }
   return pref;
+}
+
+/* One capture listener per event on window: it runs before any component's handler, so play()
+   inside a click handler always sees its own gesture. Only trusted events on controls count. */
+if (typeof window !== "undefined") {
+  const mark = (e: Event) => {
+    if (!e.isTrusted) return;
+    const t = e.target as Element | null;
+    if (!t?.closest?.(CONTROL)) return;
+    gestureAt = performance.now();
+    if (read()) void warm();
+  };
+  for (const type of ["pointerdown", "click", "keydown"]) window.addEventListener(type, mark, { capture: true, passive: true });
+  window.addEventListener("storage", (e) => {
+    if (e.key === PICKS_KEY) reloadPicks();
+  });
 }
 
 /** Whether the visitor has switched sound on (false on the server). */
@@ -47,10 +113,8 @@ export function setOn(on: boolean) {
   } catch {
     /* private mode or blocked storage: the choice lasts for this page view */
   }
-  if (on) {
-    gestured = true;
-    audio();
-  }
+  if (on) void warm();
+  else hush();
   subs.forEach((f) => f(on));
 }
 
@@ -69,119 +133,104 @@ export function subscribe(fn: (on: boolean) => void): () => void {
   };
 }
 
-function activated() {
-  if (gestured) return true;
-  const ua = (navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation;
-  if (ua?.hasBeenActive) gestured = true;
-  return gestured;
-}
-
 function audio(): AudioContext | null {
-  if (ctx) {
-    if (ctx.state === "suspended") void ctx.resume();
-    return ctx;
+  if (!ctx) {
+    const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AC) return null;
+    ctx = new AC();
+    out = ctx.createGain();
+    out.gain.value = 0.9;
+    out.connect(ctx.destination);
   }
-  const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-  if (!AC) return null;
-  ctx = new AC();
-  out = ctx.createGain();
-  out.gain.value = 0.55;
-  out.connect(ctx.destination);
-  noise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
-  const d = noise.getChannelData(0);
-  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  if (ctx.state === "suspended") void ctx.resume();
   return ctx;
 }
 
-/* ---------- voices ---------- */
-
-type Env = { at: number; peak: number; attack: number; hold?: number; decay: number };
-
-function envelope(g: GainNode, { at, peak, attack, hold = 0, decay }: Env) {
-  g.gain.setValueAtTime(0.0001, at);
-  g.gain.exponentialRampToValueAtTime(peak, at + attack);
-  g.gain.setValueAtTime(peak, at + attack + hold);
-  g.gain.exponentialRampToValueAtTime(0.0001, at + attack + hold + decay);
-  return at + attack + hold + decay;
+async function decode(c: AudioContext, file: File): Promise<AudioBuffer> {
+  const pick = picks()[file];
+  const base = pick && /^[a-z0-9_-]+$/i.test(pick) ? `/site/sound/audition/${pick}` : `/site/sound/${file}`;
+  /* Opus in WebM first (smaller); MP3 where the browser cannot decode it */
+  for (const ext of ["webm", "mp3"]) {
+    try {
+      const res = await fetch(`${base}.${ext}`);
+      if (!res.ok) continue;
+      return await c.decodeAudioData(await res.arrayBuffer());
+    } catch {
+      /* try the next format */
+    }
+  }
+  throw new Error(`sound ${file} did not decode`);
 }
 
-/** Filtered noise: paper, air. The filter sweeps from f0 to f1. */
-function hiss(c: AudioContext, at: number, e: Omit<Env, "at">, f0: number, f1: number, q = 1, type: BiquadFilterType = "bandpass") {
-  const src = c.createBufferSource();
-  src.buffer = noise;
-  src.playbackRate.value = 0.9 + Math.random() * 0.2;
-  const f = c.createBiquadFilter();
-  f.type = type;
-  f.Q.value = q;
-  f.frequency.setValueAtTime(f0, at);
-  const g = c.createGain();
-  const end = envelope(g, { at, ...e });
-  f.frequency.exponentialRampToValueAtTime(f1, end);
-  src.connect(f).connect(g).connect(out!);
-  src.start(at, Math.random() * 0.5);
-  src.stop(end + 0.02);
-}
-
-/** A pitched body: a knock, a thump, a chime. The pitch glides from p0 to p1. */
-function tone(c: AudioContext, at: number, e: Omit<Env, "at">, p0: number, p1: number, type: OscillatorType = "sine") {
-  const o = c.createOscillator();
-  o.type = type;
-  o.frequency.setValueAtTime(p0, at);
-  const g = c.createGain();
-  const end = envelope(g, { at, ...e });
-  o.frequency.exponentialRampToValueAtTime(p1, end);
-  o.connect(g).connect(out!);
-  o.start(at);
-  o.stop(end + 0.02);
-}
-
-const VOICES: Record<SoundName, (c: AudioContext, t: number) => void> = {
-  /* a fingertip on paper */
-  tap: (c, t) => {
-    hiss(c, t, { peak: 0.28, attack: 0.002, decay: 0.045 }, 2600, 1800, 1.4);
-    tone(c, t, { peak: 0.12, attack: 0.002, decay: 0.05 }, 220, 150);
-  },
-  /* a short breath of air as the charge leaves */
-  send: (c, t) => {
-    hiss(c, t, { peak: 0.16, attack: 0.12, decay: 0.26 }, 500, 3400, 0.9);
-  },
-  /* a soft, settled arrival */
-  land: (c, t) => {
-    hiss(c, t, { peak: 0.1, attack: 0.003, decay: 0.05 }, 1400, 900, 0.8, "lowpass");
-    tone(c, t, { peak: 0.14, attack: 0.006, decay: 0.26 }, 587, 523);
-    tone(c, t + 0.005, { peak: 0.05, attack: 0.006, decay: 0.2 }, 880, 784);
-  },
-  /* rubber on paper: a low thud with a pressed edge */
-  stamp: (c, t) => {
-    tone(c, t, { peak: 0.34, attack: 0.003, decay: 0.14 }, 130, 58);
-    hiss(c, t, { peak: 0.2, attack: 0.002, hold: 0.012, decay: 0.07 }, 900, 500, 0.7, "lowpass");
-  },
-  /* a sheet sliding past */
-  swish: (c, t) => {
-    hiss(c, t, { peak: 0.12, attack: 0.05, decay: 0.2 }, 4200, 1600, 1.1);
-  },
-  /* a small, bright click up */
-  approve: (c, t) => {
-    tone(c, t, { peak: 0.11, attack: 0.003, decay: 0.08 }, 880, 860, "triangle");
-    tone(c, t + 0.075, { peak: 0.11, attack: 0.003, decay: 0.14 }, 1320, 1290, "triangle");
-    hiss(c, t, { peak: 0.08, attack: 0.001, decay: 0.02 }, 3000, 2500, 2);
-  },
-};
-
-let last = 0;
-
-/** Play a sound, if the visitor has turned sound on and has interacted with the page. */
-export function play(name: SoundName) {
-  if (typeof window === "undefined" || !read() || !activated()) return;
+/** Fetch and decode every sound once, only after sound is switched on (a gesture made the context). */
+function warm(): Promise<void> {
+  if (loading) return loading;
   const c = audio();
-  if (!c || !out || !noise) return;
-  /* never stack: two calls in the same instant play once */
-  const now = c.currentTime;
-  if (now - last < 0.03) return;
-  last = now;
+  if (!c) return Promise.resolve();
+  loading = Promise.all(
+    FILES.map((f) =>
+      decode(c, f)
+        .then((b) => void buffers.set(f, b))
+        .catch(() => undefined),
+    ),
+  ).then(() => {
+    const q = queued;
+    queued = null;
+    if (q && performance.now() - q.at < LATE) start(q.name, 0);
+  });
+  return loading;
+}
+
+/** Stop anything a click booked for later (a new pick, or its stage scrolled away). */
+export function hush() {
+  pending.forEach((s) => {
+    try {
+      s.stop();
+    } catch {
+      /* already ended */
+    }
+  });
+  pending.clear();
+}
+
+/**
+ * Play a sound in answer to the visitor's own click, tap or key press. Outside that window it
+ * does nothing. `delay` (seconds) books a consequence of this same click on the audio clock.
+ */
+export function play(name: SoundName, opts: { delay?: number } = {}) {
+  if (typeof window === "undefined" || !read()) return;
+  if (performance.now() - gestureAt > WINDOW) return;
+  if (!buffers.get(FILE[name])) {
+    if (!opts.delay) queued = { name, at: gestureAt };
+    void warm();
+    return;
+  }
+  start(name, Math.max(0, opts.delay ?? 0));
+}
+
+function start(name: SoundName, delay: number) {
+  const c = audio();
+  const file = FILE[name];
+  const buf = buffers.get(file);
+  if (!c || !out || !buf) return;
+  const at = c.currentTime + 0.005 + delay;
+  /* one gesture, one sound: the same file twice within 40ms plays once */
+  if (last.file === file && Math.abs(at - last.at) < 0.04) return;
+  last = { file, at };
+
+  const src = c.createBufferSource();
+  src.buffer = buf;
+  src.playbackRate.value = 0.96 + Math.random() * 0.08;
+  const g = c.createGain();
+  g.gain.value = LEVEL[file] * (0.86 + Math.random() * 0.14);
+  src.connect(g).connect(out);
   try {
-    VOICES[name](c, now + 0.005);
+    src.start(at);
   } catch {
-    /* audio is decoration; never let it throw into a click handler */
+    return;
+  }
+  if (delay > 0) {
+    pending.add(src);
+    src.onended = () => pending.delete(src);
   }
 }

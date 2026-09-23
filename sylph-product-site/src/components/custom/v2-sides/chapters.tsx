@@ -319,14 +319,22 @@ const COMPILED: { id: string; kind: "warn" | "block"; fields: [string, string, s
 ];
 const FLIGHTS = COMPILED.flatMap((rule, r) => rule.fields.map(([, t, src], f) => ({ r, f, t, src })));
 
-/* The script: each rule owns an equal slice of the run. Inside it the clause is read, its tokens
-   lift out one after another and fly to their fields, then the card locks and its chip stamps. */
-const RUN = { start: 0.06, end: 0.84, done: 0.88 };
-const SLICE = (RUN.end - RUN.start) / COMPILED.length;
+/* The script: each rule owns a slice of the run, and the slices overlap a little so the machine
+   never idles between rules. Inside a slice the clause is read, its tokens lift out in an
+   overlapping stream and fly to their fields, then the card eases into its lock and its chip
+   stamps. The run starts while the section scrolls in and ends as the pin releases: no dead scroll. */
+const RUN = { start: 0.02, end: 0.93, done: 0.95 };
+const N = COMPILED.length;
+const OVERLAP = 0.18;
+const SLICE = (RUN.end - RUN.start) / (N - (N - 1) * OVERLAP);
 const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
 const ease = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
-const ruleU = (p: number, r: number) => clamp01((p - (RUN.start + r * SLICE)) / SLICE);
-const flightT = (u: number, f: number) => clamp01((u - (0.2 + f * 0.19)) / 0.34);
+const smooth = (x: number) => {
+  const t = clamp01(x);
+  return t * t * (3 - 2 * t);
+};
+const ruleU = (p: number, r: number) => clamp01((p - (RUN.start + r * SLICE * (1 - OVERLAP))) / SLICE);
+const flightT = (u: number, f: number) => clamp01((u - (0.1 + f * 0.15)) / 0.5);
 
 type Box = { x: number; y: number; w: number; h: number };
 
@@ -350,6 +358,7 @@ function PolicyCompile() {
     const clones = q<HTMLElement>(".v2c-flyt");
     const status = el.querySelector<HTMLElement>(".v2c-cstatus-t");
     const bar = el.querySelector<HTMLElement>(".v2c-cbar i");
+    const kinds = q<HTMLElement>(".v2c-kind");
     const tokBy = new Map(toks.map((t) => [t.dataset.k!, t]));
 
     let src: Box[] = [];
@@ -381,20 +390,23 @@ function PolicyCompile() {
         const t = flightT(u, f.f);
         const c = clones[i];
         const field = fields[i];
+        /* the field fades up under the chip as it lands, so the hand-off is continuous */
+        const land = smooth((t - 0.8) / 0.2);
+        field.classList.toggle("is-in", t >= 1);
+        field.style.opacity = land.toFixed(3);
+        field.style.transform = `scale(${(0.85 + 0.15 * land).toFixed(3)})`;
         if (t <= 0 || t >= 1) {
           if (c.style.opacity !== "0") c.style.opacity = "0";
-          field.classList.toggle("is-in", t >= 1);
           return;
         }
         out.add(f.src);
-        field.classList.remove("is-in");
         const e = ease(t);
         const a = src[i];
         const b = dst[i];
         const x = a.x + (b.x - a.x) * e;
         const y = a.y + (b.y - a.y) * e - Math.sin(Math.PI * t) * 36;
         const s = 1 + Math.sin(Math.PI * t) * 0.14;
-        c.style.opacity = "1";
+        c.style.opacity = (smooth(t / 0.08) * (1 - smooth((t - 0.9) / 0.1))).toFixed(3);
         c.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) scale(${s.toFixed(3)})`;
       });
       toks.forEach((t) => t.classList.toggle("is-out", out.has(t.dataset.k!)));
@@ -402,7 +414,12 @@ function PolicyCompile() {
       COMPILED.forEach((_, r) => {
         const u = ruleU(p, r);
         setState(clauses[r], ["is-reading", "is-done", "is-waiting"], u >= 1 ? "is-done" : u > 0 ? "is-reading" : "is-waiting");
-        setState(cards[r], ["is-empty", "is-building", "is-locked"], u >= 0.96 ? "is-locked" : u > 0.14 ? "is-building" : "is-empty");
+        setState(cards[r], ["is-empty", "is-building", "is-locked"], u >= 0.96 ? "is-locked" : u > 0.08 ? "is-building" : "is-empty");
+        /* the chip stamps in over the last stretch of the slice rather than on one frame */
+        const k = smooth((u - 0.8) / 0.2);
+        const chip = kinds[r];
+        chip.style.opacity = k.toFixed(3);
+        chip.style.transform = `scale(${(1.7 - 0.7 * k).toFixed(3)}) rotate(${(-6 * (1 - k)).toFixed(2)}deg)`;
         if (u >= 0.96) building = r + 1;
         else if (u > 0) building = Math.max(building, r + 0.5);
       });
@@ -414,7 +431,7 @@ function PolicyCompile() {
           : building === 0
             ? "Ready to compile section 4"
             : `Compiling rule ${Math.min(COMPILED.length, Math.ceil(building + 0.01))} of ${COMPILED.length}`;
-      if (bar) bar.style.transform = `scaleX(${clamp01((p - RUN.start) / (RUN.done - RUN.start)).toFixed(3)})`;
+      if (bar) bar.style.transform = `scaleX(${clamp01(p / RUN.done).toFixed(3)})`;
     };
 
     el.classList.add("is-live");
@@ -435,19 +452,36 @@ function PolicyCompile() {
 
     const pinned = window.matchMedia("(min-width: 961px) and (min-height: 700px)");
     let raf = 0;
-    let top = 0;
-    let run = 1;
+    let from = 0;
+    let span = 1;
+    /* the run begins while the section is still scrolling in (its top 30% of a viewport below the
+       nav) and ends as the pin releases, so scroll always moves the machine */
     const place = () => {
       const r = section.getBoundingClientRect();
-      top = r.top + window.scrollY;
-      run = Math.max(1, section.offsetHeight - window.innerHeight + 64);
+      const top = r.top + window.scrollY;
+      const lead = window.innerHeight * 0.3;
+      from = top - 64 - lead;
+      span = Math.max(1, section.offsetHeight - window.innerHeight + 64 + lead);
+    };
+    /* a light scrub: the shown progress eases toward the scroll position (about 110ms to settle),
+       so a wheel's steps read as one continuous run, forwards or back */
+    let cur = -1;
+    let target = 0;
+    let lastT = 0;
+    const tick = (now: number) => {
+      raf = 0;
+      const dt = lastT ? Math.min(64, now - lastT) : 16;
+      lastT = now;
+      if (cur < 0) cur = target;
+      cur += (target - cur) * (1 - Math.exp(-dt / 110));
+      if (Math.abs(target - cur) < 0.0006) cur = target;
+      apply(cur);
+      if (cur !== target) raf = requestAnimationFrame(tick);
+      else lastT = 0;
     };
     const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        apply(clamp01((window.scrollY - (top - 64)) / run));
-      });
+      target = clamp01((window.scrollY - from) / span);
+      if (!raf) raf = requestAnimationFrame(tick);
     };
 
     /* phones and short screens: no pin; the compile runs by itself once the panel is in view */
@@ -764,9 +798,34 @@ export function Verdicts() {
   );
 }
 
-/* ---------- 4. Desk: Approve or Return moves the item; the count and the month strip follow ---------- */
+/* ---------- 4. Desk: Approve or Return moves the item; the count and the month strip follow ----------
+   Round 5: the charge sits in Dana's queue itself (courier stop 4 is the pill in its row). Her approval
+   is what files it: as the courier leaves the desk for month end, the row reads Approved, the strip
+   ticks, and the charge drops into its own line on the September report (stop 5). */
 
 type Decision = "approved" | "returned";
+
+/** The courier's position relative to the desk: true once the charge has left for (or reached) the report. */
+function useFiled() {
+  const [filed, setFiled] = useState(false);
+  useEffect(() => {
+    const onArrive = (e: Event) => {
+      const n = (e as CustomEvent<{ stop: number }>).detail?.stop;
+      if (typeof n === "number") setFiled(n >= 5);
+    };
+    const onDepart = (e: Event) => {
+      const d = (e as CustomEvent<{ stop: number; to?: number }>).detail;
+      if (d?.stop === 4) setFiled((d.to ?? 5) >= 5);
+    };
+    window.addEventListener("v2s:arrive", onArrive);
+    window.addEventListener("v2s:depart", onDepart);
+    return () => {
+      window.removeEventListener("v2s:arrive", onArrive);
+      window.removeEventListener("v2s:depart", onDepart);
+    };
+  }, []);
+  return filed;
+}
 
 function DeskQueue() {
   const [done, setDone] = useState<Record<string, Decision>>({});
@@ -774,9 +833,16 @@ function DeskQueue() {
   const [leaving, setLeaving] = useState<{ merchant: string; d: Decision } | null>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const resetRef = useRef<HTMLButtonElement>(null);
-  const open = EXCEPTIONS.filter((r) => !done[r.merchant]);
-  const approved = Object.values(done).filter((d) => d === "approved").length;
-  const returned = Object.values(done).filter((d) => d === "returned").length;
+  const filed = useFiled();
+  const ours = CHARGE.merchant;
+  /* our row is answered either by the visitor or by the story (the courier filing it) */
+  const oursD: Decision | undefined = done[ours] ?? (filed ? "approved" : undefined);
+  const decided = (m: string) => (m === ours ? oursD : done[m]);
+  /* our row never leaves the list: it carries the charge, and the answer shows in place */
+  const rows = EXCEPTIONS.filter((r) => r.merchant === ours || !done[r.merchant]);
+  const waiting = EXCEPTIONS.filter((r) => !decided(r.merchant)).length;
+  const approved = EXCEPTIONS.filter((r) => decided(r.merchant) === "approved").length;
+  const returned = EXCEPTIONS.filter((r) => decided(r.merchant) === "returned").length;
 
   useArrival(4, () => {
     setFlash(true);
@@ -797,8 +863,8 @@ function DeskQueue() {
   const decide = (merchant: string, d: Decision, idx: number) => {
     if (leaving) return;
     play("approve");
-    // approved items leave toward the report, returned ones back toward the traveller
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return commit(merchant, d, idx);
+    // our row answers in place; other approved items leave toward the report, returned ones back toward the traveller
+    if (merchant === ours || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return commit(merchant, d, idx);
     setLeaving({ merchant, d });
     window.setTimeout(() => commit(merchant, d, idx), 260);
   };
@@ -807,7 +873,7 @@ function DeskQueue() {
     <Card side="dana" title="Dana's September" className="v2c-desk">
       <div className="v2c-strip" aria-hidden="true">
         {ROWS.map((r) => {
-          const d = done[r.merchant];
+          const d = decided(r.merchant);
           const state = r.verdict === "ok" ? "ok" : d ?? r.verdict;
           return (
             <span key={r.merchant} className={`v2c-cell v2c-cell--${state}`} title={r.merchant}>
@@ -824,42 +890,70 @@ function DeskQueue() {
           <b className="mono">{EXCEPTIONS.length}</b> reached Dana
         </span>
         <span aria-live="polite">
-          <b className="mono">{open.length}</b> still waiting
+          <b className="mono">{waiting}</b> still waiting
         </span>
       </p>
-      <ul className="v2c-queue" ref={listRef} aria-label={`Dana's queue, ${open.length} waiting`}>
-        {open.map((r, idx) => (
-          <li
-            key={r.merchant}
-            className={`v2c-q${r.merchant === CHARGE.merchant ? " is-ours" : ""}${flash && r.merchant === CHARGE.merchant ? " is-flash" : ""}${
-              leaving?.merchant === r.merchant ? ` is-leaving--${leaving.d}` : ""
-            }`}
-          >
-            <span className="v2c-q-main">
-              <span className="v2c-q-top">
-                <strong>{r.merchant}</strong>
-                <span className="mono">{r.amount}</span>
-                <VerdictChip v={r.verdict} />
-              </span>
-              <span className="mono v2c-q-cite">{r.cite}</span>
-              {r.merchant === CHARGE.merchant && (
-                <span className="v2c-q-note">
-                  <Head who="priya" size={20} />
-                  &ldquo;{CHARGE.note}&rdquo;
+      <ul className="v2c-queue" ref={listRef} aria-label={`Dana's queue, ${waiting} waiting`}>
+        {rows.map((r, idx) => {
+          const mine = r.merchant === ours;
+          const d = decided(r.merchant);
+          return (
+            <li
+              key={r.merchant}
+              className={`v2c-q${mine ? " is-ours" : ""}${mine && d ? ` is-${d}` : ""}${flash && mine ? " is-flash" : ""}${
+                leaving?.merchant === r.merchant ? ` is-leaving--${leaving.d}` : ""
+              }`}
+            >
+              <span className="v2c-q-main">
+                <span className="v2c-q-top">
+                  {mine ? (
+                    /* courier stop 4: the charge itself, waiting in Dana's queue */
+                    <span className="v2s-token-pill" data-courier-stop="4">
+                      <span className="v2s-token-m">{CHARGE.merchant}</span>
+                      <span className="mono">{CHARGE.amount}</span>
+                    </span>
+                  ) : (
+                    <>
+                      <strong>{r.merchant}</strong>
+                      <span className="mono">{r.amount}</span>
+                    </>
+                  )}
+                  <VerdictChip v={r.verdict} />
                 </span>
-              )}
-            </span>
-            <span className="v2c-q-acts">
-              <button type="button" className="v2c-q-b v2c-q-approve" onClick={() => decide(r.merchant, "approved", idx)} aria-label={`Approve ${r.merchant}`}>
-                Approve
-              </button>
-              <button type="button" className="v2c-q-b" onClick={() => decide(r.merchant, "returned", idx)} aria-label={`Return ${r.merchant}`}>
-                Return
-              </button>
-            </span>
-          </li>
-        ))}
-        {open.length === 0 && (
+                <span className="mono v2c-q-cite">{r.cite}</span>
+                {mine && (
+                  <span className="v2c-q-note">
+                    <Head who="priya" size={20} />
+                    &ldquo;{CHARGE.note}&rdquo;
+                  </span>
+                )}
+              </span>
+              <span className="v2c-q-acts">
+                {mine && d ? (
+                  <span className={`v2c-q-status v2c-q-status--${d}`} role="status">
+                    {d === "approved" ? (
+                      <>
+                        <Tick /> Approved, on the report
+                      </>
+                    ) : (
+                      "Returned to Priya"
+                    )}
+                  </span>
+                ) : (
+                  <>
+                    <button type="button" className="v2c-q-b v2c-q-approve" onClick={() => decide(r.merchant, "approved", idx)} aria-label={`Approve ${r.merchant}`}>
+                      Approve
+                    </button>
+                    <button type="button" className="v2c-q-b" onClick={() => decide(r.merchant, "returned", idx)} aria-label={`Return ${r.merchant}`}>
+                      Return
+                    </button>
+                  </>
+                )}
+              </span>
+            </li>
+          );
+        })}
+        {waiting === 0 && (
           <li className="v2c-q-empty">
             <span>
               Queue clear: {approved} approved onto the report, {returned} returned to the traveller for more detail.
@@ -871,6 +965,16 @@ function DeskQueue() {
         )}
       </ul>
     </Card>
+  );
+}
+
+/** The step line under a chapter's copy, for chapters whose charge sits inside their panel. */
+function StepLine({ step, state }: { step: number; state: string }) {
+  return (
+    <p className="v2s-token-line v2c-stepline">
+      <span className="v2s-token-step mono">{step}/5</span>
+      <span className="v2s-token-state">{state}</span>
+    </p>
   );
 }
 
@@ -895,7 +999,7 @@ export function Desk() {
           time.
         </p>
       }
-      token={<Token step={4} state="In Dana's queue, with Priya's note" />}
+      token={<StepLine step={4} state="In Dana's queue, with Priya's note. Her approval files it." />}
     >
       <DeskQueue />
     </Chapter>
@@ -953,7 +1057,15 @@ function MonthReport() {
               <td className="mono">{l.n}</td>
               <td>
                 <button type="button" className="v2c-rt-b" aria-pressed={line === l.n} onFocus={() => pick(l.n)} onClick={() => pick(l.n)}>
-                  {l.m}
+                  {l.m === CHARGE.merchant ? (
+                    /* courier stop 5: the charge lands on its own line of the report */
+                    <span className="v2s-token-pill" data-courier-stop="5">
+                      <span className="v2s-token-m">{CHARGE.merchant}</span>
+                      <span className="mono">{CHARGE.amount}</span>
+                    </span>
+                  ) : (
+                    l.m
+                  )}
                 </button>
               </td>
               <td className="mono v2c-num">{l.a}</td>
@@ -1006,7 +1118,7 @@ export function MonthEnd() {
               and one note. Dana answered five exceptions.
             </p>
           </div>
-          <Token step={5} tone="ok" state="On Priya's September report, closed" />
+          <StepLine step={5} state="Filed on line 3 of Priya's September report, closed" />
           <p className="v2c-air">Expenses run on air.</p>
         </div>
         <div className="v2c-panel">

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { Mark } from "@/components/custom/site/mark";
 import { CHARGE, DANA, PRIYA, ROWS, VERDICT_LABEL, type EngineRow } from "./data";
 import { Figure, Person, Sample, Tick, VerdictChip } from "./parts";
-import { play as sound } from "./sound";
+import { hush, play as sound } from "./sound";
 
 /*
  * The hero is playable. Priya's phone carries three receipts from the Denver trip; the visitor
@@ -207,15 +207,25 @@ export function HeroStage() {
     stage.dataset.played = "1";
   }, [run, measure]);
 
+  /* a landing sound booked by a click never plays once the stage is out of view */
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) hush();
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   useEffect(() => {
     const ro = new ResizeObserver(measure);
     if (ref.current) ro.observe(ref.current);
     return () => ro.disconnect();
   }, [measure]);
 
-  const announce = useCallback((id: Id, phase: "sent" | "landed", audible = true) => {
+  const announce = useCallback((id: Id, phase: "sent" | "landed") => {
     const p = PLAYS[id];
-    if (audible) sound(phase === "sent" ? "send" : "land");
     window.dispatchEvent(new CustomEvent("v2s:hero", { detail: { id, verdict: p.row.verdict, phase } }));
     if (phase === "landed") {
       const where = p.row.verdict === "ok" ? "Filed itself on the report." : "In Dana's queue.";
@@ -224,14 +234,18 @@ export function HeroStage() {
   }, []);
 
   const choose = (id: Id) => {
-    sound("tap");
+    /* sound answers the click: the tap now, and the charge's landing booked from this same click
+       for the moment it lands (a new pick, or the stage leaving view, cancels it) */
+    hush();
+    sound("send");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) sound("land", { delay: PLAYS[id].land + 0.05 });
     setPick(id);
     setDelivered((s) => new Set(s).add(id));
     setRun((n) => n + 1);
     /* reduced motion: nothing animates, so the play has already landed */
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      announce(id, "sent", false);
-      announce(id, "landed", false);
+      announce(id, "sent");
+      announce(id, "landed");
     }
   };
 
