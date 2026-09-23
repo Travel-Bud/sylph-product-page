@@ -3,8 +3,8 @@
 @theme inline {
   --color-background: #0a0f1a;
   --color-foreground: #ffffff;
-  --font-sans: var(--font-satoshi);
-  --font-mono: var(--font-ibm-plex-mono);
+  --font-sans: var(--font-satoshi, system-ui, sans-serif);
+  --font-mono: var(--font-ibm-plex-mono, ui-monospace, monospace);
 }
 
 body {

@@ -1,25 +1,15 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const satoshi = localFont({
-  src: [
-    { path: "../fonts/Satoshi-Variable.woff2", style: "normal" },
-    { path: "../fonts/Satoshi-VariableItalic.woff2", style: "italic" },
-  ],
-  variable: "--font-satoshi",
-  display: "swap",
-});
+/* No faces here: each surface loads its own (the landing and marketing pages through their <main>,
+   the pre-v3 routes through legacy-fonts.ts), so the root preloads nothing it does not use. */
 
-const ibmPlexMono = IBM_Plex_Mono({
-  variable: "--font-ibm-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
+/* Resolves the root social card (opengraph-image.jpg) to absolute URLs on every route, not only on /. */
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph-product.com";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Sylph",
   description:
     "Corporate travel and expense management with policy guardrails",
@@ -39,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${satoshi.variable} ${ibmPlexMono.variable}`}>
+    <html lang="en">
       <body className="antialiased">
         <div className="relative min-h-screen">{children}</div>
         <Analytics />

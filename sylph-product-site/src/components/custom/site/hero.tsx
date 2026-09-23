@@ -3,7 +3,7 @@ import { Arrow } from "./icons";
 import { Obj } from "./obj";
 import { DEMO } from "./anchors";
 import { VideoLoop } from "./video-loop";
-import { Mark } from "./mark";
+import { HeroBird } from "./hero-bird";
 import { QBO_LIVE } from "./sample-data";
 
 /* Hero clip: our own three objects (receipt, boarding pass, envelope) lifting on a current and
@@ -21,7 +21,6 @@ const STRIP = [
 export function Hero() {
   return (
     <section className="hero" id="hero" aria-labelledby="hero-title">
-      <Mark className="hero-bird" />
       <div className="wrap hero-grid">
         <div className="hero-copy">
           <h1 id="hero-title" className="h1" style={{ "--i": 0 } as React.CSSProperties}>
@@ -56,7 +55,7 @@ export function Hero() {
           <div className="air-obj air-obj-2" aria-hidden="true">
             <Obj name="card" size={176} priority />
           </div>
-          <div className="win air-strip" data-once aria-label="Sample verdicts">
+          <div className="win air-strip" data-once data-manual aria-label="Sample verdicts">
             <div className="win-bar">
               <span>Month end</span>
               <span className="sample">Sample data</span>
@@ -72,6 +71,7 @@ export function Hero() {
               ))}
             </ul>
           </div>
+          <HeroBird />
         </div>
       </div>
     </section>

@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
       { source: "/fresh", destination: "/", permanent: true },
       { source: "/fresh/demo", destination: "/demo", permanent: true },
       { source: "/fresh/pricing", destination: "/pricing", permanent: true },
+      // the 2026-09-22 V2 exploration: direction C ("Two sides") was promoted to the root; the others live in git history
+      { source: "/v2", destination: "/", permanent: false },
+      { source: "/v2/sides", destination: "/", permanent: false },
+      { source: "/v2/ledger", destination: "/", permanent: false },
       {
         source: "/privacy",
         destination: "https://legal.januslabsinc.com/sylph/v1/privacy",

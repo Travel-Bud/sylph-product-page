@@ -7,11 +7,11 @@ import { useEffect } from "react";
  * play once, when their panel first enters the viewport: this adds `is-in`
  * to every `[data-once]` element on entry and stops watching it. Nothing
  * loops off screen, and the settled state is the CSS default for no-JS and
- * reduced motion.
+ * reduced motion. A panel marked [data-manual] is gated by its own component instead.
  */
 export function LoopGate() {
   useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-once]"));
+    const els = Array.from(document.querySelectorAll<HTMLElement>("[data-once]:not([data-manual])"));
     if (!els.length) return;
     const io = new IntersectionObserver(
       (entries) => {

@@ -1,0 +1,271 @@
+/* The cast (cast track). Every rule here is scoped to .v2s-cast; motion is transform, opacity and
+   clip-path only. Settled by default: the plain figure on a quiet contact shadow. The scroll
+   choreography (enter, leave) is GSAP in cast.tsx, on .v2s-cast-in / -out and the ground layers;
+   CSS owns the hero pair's intro and the reactions. Each layer owns one job, so nothing fights. */
+
+.v2s-cast {
+  position: relative;
+  display: block;
+}
+.v2s-cast-body,
+.v2s-cast-in,
+.v2s-cast-out,
+.v2s-cast-face,
+.v2s-cast-act,
+.v2s-cast-part,
+.v2s-cast-step,
+.v2s-cast-alt,
+.v2s-cast-gin,
+.v2s-cast-gout {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-origin: 50% 100%;
+}
+/* the ground layers scale about the feet, where the shadow sits */
+.v2s-cast-gin,
+.v2s-cast-gout {
+  transform-origin: 50% 97.4%;
+}
+.v2s-cast-face[data-mirror] {
+  transform: scaleX(-1);
+}
+.v2s-cast-img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+.v2s-cast-alt {
+  opacity: 0;
+}
+
+/* the ground: the renders were matted without their shadow, so it is drawn here, under the feet */
+.v2s-cast-shadow {
+  position: absolute;
+  bottom: 2.6%;
+  aspect-ratio: 9 / 1;
+  translate: 0 50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(16 27 22 / 0.24), rgb(16 27 22 / 0.1) 60%, rgb(16 27 22 / 0));
+}
+.v2s-meet .v2s-cast-shadow {
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.34), rgb(0 0 0 / 0.14) 60%, rgb(0 0 0 / 0));
+}
+
+/* the snap: the phone lights once, like a shutter */
+.v2s-cast-flash {
+  position: absolute;
+  border-radius: 30%;
+  background: #fff;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ---- the hero pair: opaque from the first frame (they are the LCP), a drop by transform onto
+     the floor with a small squash at contact, the shadow growing under them. No script needed. ---- */
+  .v2s-cast[data-prio] .v2s-cast-body {
+    animation: v2s-cast-settle 1.15s 0.15s both;
+  }
+  .v2s-cast[data-prio] .v2s-cast-shadow {
+    animation: v2s-cast-ground 1.15s 0.15s both;
+  }
+
+  /* ---- reactions (data-act is set by cast.tsx for the length of the reaction) ---- */
+  .v2s-cast-alt {
+    transition: opacity 0.5s ease 0.12s;
+  }
+  .v2s-cast-base {
+    transition: opacity 0.15s linear;
+  }
+  .v2s-cast-act {
+    transition: transform 0.6s cubic-bezier(0.3, 0.7, 0.2, 1);
+  }
+  /* the new pose fades in over the old one, then the old one leaves from underneath: no see-through frame */
+  .v2s-cast[data-alt="1"]:is([data-act="read"], [data-act="glance"]) .v2s-cast-alt {
+    opacity: 1;
+    transition: opacity 0.42s ease 0.2s;
+  }
+  .v2s-cast[data-alt="1"]:is([data-act="read"], [data-act="glance"]) .v2s-cast-base {
+    opacity: 0;
+    transition: opacity 0.2s linear 0.62s;
+  }
+  .v2s-cast[data-act="flash"] .v2s-cast-flash {
+    animation: v2s-cast-flash 0.6s ease-out both;
+  }
+  /* Priya's answer arrives: the screen lights, she bows to read it, a small nod */
+  .v2s-cast[data-act="read"] .v2s-cast-flash {
+    animation: v2s-cast-flash 0.5s ease-out both;
+  }
+  .v2s-cast[data-act="read"] .v2s-cast-act {
+    animation: v2s-cast-nod 1.3s ease-in-out 0.3s both;
+  }
+  /* Dana looks up: the head lifts a hair with the new pose */
+  .v2s-cast[data-act="glance"] .v2s-cast-act {
+    transform: scale(1.002, 1.006);
+  }
+  /* month end: each leans in toward the other, Dana a beat after Priya */
+  .v2s-cast-part--a {
+    transform-origin: 26% 97%;
+  }
+  .v2s-cast-part--b {
+    transform-origin: 76% 97%;
+  }
+  .v2s-cast[data-act="meet"] .v2s-cast-part--a {
+    animation: v2s-cast-meet-a 2s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+  .v2s-cast[data-act="meet"] .v2s-cast-part--b {
+    animation: v2s-cast-meet-b 1.9s cubic-bezier(0.4, 0, 0.2, 1) 0.12s both;
+  }
+}
+
+/* ---- phones: the same story, lighter. A shorter hero settle without the squash, quicker swaps, no nod,
+   a smaller lean-in. (The scroll entrances are shortened in cast.tsx; phones have no exits.) ---- */
+@media (prefers-reduced-motion: no-preference) and (max-width: 860px) {
+  .v2s-cast[data-prio] .v2s-cast-body {
+    animation: v2s-cast-settle-lite 0.7s cubic-bezier(0.3, 0.7, 0.2, 1) 0.1s both;
+  }
+  .v2s-cast[data-prio] .v2s-cast-shadow {
+    animation: v2s-cast-ground-lite 0.7s cubic-bezier(0.3, 0.7, 0.2, 1) 0.1s both;
+  }
+  .v2s-cast[data-alt="1"]:is([data-act="read"], [data-act="glance"]) .v2s-cast-alt {
+    transition: opacity 0.28s ease 0.1s;
+  }
+  .v2s-cast[data-alt="1"]:is([data-act="read"], [data-act="glance"]) .v2s-cast-base {
+    transition: opacity 0.14s linear 0.38s;
+  }
+  .v2s-cast[data-act="read"] .v2s-cast-act {
+    animation: none;
+  }
+  .v2s-cast[data-act="meet"] .v2s-cast-part--a {
+    animation-duration: 1.5s;
+    animation-name: v2s-cast-meet-lite-a;
+  }
+  .v2s-cast[data-act="meet"] .v2s-cast-part--b {
+    animation-duration: 1.4s;
+    animation-name: v2s-cast-meet-lite-b;
+  }
+}
+
+@keyframes v2s-cast-settle {
+  0% {
+    transform: translateY(-18px);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.45);
+  }
+  55% {
+    transform: translateY(0) scale(1.014, 0.982);
+    animation-timing-function: cubic-bezier(0.2, 0.6, 0.35, 1);
+  }
+  76% {
+    transform: translateY(-1.5px) scale(0.996, 1.005);
+    animation-timing-function: ease-in-out;
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes v2s-cast-ground {
+  0% {
+    opacity: 0;
+    transform: scale(0.45);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.45);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.05, 1.12);
+    animation-timing-function: cubic-bezier(0.2, 0.6, 0.35, 1);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes v2s-cast-settle-lite {
+  from {
+    transform: translateY(-10px);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes v2s-cast-ground-lite {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes v2s-cast-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  14% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.4);
+  }
+}
+@keyframes v2s-cast-nod {
+  0%,
+  100% {
+    transform: none;
+  }
+  35% {
+    transform: scale(1, 0.993);
+  }
+  60% {
+    transform: scale(1, 1.002);
+  }
+  80% {
+    transform: scale(1, 0.997);
+  }
+}
+@keyframes v2s-cast-meet-a {
+  0%,
+  100% {
+    transform: none;
+  }
+  30%,
+  68% {
+    transform: rotate(1.8deg) translateX(3px);
+  }
+}
+@keyframes v2s-cast-meet-b {
+  0%,
+  100% {
+    transform: none;
+  }
+  32%,
+  66% {
+    transform: rotate(-1.4deg) translateX(-2px);
+  }
+}
+@keyframes v2s-cast-meet-lite-a {
+  0%,
+  100% {
+    transform: none;
+  }
+  35%,
+  65% {
+    transform: rotate(1.4deg);
+  }
+}
+@keyframes v2s-cast-meet-lite-b {
+  0%,
+  100% {
+    transform: none;
+  }
+  35%,
+  65% {
+    transform: rotate(-1.1deg);
+  }
+}

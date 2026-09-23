@@ -1,0 +1,945 @@
+/* ============================================================
+   /v2/sides, stage track: the hero, the nav rail and scroll.
+   The hero is a two-sided stage standing on one ink floor: Priya's
+   phone on the left, Dana's queue on the right, the seam between
+   them is the line the charge crosses. It must fit 1440x900 and
+   1280x800 with the CTA and both people in view, so the stage
+   height (--sh) is taken from the viewport.
+   ============================================================ */
+
+html:has(.v2s) {
+  /* the nav is 64px plus its 1px rule: anchors land flush under it, with no strip of the section above showing */
+  scroll-padding-top: 64px;
+}
+.v2s [tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* ---------- nav rail: where the charge is, stops 0 to 5 ---------- */
+.v2s-nav {
+  border-bottom: 0;
+}
+.v2s-rail {
+  border-bottom: 1px solid var(--hair-2);
+}
+.v2s-rail-in {
+  position: relative;
+  height: 0;
+}
+.v2s-rail-fill {
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: 100%;
+  height: 2px;
+  background: var(--amber);
+  transform: scaleX(var(--p, 0));
+  transform-origin: 0 50%;
+}
+.v2s-rail-in[data-done] .v2s-rail-fill {
+  background: var(--green);
+}
+.v2s-rail-stop {
+  position: absolute;
+  top: -4px;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: inset 0 0 0 1.5px var(--hair-2);
+  transition: box-shadow 0.3s var(--ease), background-color 0.3s var(--ease);
+}
+.v2s-rail-stop.is-past {
+  background: var(--amber);
+  box-shadow: none;
+}
+.v2s-rail-in[data-done] .v2s-rail-stop.is-past {
+  background: var(--green);
+}
+.v2s-nav-links a[aria-current] {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  text-decoration-color: var(--ink);
+}
+.v2s-nav-links a[data-side="priya"][aria-current] {
+  text-decoration-color: var(--coat);
+}
+.v2s-nav-links a[data-side="dana"][aria-current] {
+  text-decoration-color: var(--sweater);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v2s-rail-fill {
+    transition: background-color 0.4s var(--ease);
+  }
+}
+
+/* the sound switch: a 44px target, quiet until it is on */
+.v2s-sound {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  margin: 0 -8px 0 -6px;
+  padding: 0;
+  font: inherit;
+  color: var(--ink-3);
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.2s var(--ease);
+}
+.v2s-sound svg {
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--hair-2);
+  transition: box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.v2s-sound:hover {
+  color: var(--ink);
+}
+.v2s-sound:hover svg {
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.v2s-sound:active svg {
+  transform: scale(0.92);
+}
+.v2s-sound[aria-pressed="true"] {
+  color: var(--ink);
+}
+.v2s-sound[aria-pressed="true"] svg {
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+.v2s .v2s-sound:focus-visible {
+  border-radius: 50%;
+  outline-offset: -2px;
+}
+
+/* ---------- hero copy ---------- */
+.v2s-hero {
+  padding: clamp(16px, 2.4vh, 32px) 0 clamp(48px, 6vw, 80px);
+}
+.v2s-hero-copy {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 20px 56px;
+  align-items: end;
+  margin-bottom: clamp(16px, 2.6vh, 30px);
+}
+.v2s-hero .v2s-h1 {
+  font-size: clamp(42px, min(4.7vw, 7.6vh), 72px);
+}
+.v2s-hero .v2s-lede {
+  font-size: clamp(16px, 1.25vw, 18px);
+}
+.v2s-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 26px;
+  margin-top: 18px;
+}
+.v2s-follow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+.v2s-follow:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.v2s-follow svg {
+  transition: transform 0.25s var(--ease);
+}
+.v2s-follow:hover svg {
+  transform: translateY(2px);
+}
+
+/* ---------- the stage ---------- */
+.v2s-h-stage {
+  /* what is left of the first screen under the nav and the copy */
+  --sh: clamp(400px, calc(100svh - 340px), 560px);
+  --fh: min(calc(var(--sh) * 0.97), 500px);
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1.5px solid var(--ink);
+}
+.v2s-h-col {
+  display: grid;
+  grid-template-rows: auto var(--sh);
+  column-gap: clamp(12px, 1.6vw, 24px);
+  min-width: 0;
+  padding-top: 12px;
+}
+.v2s-h-col--priya {
+  grid-template-columns: minmax(0, 1fr) 290px;
+  grid-template-areas:
+    "head head"
+    "fig panel";
+  padding-right: clamp(16px, 2.4vw, 36px);
+  border-right: 1px solid var(--ink);
+}
+.v2s-h-col--dana {
+  grid-template-columns: minmax(0, 350px) minmax(0, 1fr);
+  grid-template-areas:
+    "head head"
+    "panel fig";
+  padding-left: clamp(16px, 2.4vw, 36px);
+}
+.v2s-h-head {
+  grid-area: head;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding-bottom: 12px;
+}
+.v2s-h-when {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+/* the people stand on the floor; a figure wider than its track spills toward the page edge */
+.v2s-h-fig {
+  grid-area: fig;
+  height: var(--fh);
+  align-self: end;
+}
+.v2s-h-col--priya .v2s-h-fig {
+  justify-self: end;
+}
+.v2s-h-col--dana .v2s-h-fig {
+  justify-self: start;
+}
+
+/* ---------- Priya's phone ---------- */
+.v2s-h-phone {
+  grid-area: panel;
+  position: relative;
+  z-index: 1;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  width: 290px;
+  height: calc(var(--sh) - 14px);
+  padding: 10px 12px 12px;
+  background: var(--bg);
+  border: 1.5px solid var(--ink);
+  border-radius: 34px;
+}
+.v2s-h-phone-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 6px 9px;
+  border-bottom: 1px solid var(--hair-2);
+}
+.v2s-h-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14.5px;
+}
+.v2s-h-contact-mark {
+  width: 24px;
+  height: 24px;
+  padding: 4px;
+  border-radius: 50%;
+  border: 1px solid var(--hair-2);
+  color: var(--green-700);
+}
+.v2s-h-threads {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+}
+/* newest at the bottom, like any thread; the oldest clips off the top on short screens */
+.v2s-h-thread {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 7px;
+  padding: 10px 2px 10px;
+}
+.v2s-h-thread[hidden] {
+  display: none;
+}
+.v2s-h-msg {
+  max-width: 92%;
+  font-size: 13.5px;
+  line-height: 1.38;
+  padding: 8px 11px;
+  border-radius: 17px;
+}
+.v2s-h-msg p + p {
+  margin-top: 6px;
+}
+.v2s-h-msg--out {
+  align-self: flex-end;
+  background: var(--coat);
+  color: var(--ink);
+  border-bottom-right-radius: 5px;
+}
+.v2s-h-msg--in {
+  align-self: flex-start;
+  background: var(--bg);
+  border: 1px solid var(--hair-2);
+  border-bottom-left-radius: 5px;
+}
+.v2s-h-msg--in .mono {
+  font-size: 12px;
+}
+.v2s-h-verdict {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px 6px;
+}
+.v2s-h-verdict .mono {
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+.v2s-h-msg--photo {
+  padding: 5px;
+}
+.v2s-h-msg--sent {
+  font-weight: 500;
+}
+.v2s-h-rc {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  width: 128px;
+  padding: 8px 10px 9px;
+  border-radius: 12px;
+  background: var(--bg);
+  color: #3b352d;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  line-height: 1.5;
+}
+.v2s-h-rc-h {
+  text-align: center;
+  font-weight: 600;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+}
+.v2s-h-rc-s {
+  text-align: center;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+.v2s-h-rc-l {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.v2s-h-rc-t {
+  margin-top: 3px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(59, 53, 45, 0.45);
+  font-weight: 600;
+}
+
+/* the tray: Priya's receipts from the trip, the hero's controls */
+.v2s-h-tray {
+  padding: 9px 0 0;
+  border-top: 1px solid var(--hair-2);
+}
+.v2s-h-tray-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+/* the quiet way on: the tray's three receipts, or a whole month of them */
+.v2s-h-month {
+  padding: 0 4px 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--hair-2);
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.v2s-h-month:hover {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+.v2s-h-tray-k {
+  padding: 0 4px 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.v2s-h-thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.v2s-h-thumb {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-height: 62px;
+  padding: 8px 8px 7px;
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1.5px solid var(--hair-2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease), transform 0.25s var(--ease);
+}
+@media (hover: hover) {
+  .v2s-h-thumb:hover {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+  }
+}
+.v2s-h-thumb:active {
+  transform: translateY(0) scale(0.97);
+}
+.v2s-h-thumb[aria-pressed="true"] {
+  border-color: var(--coat-ink);
+  box-shadow: inset 0 0 0 1px var(--coat-ink);
+}
+.v2s .v2s-h-thumb:focus-visible {
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+.v2s-h-thumb-m {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.v2s-h-thumb-bars {
+  display: grid;
+  gap: 3px;
+}
+.v2s-h-thumb-bars i {
+  display: block;
+  height: 2px;
+  width: 78%;
+  border-radius: 2px;
+  background: var(--hair-2);
+}
+.v2s-h-thumb-bars i + i {
+  width: 52%;
+}
+.v2s-h-thumb-a {
+  font-size: 11px;
+  line-height: 1.2;
+  color: var(--ink-2);
+}
+
+/* ---------- Dana's queue ---------- */
+.v2s-h-desk {
+  grid-area: panel;
+  position: relative;
+  align-self: start;
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--hair-2);
+  border-radius: 16px;
+  padding-bottom: 10px;
+  overflow: hidden;
+}
+.v2s-h-desk-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--hair-2);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.v2s-h-desk-k {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+.v2s-h-desk-sub {
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+.v2s-h-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--amber-bg);
+  color: var(--amber-ink);
+  font-size: 11px;
+}
+.v2s-h-tick {
+  display: inline-grid;
+}
+.v2s-h-tick > span {
+  grid-area: 1 / 1;
+}
+.v2s-h-tick-prev {
+  opacity: 0;
+}
+.v2s-h-slot {
+  display: grid;
+  margin: 0 14px;
+}
+.v2s-h-slot > * {
+  grid-area: 1 / 1;
+}
+.v2s-h-slot--row {
+  min-height: 66px;
+  margin-top: 8px;
+}
+.v2s-h-empty {
+  display: grid;
+  place-items: center;
+  border: 1.5px dashed var(--hair-2);
+  border-radius: 12px;
+  color: var(--ink-3);
+  font-size: 13px;
+  opacity: 0;
+}
+.v2s-h-empty.is-idle {
+  opacity: 1;
+}
+.v2s-h-qcard {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 11px 12px 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--amber);
+  background: var(--bg);
+}
+.v2s-h-qcard-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 8px;
+}
+.v2s-h-qnote {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+.v2s-h-qnote-who {
+  font-weight: 600;
+  color: var(--coat-ink);
+}
+.v2s-h-qrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 8px;
+  padding: 9px 12px 10px;
+  border-radius: 12px;
+  border: 1.5px solid var(--ox);
+  background: var(--bg);
+}
+.v2s-h-qrow .v2s-cite {
+  flex-basis: 100%;
+}
+.v2s-h-stage .v2s-token-pill--block {
+  border-color: var(--ox);
+}
+.v2s-h-stage .v2s-token-pill--ok {
+  border-color: var(--green);
+}
+.v2s-h-filed {
+  list-style: none;
+  height: calc(var(--rows, 4) * 34px);
+  margin: 0 14px;
+  overflow: hidden;
+}
+.v2s-h-filed li {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  height: 34px;
+  border-top: 1px solid var(--hair);
+  font-size: 13px;
+}
+.v2s-h-filed-tick {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--green-100);
+  color: var(--green-700);
+}
+.v2s-h-filed-tick svg {
+  width: 11px;
+  height: 11px;
+}
+.v2s-h-filed-m {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.v2s-h-filed-a {
+  font-size: 11.5px;
+}
+
+.v2s-h-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- the play (motion allowed only) ---------- */
+.v2s-h-fly {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 6;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+}
+.v2s-h-stage[data-measured] .v2s-h-fly {
+  visibility: visible;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .v2s-h-stage.is-play .v2s-h-a {
+    animation: v2s-h-pop 0.5s var(--ease) var(--d) both;
+  }
+  .v2s-h-stage.is-play .v2s-h-fly {
+    animation: v2s-h-fly 1.15s cubic-bezier(0.6, 0, 0.25, 1) var(--t-fly) both;
+  }
+  .v2s-h-stage.is-play .v2s-h-fly-in {
+    animation: v2s-h-arc 1.15s cubic-bezier(0.45, 0, 0.55, 1) var(--t-fly) both;
+  }
+  .v2s-h-stage.is-play .v2s-h-empty.is-inc {
+    animation: v2s-h-out 0.25s ease var(--t-land) both;
+  }
+  .v2s-h-stage.is-play .v2s-h-dest.is-inc {
+    animation: v2s-h-land 0.55s var(--ease) var(--t-land) both;
+  }
+  /* a cleared charge files at the top: the rows below make room as it lands */
+  .v2s-h-stage.is-play .v2s-h-filed.is-inc li:not(.is-inc) {
+    animation: v2s-h-push 0.5s var(--ease) var(--t-land) both;
+  }
+  .v2s-h-stage.is-play .v2s-h-tick-prev {
+    animation: v2s-h-out 0.2s ease var(--t-land) both;
+  }
+  .v2s-h-stage.is-play .v2s-h-tick-next {
+    animation: v2s-h-count 0.45s var(--ease) var(--t-land) both;
+  }
+  /* once the first play lands, the tray says it is the visitor's turn */
+  .v2s-h-stage.is-play:not([data-played]) .v2s-h-thumb[aria-pressed="false"] {
+    animation: v2s-h-nudge 0.8s var(--ease) calc(var(--t-land) + 0.8s) both;
+  }
+  .v2s-h-stage.is-play:not([data-played]) .v2s-h-thumb[aria-pressed="false"] + .v2s-h-thumb {
+    animation-delay: calc(var(--t-land) + 0.95s);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v2s-h-fly {
+    display: none;
+  }
+}
+@keyframes v2s-h-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes v2s-h-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes v2s-h-land {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes v2s-h-push {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes v2s-h-count {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes v2s-h-nudge {
+  0%,
+  100% {
+    transform: none;
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+}
+@keyframes v2s-h-fly {
+  0% {
+    opacity: 0;
+    transform: translate(var(--x0, 0px), var(--y0, 0px)) scale(0.9);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(var(--x0, 0px), var(--y0, 0px)) scale(1.04);
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--x1, 0px), var(--y1, 0px));
+  }
+}
+@keyframes v2s-h-arc {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: translate(var(--ax, 0px), var(--ay, 0px));
+  }
+}
+
+/* ---------- responsive ---------- */
+/* short screens: the desk keeps to the floor by showing three filed rows */
+@media (max-height: 860px) and (min-width: 861px) {
+  .v2s-h-filed {
+    --rows: 3;
+  }
+}
+@media (max-width: 1180px) {
+  .v2s-h-stage {
+    --fh: min(calc(var(--sh) * 0.72), 380px);
+  }
+  .v2s-h-col--priya {
+    grid-template-columns: minmax(0, 1fr) 272px;
+  }
+  .v2s-h-phone {
+    width: 272px;
+  }
+  .v2s-h-thumb-m {
+    font-size: 11px;
+  }
+  .v2s-h-col--dana {
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  }
+}
+@media (max-width: 960px) {
+  .v2s-hero-copy {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* the badge beside Dana's name is the phone layout's landing spot; desktop has the whole desk */
+.v2s-h-badge {
+  display: none;
+}
+
+/* ---------- phones: the first screen carries the whole idea ----------
+   Headline, CTA, then both people facing each other across the top of Priya's phone, with
+   Dana's queue in brief beside her name so the charge lands in view. Every height below comes
+   from the viewport so 390x844 and 375x667 both end the phone above the fold; the lede and the
+   full desk follow. */
+@media (max-width: 860px) {
+  .v2s-hero {
+    padding: 14px 0 40px;
+  }
+  .v2s-hero > .v2s-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+  .v2s-hero-copy,
+  .v2s-hero-side {
+    display: contents;
+  }
+  .v2s-hero .v2s-h1 {
+    order: 1;
+    font-size: clamp(28px, min(9.4vw, 4.6svh), 40px);
+  }
+  .v2s-hero-cta {
+    order: 2;
+    margin-top: clamp(10px, 1.8svh, 16px);
+  }
+  .v2s-hero-cta .v2s-btn--lg {
+    height: 48px;
+  }
+  .v2s-h-stage {
+    order: 3;
+    margin-top: clamp(10px, 1.8svh, 16px);
+  }
+  .v2s-hero .v2s-lede {
+    order: 4;
+    margin-top: 24px;
+    font-size: 16px;
+  }
+
+  .v2s-h-stage {
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) auto;
+    grid-template-areas:
+      "pfig phead dhead dfig"
+      "phone phone phone phone"
+      "desk desk desk desk";
+    column-gap: 10px;
+    border-bottom: 0;
+  }
+  .v2s-h-col {
+    display: contents;
+  }
+  .v2s-h-fig {
+    height: clamp(92px, 15svh, 136px);
+    margin-top: 8px;
+    align-self: end;
+  }
+  .v2s-h-col--priya .v2s-h-fig {
+    grid-area: pfig;
+  }
+  .v2s-h-col--dana .v2s-h-fig {
+    grid-area: dfig;
+  }
+  .v2s-h-head {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: flex-end;
+    align-self: end;
+    gap: 6px;
+    padding: 0 0 10px;
+  }
+  .v2s-h-col--priya .v2s-h-head {
+    grid-area: phead;
+  }
+  .v2s-h-col--dana .v2s-h-head {
+    grid-area: dhead;
+    align-items: flex-end;
+    text-align: right;
+  }
+  .v2s-h-col--dana .v2s-person-txt {
+    align-items: flex-end;
+  }
+  /* the figure stands beside the name, so the ringed head would say it twice */
+  .v2s-h-head .v2s-head,
+  .v2s-h-when {
+    display: none;
+  }
+  .v2s-h-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+  .v2s-h-badge-k {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .v2s-h-count--ok {
+    background: var(--green-100);
+    color: var(--green-700);
+  }
+
+  .v2s-h-phone {
+    grid-area: phone;
+    width: auto;
+    height: auto;
+    padding: 8px 10px 10px;
+    border-radius: 28px;
+  }
+  .v2s-h-threads {
+    flex: none;
+    height: clamp(136px, calc(100svh - 578px), 300px);
+  }
+  .v2s-h-msg {
+    font-size: 14px;
+  }
+  .v2s-h-tray-k,
+  .v2s-h-month {
+    font-size: 13px;
+  }
+  /* a 44px target without growing the tray: the hit area extends past the text */
+  .v2s-h-month {
+    position: relative;
+  }
+  .v2s-h-month::after {
+    content: "";
+    position: absolute;
+    inset: -14px -6px -8px;
+  }
+  .v2s-h-thumbs {
+    gap: 8px;
+  }
+  .v2s-h-thumb {
+    min-height: 64px;
+    padding: 9px 10px 8px;
+  }
+  .v2s-h-thumb-m {
+    font-size: 13px;
+  }
+  .v2s-h-thumb-a {
+    font-size: 12px;
+  }
+  .v2s-h-desk {
+    grid-area: desk;
+    margin-top: 20px;
+  }
+}

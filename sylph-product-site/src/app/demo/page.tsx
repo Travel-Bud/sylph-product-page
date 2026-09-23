@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import "@/components/custom/site/site.css";
 import { siteFonts } from "@/components/custom/site/fonts";
-import { SiteNav, SiteFooter, SmoothScroll } from "@/components/custom/site";
-import { Check } from "@/components/custom/site/icons";
+import "@/components/custom/v2-sides/sides.css";
+import "@/components/custom/v2-sides/pricing.css";
+import { SidesNav } from "@/components/custom/v2-sides/nav";
+import { SidesFooter } from "@/components/custom/v2-sides/closing";
+import { Head } from "@/components/custom/v2-sides/cast";
 import { DemoForm } from "./demo-form";
 
 export const metadata: Metadata = {
@@ -11,16 +13,20 @@ export const metadata: Metadata = {
     "A thirty-minute walkthrough on last month's charges, with or without a policy document: the rules Sylph checks, the verdicts it gives, and how the month closes with only the exceptions left to review.",
 };
 
+/* Each point is seen from the side it serves. */
 const POINTS = [
   {
+    who: "dana" as const,
     t: "Your policy, written or built",
     d: "Your PDF, or your answers to a dozen questions, becomes a ruleset you can read.",
   },
   {
+    who: "priya" as const,
     t: "A verdict you can check",
     d: "A flagged dinner earns its citation: rule, threshold, amount.",
   },
   {
+    who: "dana" as const,
     t: "The review surface",
     d: "Cleared lines file themselves. Only the exceptions reach you.",
   },
@@ -28,25 +34,24 @@ const POINTS = [
 
 export default function DemoPage() {
   return (
-    <main className={`site ${siteFonts}`} id="main">
-      <a href="#lead" className="skip">
+    <main className={`v2s ${siteFonts}`} id="main">
+      <a href="#lead" className="v2s-skip">
         Skip to content
       </a>
-      <SmoothScroll>
-      <SiteNav />
-      <section className="lead" id="lead">
-        <div className="wrap lead-grid">
-          <div className="lead-copy">
-            <h1 className="h1 h1-sm">See your month close.</h1>
-            <p className="lede">
+      <SidesNav />
+      <section className="v2d" id="lead" aria-labelledby="demo-t" tabIndex={-1}>
+        <div className="v2s-wrap v2d-grid">
+          <div className="v2d-copy">
+            <h1 id="demo-t" className="v2s-h2 v2s-h2--xl">
+              See your month close.
+            </h1>
+            <p className="v2s-lede">
               Thirty minutes, no slides. Last month&rsquo;s charges, your policy or a dozen answers, real verdicts.
             </p>
-            <ul className="lead-points">
+            <ul className="v2d-points">
               {POINTS.map((p) => (
                 <li key={p.t}>
-                  <span className="lead-ic" aria-hidden="true">
-                    <Check />
-                  </span>
+                  <Head who={p.who} size={40} />
                   <div>
                     <b>{p.t}</b>
                     <p>{p.d}</p>
@@ -55,11 +60,13 @@ export default function DemoPage() {
               ))}
             </ul>
           </div>
-          <DemoForm />
+          {/* the wired lead form, unchanged (repo rule); pricing.css styles it under .v2d-form */}
+          <div className="v2d-form">
+            <DemoForm />
+          </div>
         </div>
       </section>
-      <SiteFooter />
-      </SmoothScroll>
+      <SidesFooter />
     </main>
   );
 }
