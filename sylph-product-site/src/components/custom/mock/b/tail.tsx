@@ -1,44 +1,34 @@
 import Link from "next/link";
 import { Mark } from "@/components/custom/site/mark";
 import { DEMO, PRICING } from "@/components/custom/site/anchors";
-import { DANA, PRIYA, QBO_LIVE } from "@/components/custom/v2-sides/data";
-import { Figure, Person } from "@/components/custom/v2-sides/parts";
+import { Figure } from "@/components/custom/v2-sides/parts";
 
-/* Mock B's tail: the live questions and close (v2-sides/closing.tsx), same words, given the page's
-   grounds. The questions sit on Dana's lilac, because finance is asking; the close splits the page back
+/* The landing's tail: five questions and the close (cut down from v2-sides/closing.tsx on 2026-09-25), on the
+   page's grounds. The questions sit on Dana's lilac, because finance is asking; the close splits the page back
    into the two sides it opened with, Priya's blue and Dana's lilac, and puts the offer where they meet. */
 
-const TRUST = "Policies and receipts are encrypted in transit and at rest, and never used to train models.";
+const TRUST = "Encrypted in transit and at rest. Never used to train models.";
 
 const QA: { q: string; a: string }[] = [
   {
     q: "Do we have to switch cards or banks?",
-    a: "No. Sylph works on the cards and banks your company already uses. There is no new card to issue and nothing for travellers to carry.",
+    a: "No. Sylph works with the cards and banks you already use.",
   },
   {
-    q: "Is AI deciding what gets approved?",
-    a: "No. AI reads your policy once and drafts the rules; a person approves every one. The check itself is deterministic: no model in the decision, so the same charge gets the same answer every time.",
+    q: "Is AI approving our expenses?",
+    a: "No. AI drafts the rules from your policy and a person approves each one. After that every check is plain rule logic, so the same charge always gets the same answer.",
   },
   {
-    q: "We do not have a written policy.",
-    a: "Answer a dozen questions and Sylph writes one. You read it and approve it rule by rule, the same as a policy you brought.",
+    q: "We don't have a written policy.",
+    a: "Answer a few questions and Sylph drafts one. You approve it rule by rule.",
   },
   {
-    q: "What does our accountant get at month end?",
-    a: `An audit-grade PDF, an XLSX and a GL journal CSV, with every verdict citing its rule${QBO_LIVE ? ", and posting to QuickBooks Online" : ""}.`,
-  },
-  {
-    q: "What happens to a Blocked charge?",
-    a: "It stays off the reimbursable total, with the rule, threshold and amount cited. The card is never declined, and the traveller sees the reason when it is checked.",
-  },
-  { q: "Where does our data go?", a: TRUST },
-  {
-    q: "What does it cost?",
-    a: "Per active employee a month. Small business, up to 100 people: Expense $25, Flights $25, both together $40. Mid-size: $35 each, $60 together.",
+    q: "What happens to a blocked charge?",
+    a: "It stays off the reimbursement total, with the reason shown. The card itself still works.",
   },
   {
     q: "How long does setup take?",
-    a: "Same day. Connect the cards and banks you already have, bring a policy or answer the questions, approve the rules.",
+    a: "About a day. Connect your cards, add your policy, approve the rules.",
   },
 ];
 
@@ -47,9 +37,8 @@ export function MbQuestions() {
     <section id="questions" className="mb-q" aria-labelledby="questions-t" data-ground="#f3effb">
       <div className="v2s-wrap mb-q-grid">
         <div className="mb-q-head">
-          <Person side="dana" {...DANA} size={40} />
           <h2 id="questions-t" className="mb-h2 mb-h2--xl">
-            What finance asks first.
+            Questions from finance.
           </h2>
           <p className="mb-q-trust">
             <span className="mb-q-mark" aria-hidden="true">
@@ -59,11 +48,10 @@ export function MbQuestions() {
           </p>
         </div>
         <ol className="mb-q-list">
-          {QA.map((x, i) => (
+          {QA.map((x) => (
             <li key={x.q}>
               <details className="mb-qa">
                 <summary>
-                  <span className="mb-qa-n mono">{String(i + 1).padStart(2, "0")}</span>
                   <span className="mb-qa-q">{x.q}</span>
                   <span className="mb-qa-plus" aria-hidden="true" />
                 </summary>
@@ -93,16 +81,11 @@ export function MbClose() {
       </div>
       <div className="v2s-wrap mb-close-wrap">
         <div className="mb-close-card">
-          <p className="mb-close-who">
-            <Person side="priya" {...PRIYA} size={32} />
-            <Person side="dana" {...DANA} size={32} />
-          </p>
           <h2 id="close-t" className="mb-h2 mb-h2--xl">
-            Close next month without chasing a&nbsp;receipt.
+            Try it on last month&rsquo;s&nbsp;statement.
           </h2>
           <p className="mb-lede">
-            Bring last month&rsquo;s card statement, with or without a policy. Thirty minutes, your charges, real
-            verdicts.
+            Bring a card statement. We will run it through Sylph with you in thirty minutes.
           </p>
           <div className="mb-close-cta">
             <Link href={DEMO} className="v2s-btn v2s-btn--ink v2s-btn--lg">

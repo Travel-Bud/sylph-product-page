@@ -1,15 +1,27 @@
 "use client";
 
 import { useState } from "react";
-import { DANA, EXCEPTIONS, PRIYA } from "@/components/custom/v2-sides/data";
-import { Figure, Person, Token } from "@/components/custom/v2-sides/parts";
+import { EXCEPTIONS, QBO_LIVE } from "@/components/custom/v2-sides/data";
+import { Figure } from "@/components/custom/v2-sides/parts";
 import { play } from "@/components/custom/v2-sides/sound";
-import { ANSWERS, AnswerDetail, Card, DeskQueue, MonthReport, PolicyCompile, ReceiptPaths, StepLine, StopPulse, tabKeys } from "./panels";
+import { ANSWERS, AnswerDetail, Card, DeskQueue, MonthReport, PolicyCompile, ReceiptPaths, StopPulse, tabKeys } from "./panels";
 import { DeskWall } from "./wall";
 
-/* Mock B's five chapters: the live story, copy and panels (panels.tsx is the live code), each given its
-   own composition and ground. Priya's chapters sit on her coat blue (the answer on its deep ink), Dana's
+/* The landing's five chapters (Mock B; copy cut to one headline and one line each on 2026-09-25), each
+   with its own composition and ground. Priya's chapters sit on her coat blue (the answer on its deep ink), Dana's
    on the sweater lilac, month end on the deep green where they meet. */
+
+/** Where the courier lands the charge in a chapter: the pill alone ([data-courier-stop], courier.tsx). */
+function Stop({ n }: { n: number }) {
+  return (
+    <p className="v2s-token-line" data-rv>
+      <span className="v2s-token-pill" data-courier-stop={n}>
+        <span className="v2s-token-m">Sushi Kanda</span>
+        <span className="mono">$84.20</span>
+      </span>
+    </p>
+  );
+}
 
 /* ---------- 1. Receipts: a street. The headline across the top, Priya walks in on the floor line
    beside the panel ---------- */
@@ -23,17 +35,16 @@ export function Receipts() {
       <StopPulse stop={5} />
       <div className="v2s-wrap mb-rc-grid">
         <div className="mb-rc-head">
-          <Person side="priya" {...PRIYA} size={40} />
           <h2 id="receipts-t" className="mb-h2">
-            <span className="v2s-name v2s-name--priya">Priya&rsquo;s</span> part is a&nbsp;photo.
+            <span className="v2s-name v2s-name--priya">Priya</span> just texts a&nbsp;photo.
           </h2>
         </div>
         <div className="mb-rc-lede">
           <p className="mb-lede">
-            Text it, forward the email, or drop it in. Each receipt finds its own charge on the cards and banks your
-            company already has. Nothing to switch, no report to build.
+            Or forwards the email, or drops it in the app. Sylph finds the card charge it belongs to, and that is
+            her whole expense report.
           </p>
-          <Token step={1} state="Photo in, matched to the charge" />
+          <Stop n={1} />
         </div>
         <div className="mb-rc-fig">
           <Figure name="priya-walk" height={440} />
@@ -52,13 +63,12 @@ export function Policy() {
   return (
     <section id="policy" className="v2s-ch v2c v2c--dana mb-ch mb-po" aria-labelledby="policy-t" data-ground="#f3effb">
       <div className="v2s-wrap mb-po-intro">
-        <Person side="dana" {...DANA} size={40} />
         <h2 id="policy-t" className="mb-h2">
-          <span className="v2s-name v2s-name--dana">Dana&rsquo;s</span> part is written once.
+          <span className="v2s-name v2s-name--dana">Dana</span> sets the rules once.
         </h2>
         <p className="mb-lede">
-          Hand Sylph the policy you already have, or answer a dozen questions and Sylph writes one. Every sentence
-          compiles to rules that quote it, and nothing checks a charge until Dana approves the set.
+          Upload your expense policy, or answer a few questions instead. Sylph turns each line into a rule, and
+          nothing runs until Dana approves it.
         </p>
       </div>
       <div className="mb-po-track" data-pin-track>
@@ -66,7 +76,7 @@ export function Policy() {
           <div className="v2s-wrap mb-po-stage">
             <div className="mb-po-panel">
               <PolicyCompile />
-              <Token step={2} state="Rule M-041 is already waiting for it" />
+              <Stop n={2} />
             </div>
             <div className="mb-po-fig">
               <Figure name="dana-review" height={420} />
@@ -133,24 +143,18 @@ export function Verdicts() {
     <section id="verdicts" className="v2s-ch v2c v2c--priya mb-ch mb-vd" aria-labelledby="verdicts-t" data-ground="#12294a" data-dark="">
       <div className="v2s-wrap mb-vd-grid">
         <div className="mb-vd-head">
-          <Person side="priya" {...PRIYA} size={40} />
           <h2 id="verdicts-t" className="mb-h2">
-            Every answer <span className="v2s-name v2s-name--priya">Priya</span> gets names its rule.
+            <span className="v2s-name v2s-name--priya">Priya</span> hears back right away.
           </h2>
           <p className="mb-lede">
-            Each charge is checked as it happens, with the rule, the threshold and the amount. Blocked keeps a charge
-            off the reimbursable total. It never declines the card.
+            Cleared, needs a note, or blocked, and the rule that decided it. Pick one to see what she sees.
           </p>
-          <Token step={3} state="Needs a note, and she has already written it" />
+          <Stop n={3} />
         </div>
         <VerdictBoard />
         <div className="mb-vd-fig">
           <Figure name="priya-snap" height={400} />
         </div>
-        <p className="mb-vd-next">
-          <span className="v2c-next-tag">In build, not yet available</span> The same rule answering at the card terminal,
-          Visa cards first.
-        </p>
       </div>
     </section>
   );
@@ -163,7 +167,6 @@ export function Desk() {
     <section id="desk" className="v2s-ch v2c v2c--dana mb-ch mb-dk" aria-labelledby="desk-t" data-ground="#ebe4f8">
       <div className="v2s-wrap mb-dk-grid">
         <div className="mb-dk-head">
-          <Person side="dana" {...DANA} size={40} />
           <h2 id="desk-t" className="mb-h2 mb-h2--xl">
             <span>Twenty charges.</span>{" "}
             <span>
@@ -174,11 +177,9 @@ export function Desk() {
         <DeskWall />
         <div className="mb-dk-side">
           <p className="mb-lede">
-            Everything in policy files itself. What reaches Dana carries its rule, threshold and amount, and the note
-            the traveller already wrote. No model sits in the decision: the same charge gets the same answer, every
-            time.
+            The other fifteen file themselves. Each one Dana does see arrives with the rule it broke and Priya&rsquo;s
+            note.
           </p>
-          <StepLine step={4} state="In Dana's queue, with Priya's note. Her approval files it." />
           <div className="mb-dk-fig">
             <Figure name="dana-desk" height={280} />
           </div>
@@ -197,13 +198,11 @@ export function MonthEnd() {
     <section id="month-end" className="v2s-meet v2c v2c--meet mb-ch mb-me" aria-labelledby="month-end-t" data-ground="#0b5f44" data-dark="">
       <div className="v2s-wrap mb-me-grid">
         <div className="mb-me-head">
-          <p className="mb-me-kicker mono">Both sides, September 30</p>
           <h2 id="month-end-t" className="mb-h2 mb-h2--xl">
-            They meet at month end. The report is already there.
+            Month end is already done.
           </h2>
           <p className="mb-lede">
-            Every charge matched, every exception answered, the journal coded for your accountant. Priya sent photos and
-            one note. Dana answered five exceptions.
+            Receipts matched, notes attached. Hand your accountant a PDF, a spreadsheet{QBO_LIVE ? ", or the entries in QuickBooks" : " or a GL journal"}.
           </p>
         </div>
         <div className="mb-me-fig">
@@ -211,7 +210,6 @@ export function MonthEnd() {
         </div>
         <div className="mb-me-panel">
           <MonthReport />
-          <StepLine step={5} state="Filed on line 3 of Priya's September report, closed" />
         </div>
         <p className="mb-me-air" aria-hidden="true">
           Expenses run on air.

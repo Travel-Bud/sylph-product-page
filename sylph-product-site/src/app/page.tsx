@@ -4,9 +4,9 @@ import { UpgradedLanding } from "@/components/custom/mock/b/landing";
 /* The landing: "Two sides" (direction C of the 2026-09-22 V2 exploration, promoted to the root the same day;
    docs/plans/2026-09-22-landing-v2-directions.md), upgraded on 2026-09-25 to Mock B (components/custom/mock/b,
    docs/plans/2026-09-25-mock-b/NOTES.md). The social card is app/opengraph-image.jpg. */
-const TITLE = "Sylph: one charge, two people, nothing to chase";
+const TITLE = "Sylph: stop chasing receipts";
 const DESCRIPTION =
-  "The person who spent it texts a receipt and gets an answer that names the rule. The person who closes the books sees only the exceptions. At month end the report is already there. Works on the cards and banks you already use.";
+  "Your team texts a photo of each receipt. Sylph checks it against your policy, files it, and shows finance only what breaks a rule. Works with the cards and banks you already use.";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph-product.com";
 
