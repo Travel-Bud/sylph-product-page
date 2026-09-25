@@ -2,7 +2,7 @@
    gives way to the next: the colour of the side the charge is going to sweeps in from that person's edge
    of the page (Priya's is the left, Dana's the right; into month end both rise to meet in the middle).
    The line where the grounds meet is the line that divided the two sides on the live page. The step's pill
-   sits on it, a caption on each ground says what just happened and what is waiting, and the courier
+   sits on it, and the courier
    (courier.tsx) flies the charge across the band through the pill ([data-handoff] .mb-ho-pill).
    Pure markup: under reduced motion or without script the band is the same, minus the flight. */
 
@@ -25,8 +25,6 @@ export function Handoff({
   bottom,
   split,
   title,
-  out,
-  into,
   darkTop = false,
   darkBottom = false,
 }: {
@@ -39,8 +37,6 @@ export function Handoff({
   /** the hero hands off from two grounds: Dana's lilac holds the top right until Priya's blue takes the band */
   split?: string;
   title: string;
-  out: string;
-  into: string;
   darkTop?: boolean;
   darkBottom?: boolean;
 }) {
@@ -62,12 +58,10 @@ export function Handoff({
         <path d={split ? "M50 0 C50 58 72 100 100 100" : s.line} className="mb-ho-line" vectorEffect="non-scaling-stroke" />
       </svg>
       <div className="v2s-wrap mb-ho-in">
-        <span className={`mb-ho-cap mb-ho-cap--out${darkTop ? " is-dark" : ""}`}>{out}</span>
         <span className="mb-ho-pill">
           <b className="mono">0{leg + 1}</b>
           <span>{title}</span>
         </span>
-        <span className={`mb-ho-cap mb-ho-cap--in${darkBottom ? " is-dark" : ""}`}>{into}</span>
       </div>
     </div>
   );
