@@ -14,7 +14,8 @@ The Next.js app lives in `sylph-product-site/`. Run every package command from i
 sylph-product-site/
   src/app/                          file routes (see Routes)
   src/app/hooks/useServerActions.ts demo-form submit hook
-  src/components/custom/v2-sides/   the landing, "Two sides" (promoted 2026-09-22): hero, chapters, courier, cast, your-month, sound, scroll
+  src/components/custom/mock/b/     the landing at /, "Two sides, upgraded" (Mock B, promoted 2026-09-25): landing.tsx composes it, rendered by / and /mock/B
+  src/components/custom/v2-sides/   the 2026-09-22 "Two sides" parts the landing still reuses (hero, cast, your-month, sound, scroll, closing) and Mock A builds on
   src/components/custom/site/       the v3 panel library (site.css, sample-data.ts, anchors.ts); its panels are reused inside the landing's tiles
   src/components/custom/mock/       the /mock landing mockups, one folder each (a, b, c, d) plus shared/ (the list and the switcher bar)
   src/app/legacy-fonts.ts           Satoshi and IBM Plex Mono, loaded only by /launching-soon, /terms and /dev through their layouts
@@ -50,7 +51,7 @@ All four gates (`typecheck`, `lint`, `test`, `build`) must exit 0 before a push.
 - `staging` is the working branch. Cut feature work from it and merge back into it.
 - `staging` into `main` is the deploy. Vercel builds `main` through its git integration; there is no workflow file in this repo.
 - Every other pushed branch gets a Vercel preview URL automatically.
-- The "Two sides" landing replaced Ben's v3 at `/` (2026-09-22, V2 exploration; plan and evidence under `docs/plans/2026-09-22-landing-v2*`).
+- The "Two sides" landing replaced Ben's v3 at `/` (2026-09-22, V2 exploration; plan and evidence under `docs/plans/2026-09-22-landing-v2*`), and Mock B, its upgrade, replaced it on 2026-09-25 (`docs/plans/2026-09-25-mock-b/NOTES.md`).
 
 ## Environment variables
 
@@ -65,7 +66,7 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 
 | Route | Notes |
 |---|---|
-| `/` | the landing (`src/app/page.tsx`, "Two sides": Priya spends, Dana closes the books), carries site metadata and JSON-LD |
+| `/` | the landing (`src/app/page.tsx` renders `mock/b/landing.tsx`, "Two sides, upgraded": Priya spends, Dana closes the books), carries site metadata and JSON-LD |
 | `/pricing` | pricing page |
 | `/demo` | demo request page; `demo-form.tsx` posts through `useServerActions` to the email worker |
 | `/terms` | stub page, stays until a terms document is published |
@@ -82,7 +83,7 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 
 ## Cross-host link contract
 
-- The only links from this site to the app are `https://app.sylph-product.com/login` (`APP_LOGIN` in `site/anchors.ts`, used by the landing's `v2-sides/nav.tsx` and `closing.tsx` and the v3 `site/nav.tsx` and `footer.tsx`; the v5 `landing-nav.tsx` and `landing-footer.tsx` carry the same URL). The app never links back to this site.
+- The only links from this site to the app are `https://app.sylph-product.com/login` (`APP_LOGIN` in `site/anchors.ts`, used by the landing's `mock/b/nav.tsx` and footer (`v2-sides/closing.tsx`), the 2026-09-22 `v2-sides/nav.tsx`, and the v3 `site/nav.tsx` and `footer.tsx`; the v5 `landing-nav.tsx` and `landing-footer.tsx` carry the same URL). The app never links back to this site.
 - Legal documents live on `https://legal.januslabsinc.com/sylph/v1/` and are never rendered here. `/privacy` redirects there; `/terms` keeps a stub because no terms document is published yet.
 
 ## Demo-lead path

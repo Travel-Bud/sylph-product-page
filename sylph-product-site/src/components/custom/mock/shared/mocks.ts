@@ -12,9 +12,9 @@ export const MOCKS: Mock[] = [
   {
     id: "live",
     href: "/",
-    name: "Two sides",
+    name: "Two sides, upgraded",
     kind: "Live",
-    line: "The page at sylph-product.com today: Priya spends it, Dana closes the books, one charge travels between them.",
+    line: "The page at sylph-product.com today: Mock B, promoted on Sep 25. Priya spends it, Dana closes the books, the bird carries one charge between them.",
   },
   {
     id: "A",
@@ -28,7 +28,7 @@ export const MOCKS: Mock[] = [
     href: "/mock/B",
     name: "Two sides, upgraded",
     kind: "Upgrade",
-    line: "The live page, kept and refined: tighter handoffs instead of empty seams, a courier you can see, and each chapter composed and coloured on its own terms.",
+    line: "The Sep 22 page, kept and refined: tighter handoffs instead of empty seams, a courier you can see, and each chapter composed and coloured on its own terms. Now live at /.",
   },
   {
     id: "C",
