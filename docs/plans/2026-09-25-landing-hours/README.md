@@ -1,6 +1,6 @@
 # Hours: the landing, keeping the story's clock (2026-09-25)
 
-Mockup at `/lab/hours` (noindex, unlinked, like the rest of `/lab`). `/` is untouched. Branch `lab/hours`, cut
+Mockup A at `/mock/A` (first shipped at `/lab/hours`, moved 2026-09-25; noindex, unlinked). `/` is untouched. Branch `lab/hours`, cut
 from `staging` at `a4a93f3`.
 
 ## Audit
@@ -83,7 +83,7 @@ night ink, and the close is a new scene: the Sylph bird riding hand-drawn wind l
 
 ## Check
 
-`node scripts/explore-check.mjs http://localhost:3100/lab/hours` (console, failed requests and overflow at 1440, 390
+`node scripts/explore-check.mjs http://localhost:3100/mock/A` (console, failed requests and overflow at 1440, 390
 and reduced motion), plus the four repo gates.
 
 ## State (2026-09-25)
