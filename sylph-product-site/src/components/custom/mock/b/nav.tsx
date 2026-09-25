@@ -5,9 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Mark } from "@/components/custom/site/mark";
 import { APP_LOGIN, DEMO, PRICING } from "@/components/custom/site/anchors";
-import { isOn, play, setOn, subscribe } from "./sound";
+import { isOn, play, setOn, subscribe } from "@/components/custom/v2-sides/sound";
 /* the rail, the lit link and the sound switch are styled with the hero */
-import "./hero.css";
+import "@/components/custom/v2-sides/hero.css";
 
 type Spot = "priya" | "dana" | "month-end" | "your-month" | "questions" | null;
 const STOPS = [0, 1, 2, 3, 4, 5];
@@ -63,10 +63,11 @@ function Sec({ id, side, landing, lit, children }: { id: string; side?: "priya" 
   );
 }
 
-/* the landing lives at /; /v2/sides is its old address and redirects there; /mock/A is its mockup variant */
-const LANDING = new Set(["/", "/v2/sides", "/mock/A"]);
+/* Mock B's copy of the landing nav (v2-sides/nav.tsx): identical, except the charge rail, the lit links
+   and the sound switch run on /mock/B, which the shared nav's route list does not include. */
+const LANDING = new Set(["/mock/B"]);
 
-export function SidesNav() {
+export function MbNav() {
   const rail = useRef<HTMLDivElement>(null);
   const [spot, setSpot] = useState<Spot>(null);
   const path = usePathname();
@@ -126,7 +127,7 @@ export function SidesNav() {
   return (
     <header className="v2s-nav">
       <div className="v2s-wrap v2s-nav-in">
-        <Link href="/" className="v2s-brand" aria-label={landing ? "Sylph, top of page" : "Sylph home"}>
+        <Link href={landing ? "#top" : "/"} className="v2s-brand" aria-label={landing ? "Sylph, top of page" : "Sylph home"}>
           <Mark className="v2s-brand-mark" />
           Sylph
         </Link>

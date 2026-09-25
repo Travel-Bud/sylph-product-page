@@ -1,4 +1,4 @@
-// Page check for the /lab directions: node scripts/explore-check.mjs <url>
+// Page check for the landing mockups (/mock): node scripts/explore-check.mjs <url>
 // Loads the page at 1440 (desktop), 390 (mobile, touch) and 1440 under reduced motion in real-time
 // headless Chrome, scrolls it top to bottom, and reports exceptions, console errors and warnings,
 // failed requests (4xx, 5xx, network) and the widest horizontal overflow seen at any scroll step.

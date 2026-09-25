@@ -1,0 +1,55 @@
+/* The mockup switcher (switch.tsx). Self-contained: it must read the same on every mockup's ground. */
+.mk-switch {
+  position: fixed;
+  z-index: 90;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(16, 27, 22, 0.88);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  font: 500 12.5px/1 var(--font-martian), ui-monospace, Menlo, monospace;
+}
+.mk-switch a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: rgba(244, 247, 245, 0.78);
+  text-decoration: none;
+}
+.mk-switch a:hover {
+  color: #fff;
+  background: rgba(244, 247, 245, 0.1);
+}
+.mk-switch a:focus-visible {
+  outline: 2px solid #0ecc83;
+  outline-offset: 1px;
+}
+.mk-switch a[aria-current] {
+  background: #f4f7f5;
+  color: #101b16;
+}
+.mk-switch-home {
+  margin-right: 4px;
+  border-right: 1px solid rgba(244, 247, 245, 0.18);
+  border-radius: 999px 0 0 999px !important;
+}
+@media (max-width: 480px) {
+  .mk-switch-home {
+    display: none !important;
+  }
+}
+@media print {
+  .mk-switch {
+    display: none;
+  }
+}

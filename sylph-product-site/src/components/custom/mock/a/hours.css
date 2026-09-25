@@ -1,0 +1,1242 @@
+/* ============================================================
+   Hours (/mock/A): the Two sides landing, keeping the story's
+   clock. Each chapter sits on the ground of the hour it happens in;
+   the passages between them (passage.tsx) are the time passing,
+   drawn by hand and scrubbed to the scroll. Spec and audit:
+   docs/plans/2026-09-25-landing-hours/README.md.
+   This file departs from White Air on purpose: grounds change,
+   skies may blend, and the lights come on.
+   Scoped under .hrs (which also carries .v2s).
+   ============================================================ */
+
+.hrs {
+  --h-white: #ffffff;
+  --h-dusk: #1c2546;
+  --h-lilac: #eee8f7;
+  --h-night: #0b1226;
+  --h-morning: #fbf0dc;
+  --h-green: #0b5f44;
+  --h-graph: #f6f4ec;
+  --h-air: #e3edf7;
+  --lantern: #ffc978;
+}
+
+/* ---------- the passage shell ---------- */
+.hrs-p {
+  position: relative;
+}
+.hrs-stage {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  height: min(88svh, 780px);
+  min-height: 560px;
+  /* the settled frame: a blend from the chapter above to the chapter below */
+  background: linear-gradient(180deg, var(--from) 0%, var(--to) 72%);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hrs-p {
+    height: 160svh;
+  }
+  .hrs-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 0;
+  }
+}
+.hrs-p[data-live] .hrs-stage {
+  background: var(--to);
+}
+.hrs-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* the time card */
+.hrs-card {
+  position: absolute;
+  z-index: 3;
+  left: max(var(--gutter), calc((100vw - var(--maxw)) / 2));
+  top: clamp(92px, 14svh, 150px);
+  max-width: 30rem;
+  color: var(--bone);
+}
+.hrs-kicker {
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: pre;
+  opacity: 0.72;
+}
+.hrs-when {
+  display: flex;
+  flex-direction: column;
+  margin-top: 14px;
+  font-size: clamp(40px, 6.2vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+}
+.hrs-clock {
+  margin-top: 6px;
+  font-size: 0.58em;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+.hrs-cap {
+  margin-top: 20px;
+  max-width: 36ch;
+  font-size: 16.5px;
+  line-height: 1.5;
+  opacity: 0.84;
+  text-wrap: pretty;
+}
+
+/* the stars twinkle on their own clocks (opacity only; off under reduced motion) */
+.hrs-star {
+  fill: #f4f1ff;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hrs-star--1 {
+    animation: hrs-tw 3.1s ease-in-out infinite;
+  }
+  .hrs-star--3 {
+    animation: hrs-tw 4.7s ease-in-out 1.2s infinite;
+  }
+}
+@keyframes hrs-tw {
+  50% {
+    fill-opacity: 0.25;
+  }
+}
+.hrs-range-far {
+  fill: #2e3a68;
+}
+.hrs-range-near {
+  fill: #222c52;
+}
+.hrs-tower {
+  fill: #0a1022;
+}
+.hrs-tower-win rect {
+  fill: #ffd98a;
+}
+.hrs-wind-line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+/* ---------- 1. dusk ---------- */
+.p1-bld {
+  fill: #141b37;
+}
+.p1-cornice {
+  fill: #141b37;
+}
+.p1-bld2 {
+  fill: #1b2446;
+}
+.p1-awn {
+  fill: #6b2a2a;
+}
+.p1-towers .hrs-tower {
+  fill: #1f2851;
+}
+.p1-walk {
+  fill: #0e1429;
+}
+.p1-w {
+  fill: #ffd98a;
+}
+.p1-w--1 {
+  fill: #ffc56b;
+}
+.p1-w--2 {
+  fill: #2a3358;
+}
+.p1-w--3 {
+  fill: #ffe6b0;
+}
+.p1-room {
+  fill: var(--lantern);
+}
+.p1-sign {
+  fill: #2b2118;
+}
+.p1-sign-t {
+  fill: #f6e5c4;
+  font: 600 15px/1 var(--mono);
+  letter-spacing: 0.24em;
+}
+.p1-noren rect {
+  fill: #233262;
+}
+.p1-mon {
+  fill: none;
+  stroke: #f4f1ea;
+  stroke-width: 2;
+}
+.p1-lantern {
+  fill: #e0513a;
+}
+.p1-lantern-glow,
+.p1-lamp-glow {
+  fill: url(#p1-glow-g);
+}
+.p1-pole,
+.p1-cord {
+  fill: none;
+  stroke: #0b1024;
+  stroke-width: 4;
+}
+.p1-cord {
+  stroke-width: 1.5;
+}
+.p1-lamp {
+  fill: #ffe2a6;
+}
+
+.p1-focal {
+  position: absolute;
+  z-index: 2;
+  left: 70%;
+  top: 46%;
+  width: 232px;
+  transform: translate(-50%, -50%);
+}
+.p1-print {
+  position: relative;
+}
+.p1-printer {
+  position: relative;
+  z-index: 1;
+  height: 16px;
+  margin: 0 -14px;
+  border-radius: 8px;
+  background: #0c1124;
+  box-shadow:
+    inset 0 3px 0 #2d3760,
+    0 10px 24px rgba(0, 0, 0, 0.35);
+}
+.p1-feed {
+  overflow: hidden;
+  margin-bottom: -6px;
+  padding: 18px 0 0;
+}
+.p1-paper {
+  padding: 22px 18px 20px;
+  background: #fbfaf5;
+  color: #1c1c1c;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.75;
+  box-shadow: 0 16px 34px rgba(4, 8, 24, 0.45);
+  /* the torn foot of a thermal receipt */
+  --tooth: 7px;
+  clip-path: polygon(
+    0 var(--tooth),
+    5% 0,
+    10% var(--tooth),
+    15% 0,
+    20% var(--tooth),
+    25% 0,
+    30% var(--tooth),
+    35% 0,
+    40% var(--tooth),
+    45% 0,
+    50% var(--tooth),
+    55% 0,
+    60% var(--tooth),
+    65% 0,
+    70% var(--tooth),
+    75% 0,
+    80% var(--tooth),
+    85% 0,
+    90% var(--tooth),
+    95% 0,
+    100% var(--tooth),
+    100% 100%,
+    0 100%
+  );
+}
+.p1-line {
+  display: flex;
+  justify-content: space-between;
+  min-height: 1.75em;
+}
+.p1-l-h {
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+.p1-l-s {
+  justify-content: center;
+  color: #5c5c5c;
+}
+.p1-l-t {
+  font-size: 14px;
+  font-weight: 700;
+}
+.p1-rule {
+  min-height: 0;
+  margin: 6px 0;
+  border-top: 1px dashed #9a9a9a;
+}
+.p1-vf {
+  position: absolute;
+  inset: -22px -30px -6px;
+  pointer-events: none;
+}
+.p1-vf i {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 0 solid #fff;
+}
+.p1-vf i:nth-child(1) {
+  left: 0;
+  top: 0;
+  border-width: 2.5px 0 0 2.5px;
+}
+.p1-vf i:nth-child(2) {
+  right: 0;
+  top: 0;
+  border-width: 2.5px 2.5px 0 0;
+}
+.p1-vf i:nth-child(3) {
+  left: 0;
+  bottom: 0;
+  border-width: 0 0 2.5px 2.5px;
+}
+.p1-vf i:nth-child(4) {
+  right: 0;
+  bottom: 0;
+  border-width: 0 2.5px 2.5px 0;
+}
+.p1-shot {
+  position: absolute;
+  left: 50%;
+  top: -30px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: var(--bone);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+}
+.p1-charge {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  opacity: 0;
+  box-shadow: 0 10px 30px rgba(255, 201, 120, 0.3);
+}
+.p1-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+/* the settled frame (reduced motion, no script) is the receipt, photographed; the charge waits below */
+.hrs-p:not([data-live]) .p1-charge {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .hrs-when {
+    font-size: clamp(38px, 11vw, 56px);
+  }
+  .hrs-cap {
+    font-size: 15px;
+    max-width: 34ch;
+  }
+  .p1-focal {
+    left: 50%;
+    top: auto;
+    bottom: 14svh;
+    width: 176px;
+    transform: translateX(-50%) scale(0.86);
+    transform-origin: 50% 100%;
+  }
+}
+@media (max-height: 700px) and (min-width: 761px) {
+  .hrs-cap {
+    display: none;
+  }
+}
+
+/* ---------- 2. the page ---------- */
+.hrs-p--page .hrs-card {
+  color: var(--ink);
+}
+.p2-sheet {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: var(--h-lilac);
+  /* ruled paper, with the margin line a policy binder has */
+  background-image:
+    linear-gradient(90deg, transparent calc(var(--gutter) - 18px), rgba(160, 60, 90, 0.2) calc(var(--gutter) - 18px), rgba(160, 60, 90, 0.2) calc(var(--gutter) - 17px), transparent calc(var(--gutter) - 17px)),
+    repeating-linear-gradient(180deg, transparent 0 31px, rgba(70, 50, 138, 0.08) 31px 32px);
+  box-shadow: 0 -30px 60px rgba(4, 8, 24, 0.35);
+  transform-origin: 50% 0;
+}
+.p2-book {
+  position: absolute;
+  left: 64%;
+  top: 54%;
+  width: min(720px, 54vw);
+  aspect-ratio: 1.62;
+  transform: translate(-50%, -50%);
+  perspective: 2200px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #231b3d;
+}
+.p2-page,
+.p2-leaf {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+}
+.p2-page,
+.p2-face {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px 26px;
+  background: #fdfcff;
+  box-shadow: 0 1px 0 rgba(70, 50, 138, 0.1);
+}
+.p2-page--l {
+  left: 0;
+  border-radius: 6px 0 0 6px;
+  box-shadow:
+    inset -18px 0 24px -18px rgba(70, 50, 138, 0.25),
+    0 24px 40px -18px rgba(40, 24, 90, 0.35);
+}
+.p2-page--r {
+  left: 50%;
+  gap: 4px;
+  border-radius: 0 6px 6px 0;
+  box-shadow:
+    inset 18px 0 24px -18px rgba(70, 50, 138, 0.25),
+    0 24px 40px -18px rgba(40, 24, 90, 0.35);
+}
+.p2-leaf {
+  left: 50%;
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+  transform: rotateY(-180deg);
+}
+.p2-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 0 6px 6px 0;
+  box-shadow: inset 18px 0 24px -18px rgba(70, 50, 138, 0.2);
+}
+.p2-face--back {
+  transform: rotateY(180deg);
+  border-radius: 6px 0 0 6px;
+  box-shadow: inset -18px 0 24px -18px rgba(70, 50, 138, 0.2);
+}
+.p2-book b {
+  font-weight: 600;
+  font-size: 14px;
+}
+.p2-title {
+  font-size: 18px !important;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.p2-sub {
+  font-size: 10.5px;
+  color: #6c6190;
+}
+.p2-foot {
+  margin-top: auto;
+}
+.p2-intro {
+  color: #4a416c;
+}
+.p2-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 6px;
+}
+.p2-bars i {
+  display: block;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(70, 50, 138, 0.12);
+}
+.p2-line {
+  position: relative;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(70, 50, 138, 0.1);
+}
+.p2-n {
+  font-size: 10.5px;
+  padding-top: 2px;
+  color: #6c6190;
+}
+.p2-line--hit .p2-t {
+  font-weight: 600;
+}
+.p2-code {
+  position: absolute;
+  right: -10px;
+  top: 7px;
+  transform: translateX(100%);
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #46328a;
+  color: #fff;
+  font-size: 9.5px;
+}
+.p2-hl {
+  position: relative;
+  white-space: nowrap;
+}
+.p2-mark {
+  position: absolute;
+  z-index: -1;
+  left: -2px;
+  right: -2px;
+  bottom: 1px;
+  height: 0.62em;
+  border-radius: 2px;
+  background: rgba(245, 158, 11, 0.42);
+  transform-origin: 0 50%;
+}
+.p2-line--hit {
+  padding-bottom: 50px;
+}
+.p2-slot {
+  position: absolute;
+  left: 30px;
+  bottom: 10px;
+  z-index: 20;
+  height: 34px;
+}
+.p2-slot-pill {
+  box-shadow: 0 8px 20px -8px rgba(40, 24, 90, 0.4);
+}
+.p2-charge {
+  position: absolute;
+  z-index: 5;
+  left: 70%;
+  top: 62%;
+  translate: -50% 0;
+  box-shadow: 0 10px 30px rgba(255, 201, 120, 0.3);
+}
+.p2-lift {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.hrs-p--page:not([data-live]) .p2-charge,
+.hrs-p--page[data-live] .p2-slot-pill {
+  visibility: hidden;
+}
+@media (max-width: 1100px) {
+  .p2-code {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  .p2-book {
+    left: 50%;
+    top: auto;
+    bottom: 6svh;
+    width: 640px;
+    transform: translateX(-50%) scale(0.56);
+    transform-origin: 50% 100%;
+  }
+}
+
+/* ---------- 3. the plane ---------- */
+.p3-moon-cut {
+  fill: var(--h-night);
+}
+.p3-city .hrs-range-far {
+  fill: #19224a;
+}
+.p3-city .hrs-range-near {
+  fill: #121a3a;
+}
+.p3-ground {
+  fill: #080d1e;
+}
+.p3-body {
+  fill: #fdfcff;
+  stroke: #cfc5e6;
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+.p3-flap-l,
+.p3-flap-r {
+  fill: #d9d0ee;
+  stroke: #cfc5e6;
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+.p3-crease {
+  fill: none;
+  stroke: #b9acdb;
+  stroke-width: 1.2;
+}
+.p3-words {
+  opacity: 0;
+  font-family: var(--sans);
+}
+.p3-w-k {
+  font: 600 9px/1 var(--mono);
+  letter-spacing: 0.14em;
+  fill: #6c6190;
+}
+.p3-w-h {
+  font-size: 15px;
+  font-weight: 600;
+  fill: #101b16;
+}
+.p3-w-b {
+  font: 400 10.5px/1 var(--mono);
+  fill: #46504a;
+}
+.p3-w-chip {
+  fill: var(--amber-bg);
+}
+.p3-w-chip-t {
+  font-size: 9.5px;
+  font-weight: 600;
+  fill: var(--amber-ink);
+}
+.p3-w-reply {
+  fill: none;
+  stroke: #cfc5e6;
+}
+.p3-trail {
+  fill: none;
+  stroke: rgba(226, 220, 255, 0.55);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+/* ---------- 4. the weekend ---------- */
+.p4-card {
+  color: var(--ink);
+}
+.p4-board {
+  display: flex;
+  margin-top: 16px;
+  font-size: clamp(30px, 4.6vw, 66px);
+  font-weight: 500;
+}
+.fl {
+  position: relative;
+  width: 0.72em;
+  height: 1.16em;
+  margin-right: 0.06em;
+  perspective: 5em;
+  color: #f4f7f5;
+}
+.fl--gap {
+  width: 0.26em;
+}
+.fl > span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  text-align: center;
+  background: #151c2f;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.fl--gap > span {
+  background: transparent;
+}
+.fl-t,
+.fl-ft {
+  top: 0;
+  line-height: 1.16em;
+  border-radius: 0.09em 0.09em 0 0;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.6);
+}
+.fl-b,
+.fl-fb {
+  bottom: 0;
+  line-height: 0;
+  border-radius: 0 0 0.09em 0.09em;
+  background: #1b2338 !important;
+}
+.fl--gap .fl-b,
+.fl--gap .fl-fb {
+  background: transparent !important;
+}
+.fl-ft {
+  transform-origin: 50% 100%;
+  visibility: hidden;
+}
+.fl-fb {
+  transform-origin: 50% 0;
+  visibility: hidden;
+}
+.fl.is-flip .fl-ft {
+  visibility: visible;
+  animation: fl-top 0.085s ease-in both;
+}
+.fl.is-flip .fl-fb {
+  visibility: visible;
+  animation: fl-bot 0.085s ease-out 0.085s both;
+}
+@keyframes fl-top {
+  from {
+    transform: rotateX(0);
+  }
+  to {
+    transform: rotateX(-90deg);
+  }
+}
+@keyframes fl-bot {
+  from {
+    transform: rotateX(90deg);
+  }
+  to {
+    transform: rotateX(0);
+  }
+}
+.p4-wind {
+  color: rgba(255, 255, 255, 0.5);
+}
+.hrs-p--dawn:not([data-live]) .p4-wind {
+  opacity: 0;
+}
+.p4-fly {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  top: 58%;
+}
+.p4-bob {
+  width: max-content;
+  margin-left: max(var(--gutter), calc((100vw - var(--maxw)) / 2));
+}
+.p4-bubble {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 300px;
+}
+.p4-from,
+.p4-sent {
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: rgba(244, 247, 245, 0.8);
+}
+.p4-sent {
+  align-self: flex-end;
+}
+.p4-msg {
+  padding: 12px 16px;
+  border-radius: 20px 20px 6px 20px;
+  background: #2f6fd6;
+  color: #fff;
+  font-size: 15.5px;
+  line-height: 1.4;
+  box-shadow: 0 18px 40px -12px rgba(8, 20, 60, 0.55);
+}
+.hrs-p--dawn:not([data-live]) .p4-fly {
+  display: none;
+}
+
+/* ---------- 5. the month ---------- */
+.hrs-p--month .hrs-card {
+  color: var(--bone);
+}
+.p5-flood {
+  --fx: 70%;
+  --fy: 50%;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--h-green);
+}
+.p5-wind {
+  color: rgba(16, 27, 22, 0.28);
+}
+.hrs-p--month:not([data-live]) .p5-wind {
+  opacity: 0;
+}
+.p5-cal {
+  position: absolute;
+  z-index: 2;
+  left: 70%;
+  top: 50%;
+  width: min(330px, 30vw);
+  margin: calc(min(330px, 30vw) * -0.62) 0 0 calc(min(330px, 30vw) / -2);
+}
+.p5-stack,
+.p5-head {
+  box-shadow: 0 30px 50px -24px rgba(40, 30, 10, 0.35);
+}
+.p5-rings {
+  position: absolute;
+  z-index: 3;
+  top: -12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 22%;
+}
+.p5-rings i {
+  width: 10px;
+  height: 26px;
+  border-radius: 5px;
+  background: #2a2f36;
+  box-shadow: inset -2px 0 0 #50565f;
+}
+.p5-head {
+  position: relative;
+  z-index: 2;
+  padding: 22px 0 12px;
+  border-radius: 10px 10px 0 0;
+  background: #c2402e;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.p5-stack {
+  position: relative;
+  aspect-ratio: 1 / 1.02;
+}
+.p5-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: #fffdf8;
+  border-radius: 0 0 10px 10px;
+  border-top: 1px dashed #d8d2c4;
+  color: var(--ink);
+  transform-origin: 50% 0;
+  box-shadow: 0 1px 0 #e9e3d6;
+}
+.p5-wd {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+}
+.p5-d {
+  position: relative;
+  font-size: min(150px, 13vw);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+}
+.p5-ring {
+  position: absolute;
+  inset: -6% -14%;
+  border: 4px solid var(--green);
+  border-radius: 50%;
+}
+.p5-note {
+  margin-top: 14px;
+  min-height: 1.5em;
+  font-size: 11px;
+  color: var(--ink-3);
+}
+.hrs-p--month:not([data-live]) .p5-page:not(.p5-page--last) {
+  display: none;
+}
+@media (max-width: 760px) {
+  .p5-flood {
+    --fx: 50%;
+    --fy: 68%;
+  }
+  .p5-cal {
+    left: 50%;
+    top: auto;
+    bottom: 7svh;
+    width: 220px;
+    margin: 0 0 0 -110px;
+  }
+  .p5-d {
+    font-size: 100px;
+  }
+  .p4-fly {
+    top: auto;
+    bottom: 12svh;
+  }
+}
+
+/* ============================================================
+   The chapters, each on the ground of its hour
+   ============================================================ */
+
+/* copy that reads on a dark ground; panels keep their own light card tokens */
+.hrs #receipts .v2c-copy,
+.hrs #verdicts .v2c-copy,
+.hrs #questions {
+  --ink: #f4f7f5;
+  --ink-2: rgba(244, 247, 245, 0.78);
+  --ink-3: rgba(244, 247, 245, 0.62);
+  --hair: rgba(244, 247, 245, 0.12);
+  --hair-2: rgba(244, 247, 245, 0.2);
+  --coat-ink: #a9c8f0;
+  --sweater-ink: #cdbdf2;
+  --green-700: #5fe3ae;
+  color: var(--ink);
+}
+.hrs #receipts .v2s-token-pill,
+.hrs #verdicts .v2s-token-pill {
+  color: #101b16;
+}
+.hrs .v2c-h2 {
+  font-size: clamp(34px, 3.6vw, 56px);
+  letter-spacing: -0.034em;
+}
+
+/* 7:52 pm, dusk: the street lamp still on Priya's side */
+.hrs #receipts {
+  background:
+    radial-gradient(ellipse 40% 60% at 10% 92%, rgba(255, 201, 120, 0.16), transparent 70%),
+    var(--h-dusk);
+}
+.hrs #receipts .v2c-h2 {
+  font-size: clamp(40px, 4.6vw, 68px);
+}
+
+/* the rule: Dana's ruled paper, carried on from the sheet that rose over the night */
+.hrs #policy {
+  background-color: var(--h-lilac);
+  background-image:
+    linear-gradient(90deg, transparent calc(var(--gutter) - 18px), rgba(160, 60, 90, 0.2) calc(var(--gutter) - 18px), rgba(160, 60, 90, 0.2) calc(var(--gutter) - 17px), transparent calc(var(--gutter) - 17px)),
+    repeating-linear-gradient(180deg, transparent 0 31px, rgba(70, 50, 138, 0.08) 31px 32px);
+}
+
+/* 7:53 pm, night: a few stars over her answer, and the copy across the top */
+.hrs #verdicts {
+  background:
+    radial-gradient(1.2px 1.2px at 12% 18%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 34% 8%, #fff 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 58% 14%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 76% 6%, #fff 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 91% 22%, #fff 50%, transparent 51%),
+    radial-gradient(1px 1px at 46% 30%, rgba(255, 255, 255, 0.7) 50%, transparent 51%),
+    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(47, 111, 214, 0.22), transparent 70%),
+    var(--h-night);
+}
+@media (min-width: 961px) {
+  .hrs #verdicts .v2c-grid {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "copy copy"
+      "fig panel";
+    align-items: end;
+  }
+  .hrs #verdicts .v2c-copy {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    column-gap: clamp(32px, 5vw, 80px);
+    align-items: end;
+    margin-bottom: 12px;
+  }
+  .hrs #verdicts .v2c-copy > * {
+    grid-column: 1;
+  }
+  .hrs #verdicts .v2c-copy > .v2c-lede,
+  .hrs #verdicts .v2c-copy > .v2s-token-line {
+    grid-column: 2;
+  }
+  .hrs #verdicts .v2c-copy > .v2c-lede {
+    grid-row: 1 / span 2;
+    align-self: end;
+  }
+  .hrs #verdicts .v2c-h2 {
+    font-size: clamp(44px, 5vw, 76px);
+    max-width: 12ch;
+  }
+  .hrs #verdicts .v2c-fig {
+    height: min(360px, calc(100svh - 420px));
+  }
+}
+
+/* Monday 9:12 am: morning light through Dana's window */
+.hrs #desk {
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, 0) 30%, rgba(255, 244, 214, 0.9) 31%, rgba(255, 244, 214, 0) 44%),
+    linear-gradient(115deg, rgba(255, 255, 255, 0) 48%, rgba(255, 244, 214, 0.7) 49%, rgba(255, 244, 214, 0) 58%),
+    var(--h-morning);
+}
+
+/* the sample month on squared paper, a working surface after the green */
+.hrs #your-month {
+  background-color: var(--h-graph);
+  background-image:
+    linear-gradient(rgba(16, 27, 22, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 27, 22, 0.045) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* the questions, asked after hours: bone on ink */
+.hrs #questions {
+  background: #0f1a15;
+}
+.hrs #questions .v2s-trust {
+  background: rgba(244, 247, 245, 0.06);
+  border-color: rgba(244, 247, 245, 0.16);
+}
+
+/* ---------- the close, on open air ---------- */
+.hrs-air {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0f1a15 0%, #33506b 16%, #9ec1e0 42%, var(--h-air) 70%);
+  padding-top: clamp(220px, 34svh, 340px);
+}
+.hrs-air .v2s-close {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+.hrs-air .v2s-close-in .v2s-price {
+  background: rgba(255, 255, 255, 0.72);
+}
+.hrs-air-sky {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: clamp(320px, 50svh, 520px);
+}
+.hrs-air-line {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.55);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-dasharray: 0.16 0.84;
+}
+.hrs-air-glide {
+  stroke: rgba(255, 255, 255, 0.35);
+  stroke-dasharray: 0.02 0.03;
+}
+.hrs-air-bird {
+  transform-box: view-box;
+  offset-anchor: 0 0;
+  offset-distance: 58%;
+  offset-rotate: auto 40deg;
+  filter: drop-shadow(0 10px 18px rgba(20, 50, 90, 0.3));
+}
+.hrs-air-slogan {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: clamp(120px, 20svh, 200px);
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: #fff;
+  font-size: clamp(34px, 6vw, 88px);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  text-shadow: 0 10px 40px rgba(20, 50, 90, 0.25);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hrs-air-line {
+    animation: hrs-drift 9s linear infinite;
+  }
+  .hrs-air-line--1 {
+    animation-duration: 12s;
+  }
+  .hrs-air-line--2 {
+    animation-duration: 7s;
+  }
+  .hrs-air-line--3 {
+    animation-duration: 15s;
+  }
+  .hrs-air-glide {
+    animation-duration: 20s;
+  }
+  .hrs-air-bird {
+    animation: hrs-glide 16s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  }
+}
+@keyframes hrs-drift {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+@keyframes hrs-glide {
+  from {
+    offset-distance: 8%;
+  }
+  to {
+    offset-distance: 92%;
+  }
+}
+
+/* the weekend's settled frame is Monday morning */
+.hrs-p--dawn:not([data-live]) .hrs-stage {
+  background: linear-gradient(180deg, #f4c7a2 0%, var(--h-morning) 62%);
+}
+.hrs-p--dawn:not([data-live]) .hrs-range-far {
+  fill: #b9b6cf;
+}
+.hrs-p--dawn:not([data-live]) .hrs-range-near {
+  fill: #a9b39a;
+}
+.hrs-p--dawn:not([data-live]) .hrs-tower {
+  fill: #8a93a8;
+}
+.hrs-p--dawn:not([data-live]) .hrs-tower-win,
+.hrs-p--dawn:not([data-live]) .hrs-stars {
+  opacity: 0;
+}
+
+/* ============================================================
+   The courier (courier.tsx): one charge, carried by the bird,
+   an amber beam behind it. Fixed over the page, under the nav.
+   ============================================================ */
+.hc {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  display: none;
+}
+.hc[data-on] {
+  display: block;
+}
+.hc-sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.hc-beam,
+.hc-glow {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+}
+.hc-beam {
+  stroke: var(--amber);
+  stroke-width: 2.5;
+}
+.hc-glow {
+  stroke: #ffc978;
+  stroke-width: 12;
+  filter: blur(6px);
+}
+.hc-pill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  color: #101b16 !important;
+  background: #fff !important;
+  box-shadow: 0 10px 30px -6px rgba(245, 158, 11, 0.45);
+  will-change: transform, opacity;
+}
+.hc-bird {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 60px;
+  height: 58px;
+  opacity: 0;
+  color: var(--ink);
+  will-change: transform, opacity;
+}
+.hc-bird svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+  transform-origin: 50% 70%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hc-bird svg {
+    animation: hc-flap 0.34s ease-in-out infinite alternate;
+  }
+}
+@keyframes hc-flap {
+  to {
+    transform: scaleY(0.78) translateY(3px);
+  }
+}
+/* over the dark hours the bird is bone */
+.hrs[data-nav="dark"] .hc-bird {
+  color: #f4f7f5;
+}
+/* the scenes' own pills are the courier's anchors while it runs: they move, it draws */
+.hrs[data-courier-live] .p1-charge,
+.hrs[data-courier-live] .p2-charge {
+  visibility: hidden;
+}
+.p3-anchor {
+  fill: transparent;
+}
+.p4-anchor {
+  position: absolute;
+  left: 92px;
+  top: calc(100% + 22px);
+  width: 1px;
+  height: 1px;
+}
+.p5-anchor {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: -40px;
+  width: 1px;
+  height: 1px;
+}
+
+/* ---------- the nav takes the hour under it ---------- */
+.hrs .v2s-nav {
+  --bg: var(--nav-bg, #fff);
+  background: var(--nav-bg, #fff);
+}
+.hrs[data-nav="dark"] .v2s-nav {
+  --ink: #f4f7f5;
+  --ink-2: rgba(244, 247, 245, 0.74);
+  --hair-2: rgba(244, 247, 245, 0.18);
+  --green-700: #5fe3ae;
+}
+.hrs[data-nav="dark"] .v2s-nav .v2s-btn--ink {
+  background: #f4f7f5;
+  color: #101b16;
+}
+.hrs-air {
+  background-color: var(--h-air);
+}
