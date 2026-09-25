@@ -56,39 +56,43 @@ const build: Build = ({ tl, q, stage }) => {
   gsap.set(plane, { x: Number(X(sx)), y: Number(Y(sy)), rotation: 0, scale: narrow ? 0.8 : 1 });
 
   /* the note's words go as the first fold starts */
-  tl.fromTo(q(".p3-words"), { opacity: 1 }, { opacity: 0, duration: 0.05 }, 0.12);
+  /* the charge lands on the note's own line and goes into it as the fold starts; it comes back out where
+     the plane leaves the screen */
+  tl.fromTo(q(".p3-anchor"), { opacity: 1 }, { opacity: 0, duration: 0.02 }, 0.36);
+  tl.to(q(".p3-anchor"), { opacity: 1, duration: 0.01 }, 0.97);
+  tl.fromTo(q(".p3-words"), { opacity: 1 }, { opacity: 0, duration: 0.05 }, 0.37);
   /* fold, fold, fold: every facet walks its keyframes together */
-  const folds = [0.14, 0.26, 0.38];
+  const folds = [0.39, 0.47, 0.55];
   folds.forEach((at, k) => {
-    const o = { duration: 0.1, ease: "power2.inOut", immediateRender: k === 0 };
+    const o = { duration: 0.08, ease: "power2.inOut", immediateRender: k === 0 };
     tl.fromTo(q(".p3-body"), { attr: { points: BODY[k] } }, { attr: { points: BODY[k + 1] }, ...o }, at);
     tl.fromTo(q(".p3-flap-l"), { attr: { points: FLAP_L[k] } }, { attr: { points: FLAP_L[k + 1] }, ...o }, at);
     tl.fromTo(q(".p3-flap-r"), { attr: { points: FLAP_R[k] } }, { attr: { points: FLAP_R[k + 1] }, ...o }, at);
     tl.fromTo(q(".p3-crease"), { attr: { points: CREASE[k] } }, { attr: { points: CREASE[k + 1] }, ...o }, at);
   });
-  tl.fromTo(q(".p3-flap-l, .p3-flap-r"), { fill: "#fdfcff" }, { fill: "#d9d0ee", duration: 0.1 }, 0.14);
-  tl.fromTo(q(".p3-crease"), { opacity: 0 }, { opacity: 1, duration: 0.05 }, 0.2);
-  tl.to(plane, { scale: narrow ? 0.34 : 0.42, duration: 0.08, ease: "power2.in" }, 0.44);
+  tl.fromTo(q(".p3-flap-l, .p3-flap-r"), { fill: "#fdfcff" }, { fill: "#d9d0ee", duration: 0.08 }, 0.39);
+  tl.fromTo(q(".p3-crease"), { opacity: 0 }, { opacity: 1, duration: 0.05 }, 0.43);
+  tl.to(plane, { scale: narrow ? 0.34 : 0.42, duration: 0.06, ease: "power2.in" }, 0.63);
 
   /* the flight: along the line of air, nose first, the trail drawing behind it */
   tl.to(
     plane,
     {
       motionPath: { path, align: path, alignOrigin: [0.5, 0.5], autoRotate: 90 },
-      duration: 0.44,
+      duration: 0.28,
       ease: "power1.inOut",
       immediateRender: false,
     },
-    0.52,
+    0.68,
   );
-  tl.fromTo(path, { drawSVG: "0% 0%" }, { drawSVG: "0% 100%", duration: 0.44, ease: "power1.inOut" }, 0.52);
-  tl.to(path, { drawSVG: "100% 100%", duration: 0.2 }, 0.8);
-  tl.to(q(".p3-city"), { y: 300, duration: 0.14, ease: "power2.in" }, 0.86);
+  tl.fromTo(path, { drawSVG: "0% 0%" }, { drawSVG: "0% 100%", duration: 0.28, ease: "power1.inOut" }, 0.68);
+  tl.to(path, { drawSVG: "100% 100%", duration: 0.1 }, 0.88);
+  tl.to(q(".p3-city"), { y: 300, duration: 0.1, ease: "power2.in" }, 0.9);
 };
 
 export function PlanePassage() {
   return (
-    <Passage n={2} from={H.lilac} to={H.night} label="Saturday, 7:53 pm: the answer" className="hrs-p--plane" build={build}>
+    <Passage from={H.lilac} to={H.night} label="Saturday, 7:53 pm: the answer" className="hrs-p--plane" build={build}>
       <svg className="hrs-scene" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
         <Stars />
         <g className="p3-moon">
@@ -108,6 +112,7 @@ export function PlanePassage() {
           <polygon className="p3-flap-l" points={FLAP_L[3]} />
           <polygon className="p3-flap-r" points={FLAP_R[3]} />
           <polyline className="p3-crease" points={CREASE[3]} />
+          <circle className="p3-anchor" cx={0} cy={-62} r={2} />
           <g className="p3-words">
             <text x={-78} y={-92} className="p3-w-k">
               SYLPH

@@ -99,3 +99,19 @@ Open before any of this reaches `/`:
 - The scenery is flat and deliberately simple. It needs an art pass (roofline detail, the weekend's daylight
   palette) and a decision on whether the clay cast should appear inside the passages.
 - The sun rises over the Front Range, which lies west of Denver. It is a liberty; move the arc if anyone minds.
+
+## Round 2 (2026-09-25): the courier and the scroll
+
+- **One charge, carried the whole way.** `courier.tsx` flies the single Sushi Kanda pill down the page on the Sylph
+  bird, with an amber beam that draws behind it and shrinks into it on landing. It is born from the photographed
+  receipt, rests in each chapter's own pill (the others show empty dashed slots), and in each scene rides an anchor
+  the scene animates: lifted by the rising page onto rule 4.3, into the note before it folds into the plane,
+  attached to Priya's reply, pinned to the calendar, and onto line 3 of the month-end report. Position is a pure
+  function of scroll, so scrolling back rewinds it. The cast reactions fire when it lands in a chapter.
+- **Easier scroll.** Passages are 160svh (from 200svh; the page is 15,000px, from 16,800px), scrub smoothing is 0.3
+  (from 0.6) on top of Lenis, and scenes 3 to 5 were re-timed so their main action starts after the charge lands.
+- **Flow between sections.** Each time card leaves before its stage does, so every scene ends on bare ground in
+  the next chapter's colour; the nav bar takes the colour of the hour under it (bone type over the dark ones); and
+  the nav's orange charge rail now runs on this route too (`v2-sides/nav.tsx`, the one shared file touched).
+
+Captures: `courier-1440-a.jpg`, `courier-1440-b.jpg` (the walk at 420px steps), `courier-390.jpg`. Checks as before, all clean.

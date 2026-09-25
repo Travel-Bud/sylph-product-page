@@ -36,7 +36,7 @@
 }
 @media (prefers-reduced-motion: no-preference) {
   .hrs-p {
-    height: 200svh;
+    height: 160svh;
   }
   .hrs-stage {
     position: sticky;
@@ -1118,4 +1118,125 @@
 .hrs-p--dawn:not([data-live]) .hrs-tower-win,
 .hrs-p--dawn:not([data-live]) .hrs-stars {
   opacity: 0;
+}
+
+/* ============================================================
+   The courier (courier.tsx): one charge, carried by the bird,
+   an amber beam behind it. Fixed over the page, under the nav.
+   ============================================================ */
+.hc {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  display: none;
+}
+.hc[data-on] {
+  display: block;
+}
+.hc-sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.hc-beam,
+.hc-glow {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+}
+.hc-beam {
+  stroke: var(--amber);
+  stroke-width: 2.5;
+}
+.hc-glow {
+  stroke: #ffc978;
+  stroke-width: 12;
+  filter: blur(6px);
+}
+.hc-pill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  color: #101b16 !important;
+  background: #fff !important;
+  box-shadow: 0 10px 30px -6px rgba(245, 158, 11, 0.45);
+  will-change: transform, opacity;
+}
+.hc-bird {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 60px;
+  height: 58px;
+  opacity: 0;
+  color: var(--ink);
+  will-change: transform, opacity;
+}
+.hc-bird svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.25));
+  transform-origin: 50% 70%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hc-bird svg {
+    animation: hc-flap 0.34s ease-in-out infinite alternate;
+  }
+}
+@keyframes hc-flap {
+  to {
+    transform: scaleY(0.78) translateY(3px);
+  }
+}
+/* over the dark hours the bird is bone */
+.hrs[data-nav="dark"] .hc-bird {
+  color: #f4f7f5;
+}
+/* the scenes' own pills are the courier's anchors while it runs: they move, it draws */
+.hrs[data-courier-live] .p1-charge,
+.hrs[data-courier-live] .p2-charge {
+  visibility: hidden;
+}
+.p3-anchor {
+  fill: transparent;
+}
+.p4-anchor {
+  position: absolute;
+  left: 92px;
+  top: calc(100% + 22px);
+  width: 1px;
+  height: 1px;
+}
+.p5-anchor {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: -40px;
+  width: 1px;
+  height: 1px;
+}
+
+/* ---------- the nav takes the hour under it ---------- */
+.hrs .v2s-nav {
+  --bg: var(--nav-bg, #fff);
+  background: var(--nav-bg, #fff);
+}
+.hrs[data-nav="dark"] .v2s-nav {
+  --ink: #f4f7f5;
+  --ink-2: rgba(244, 247, 245, 0.74);
+  --hair-2: rgba(244, 247, 245, 0.18);
+  --green-700: #5fe3ae;
+}
+.hrs[data-nav="dark"] .v2s-nav .v2s-btn--ink {
+  background: #f4f7f5;
+  color: #101b16;
+}
+.hrs-air {
+  background-color: var(--h-air);
 }

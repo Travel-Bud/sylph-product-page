@@ -109,9 +109,9 @@ const build: Build = ({ tl, q, stage }) => {
 
   /* her note, sent, carried across on the wind to Dana's side */
   tl.fromTo(q(".p4-bubble"), { opacity: 0, y: 18, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.05, ease: "back.out(2)" }, 0.02);
-  tl.fromTo(q(".p4-fly"), { xPercent: 0 }, { xPercent: 100, duration: 0.6, ease: "power1.in" }, 0.14);
-  tl.fromTo(q(".p4-bob"), { y: 0, rotate: 0 }, { keyframes: { y: [0, -26, 10, -18, 0], rotate: [0, -3, 2, -2, 0] }, duration: 0.6 }, 0.14);
-  tl.fromTo(q(".hrs-wind-line"), { drawSVG: "0% 0%" }, { drawSVG: "100% 100%", duration: 0.3, stagger: 0.08, ease: "power1.inOut" }, 0.12);
+  tl.fromTo(q(".p4-fly"), { xPercent: 0 }, { xPercent: 100, duration: 0.5, ease: "power1.in" }, 0.36);
+  tl.fromTo(q(".p4-bob"), { y: 0, rotate: 0 }, { keyframes: { y: [0, -26, 10, -18, 0], rotate: [0, -3, 2, -2, 0] }, duration: 0.5 }, 0.36);
+  tl.fromTo(q(".hrs-wind-line"), { drawSVG: "0% 0%" }, { drawSVG: "100% 100%", duration: 0.3, stagger: 0.07, ease: "power1.inOut" }, 0.34);
   tl.fromTo(q(".p4-sent"), { opacity: 0 }, { opacity: 1, duration: 0.02 }, 0.07);
   tl.fromTo(q(".p4-city"), { y: 70 }, { y: 400, duration: 0.1, ease: "power2.in" }, 0.9);
 };
@@ -119,7 +119,7 @@ const build: Build = ({ tl, q, stage }) => {
 export function DawnPassage() {
   const cells = flapCells(label(END));
   return (
-    <Passage n={3} from={H.night} to={H.morning} label="The weekend, to Monday 9:12 am" className="hrs-p--dawn" build={build}>
+    <Passage from={H.night} to={H.morning} label="The weekend, to Monday 9:12 am" className="hrs-p--dawn" build={build}>
       <svg className="hrs-scene" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
         <defs>
           <radialGradient id="p4-sun-g">
@@ -169,6 +169,7 @@ export function DawnPassage() {
             <span className="p4-from mono">Priya, 8:05 pm</span>
             <span className="p4-msg">Late finish at the site visit, only place still open.</span>
             <span className="p4-sent mono">Sent to Dana with your note</span>
+            <span className="p4-anchor" />
           </div>
         </div>
       </div>

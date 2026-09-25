@@ -140,7 +140,7 @@ const build: Build = ({ tl, q, stage }) => {
 
 export function DuskPassage() {
   return (
-    <Passage n={0} from={H.white} to={H.dusk} label="Saturday, 7:52 pm in Denver" className="hrs-p--dusk" build={build}>
+    <Passage from={H.white} to={H.dusk} label="Saturday, 7:52 pm in Denver" className="hrs-p--dusk" build={build}>
       <svg className="hrs-scene" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
         <defs>
           <radialGradient id="p1-sun-g" cx="50%" cy="50%" r="50%">

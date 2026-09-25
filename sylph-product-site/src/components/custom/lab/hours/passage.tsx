@@ -13,8 +13,8 @@ import { gsap, ScrollTrigger, useGSAP, MM_MOTION } from "@/components/custom/sit
  * no-script see. Under no-preference `build` receives a timeline of length 1 (fromTo tweens set the
  * opening frame as soon as they are created) and draws the passage over it.
  *
- * When the scrub passes the end the page dispatches v2s:arrive for the next stop, the contract the
- * courier used on /, so the cast in the next chapter still reacts to the charge landing.
+ * The charge itself is not drawn here: courier.tsx carries it down the page and lands it on the anchor
+ * each scene animates.
  */
 
 export type Build = (ctx: {
@@ -25,7 +25,6 @@ export type Build = (ctx: {
 }) => void;
 
 export function Passage({
-  n,
   from,
   to,
   label,
@@ -33,8 +32,6 @@ export function Passage({
   build,
   children,
 }: {
-  /** 0-based: the passage after the hero is 0; it lands the charge at stop n + 1 */
-  n: number;
   from: string;
   to: string;
   label: string;
@@ -53,28 +50,20 @@ export function Passage({
       const mm = gsap.matchMedia();
       mm.add(MM_MOTION, () => {
         el.dataset.live = "on";
-        let arrived = false;
-        const fire = (type: string) => window.dispatchEvent(new CustomEvent(type, { detail: { stop: n + 1 } }));
         const tl = gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: {
             trigger: el,
             start: "top 70%",
             end: "bottom bottom",
-            scrub: 0.6,
+            scrub: 0.3,
             invalidateOnRefresh: true,
-            onUpdate: (st) => {
-              if (!arrived && st.progress > 0.97) {
-                arrived = true;
-                fire("v2s:arrive");
-              } else if (arrived && st.progress < 0.9) {
-                arrived = false;
-                fire("v2s:depart");
-              }
-            },
           },
         });
-        build({ tl, q: gsap.utils.selector(el), el, stage });
+        const q = gsap.utils.selector(el);
+        build({ tl, q, el, stage });
+        /* the time card leaves before the stage does, so each scene ends on its bare ground */
+        tl.fromTo(q(".hrs-card"), { opacity: 1, y: 0 }, { opacity: 0, y: -48, duration: 0.08, ease: "power1.in", immediateRender: false }, 0.9);
         /* pad the timeline to exactly 1 so positions in `build` read as fractions of the passage */
         tl.set({}, {}, 1);
         return () => {

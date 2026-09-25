@@ -17,10 +17,11 @@ import { PlanePassage } from "@/components/custom/lab/hours/p3-plane";
 import { DawnPassage } from "@/components/custom/lab/hours/p4-dawn";
 import { MonthPassage } from "@/components/custom/lab/hours/p5-month";
 import { AirClose } from "@/components/custom/lab/hours/close";
+import { HoursCourier, HoursNavTint } from "@/components/custom/lab/hours/courier";
 
 /* Lab direction "Hours" (docs/plans/2026-09-25-landing-hours/README.md): the Two sides landing with
-   its seams replaced by passages of time, each chapter on the ground of the hour it happens in. The
-   courier is not mounted here; the passages carry the charge and dispatch its arrivals. */
+   its seams replaced by passages of time, each chapter on the ground of the hour it happens in. Its own
+   courier (lab/hours/courier.tsx) carries the charge through scenes and chapters alike. */
 export const metadata: Metadata = {
   title: "Sylph: one charge, two people, the hours between",
   description:
@@ -54,6 +55,8 @@ export default function HoursPage() {
       </AirClose>
       <SidesFooter sampleNote />
       <HoursRefresh />
+      <HoursCourier />
+      <HoursNavTint />
     </main>
   );
 }

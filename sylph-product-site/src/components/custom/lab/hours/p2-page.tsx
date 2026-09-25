@@ -90,7 +90,8 @@ const build: Build = ({ tl, q, stage }) => {
      measured with the sheet, the lift and the pill all at rest, whatever frame the scrub is on. */
   const sheet = q(".p2-sheet")[0] as HTMLElement;
   const lift = q(".p2-lift")[0] as HTMLElement;
-  const L = () => Math.round(stage.clientHeight * 0.36);
+  /* on a phone the book sits low under the card, so the lift is short */
+  const L = () => Math.round(stage.clientHeight * (stage.clientWidth < 760 ? 0.12 : 0.36));
   tl.fromTo(lift, { y: 0 }, { y: () => -L(), duration: 0.28, ease: "power2.out" }, 0.06);
   const delta = () => {
     const els = [sheet, lift, pill];
@@ -122,7 +123,7 @@ const build: Build = ({ tl, q, stage }) => {
 
 export function PagePassage() {
   return (
-    <Passage n={1} from={H.dusk} to={H.lilac} label="The rule, written once" className="hrs-p--page" build={build}>
+    <Passage from={H.dusk} to={H.lilac} label="The rule, written once" className="hrs-p--page" build={build}>
       <svg className="hrs-scene" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
         <Stars count={70} />
       </svg>
