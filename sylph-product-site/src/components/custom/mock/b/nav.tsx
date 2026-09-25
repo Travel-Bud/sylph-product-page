@@ -64,8 +64,8 @@ function Sec({ id, side, landing, lit, children }: { id: string; side?: "priya" 
 }
 
 /* Mock B's copy of the landing nav (v2-sides/nav.tsx): identical, except the charge rail, the lit links
-   and the sound switch run on /mock/B, which the shared nav's route list does not include. */
-const LANDING = new Set(["/mock/B"]);
+   and the sound switch run on / and /mock/B, which the shared nav's route list does not name for this page. */
+const LANDING = new Set(["/", "/mock/B"]);
 
 export function MbNav() {
   const rail = useRef<HTMLDivElement>(null);
