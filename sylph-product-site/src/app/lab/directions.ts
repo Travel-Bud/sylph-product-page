@@ -45,4 +45,10 @@ export const DIRECTIONS: Direction[] = [
     kind: "Two sides, pushed",
     line: "A playable rules board: drop Priya's receipts through six gates, and a charge dropped again takes the same path.",
   },
+  {
+    slug: "hours",
+    name: "Hours",
+    kind: "Two sides, pushed",
+    line: "The page keeps the story's clock: dusk, the rule, night, a weekend time-lapse and a month torn off, each gap drawn as the time passing.",
+  },
 ];
