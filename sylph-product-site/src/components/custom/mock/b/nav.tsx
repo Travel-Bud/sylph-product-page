@@ -141,9 +141,6 @@ export function MbNav() {
           <Sec id="month-end" landing={landing} lit={spot === "month-end"}>
             Month end
           </Sec>
-          <Sec id="your-month" landing={landing} lit={spot === "your-month"}>
-            Sample month
-          </Sec>
           <Sec id="questions" landing={landing} lit={spot === "questions"}>
             Questions
           </Sec>

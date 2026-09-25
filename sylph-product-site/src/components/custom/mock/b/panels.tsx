@@ -6,7 +6,7 @@ import { Obj, type ObjName } from "@/components/custom/site/obj";
 import { VerdictCard } from "@/components/custom/site/verdicts";
 import { FaresWindow } from "@/components/custom/site/panels";
 import { CHARGE, CLEARED, EXCEPTIONS, QBO_LIVE, ROWS, type EngineRow } from "@/components/custom/v2-sides/data";
-import { Head, Sample, SideTag, Tick, VerdictChip, type Side } from "@/components/custom/v2-sides/parts";
+import { Head, Sample, Tick, VerdictChip, type Side } from "@/components/custom/v2-sides/parts";
 import { play } from "@/components/custom/v2-sides/sound";
 
 /* Mock B: the live landing's chapter panels (v2-sides/chapters.tsx), copied so the chapters can be
@@ -60,13 +60,12 @@ export function tabKeys(e: React.KeyboardEvent<HTMLElement>, i: number, n: numbe
   e.currentTarget.parentElement?.querySelectorAll<HTMLElement>('[role="tab"]')[j]?.focus();
 }
 
-export function Card({ side, title, children, className = "" }: { side: Side | "both"; title: string; children: React.ReactNode; className?: string }) {
+export function Card({ title, children, className = "" }: { side: Side | "both"; title: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={`v2c-card ${className}`}>
       <div className="v2c-card-head">
         <h3 className="v2c-card-k">{title}</h3>
         <span className="v2c-card-tags">
-          <SideTag side={side} />
           <Sample />
         </span>
       </div>
@@ -200,8 +199,8 @@ export function ReceiptPaths() {
         </div>
       </div>
       <p className="v2c-foot">
-        Amount and date agree, so the receipt lands on its charge by itself. Any currency:{" "}
-        <span className="mono">&yen;14,200</span> becomes <span className="mono">$95.62</span> at the rate on the receipt date.
+        Matched on amount and date. <span className="mono">&yen;14,200</span> converts to{" "}
+        <span className="mono">$95.62</span> at that day&rsquo;s rate.
       </p>
     </Card>
   );
@@ -793,7 +792,7 @@ const LINES = [
 ];
 
 const EXPORTS = [
-  { id: "pdf", k: "PDF", say: "Audit-grade statement: every line with its rule, threshold and amount." },
+  { id: "pdf", k: "PDF", say: "Every line with the rule behind it." },
   { id: "xlsx", k: "XLSX", say: "Line items with their rule references, ready to filter." },
   { id: "csv", k: "GL journal CSV", say: "The journal, coded to the accounts you set once." },
   ...(QBO_LIVE ? [{ id: "qbo", k: "QuickBooks Online", say: "Posts the journal to QuickBooks Online." }] : []),
