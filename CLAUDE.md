@@ -16,7 +16,7 @@ sylph-product-site/
   src/app/hooks/useServerActions.ts demo-form submit hook
   src/components/custom/v2-sides/   the landing, "Two sides" (promoted 2026-09-22): hero, chapters, courier, cast, your-month, sound, scroll
   src/components/custom/site/       the v3 panel library (site.css, sample-data.ts, anchors.ts); its panels are reused inside the landing's tiles
-  src/components/custom/lab/        the six /lab landing directions (2026-09-22 explore run), one folder each
+  src/components/custom/mock/       the /mock landing mockups, one folder each (a, b, c, d) plus shared/ (the list and the switcher bar)
   src/app/legacy-fonts.ts           Satoshi and IBM Plex Mono, loaded only by /launching-soon, /terms and /dev through their layouts
   public/site/characters/           the Priya and Dana cast (matte clay renders, transparent WebP)
   src/components/custom/landing/    the July v5 landing, now only behind /launching-soon and the /dev/hero lab
@@ -76,7 +76,8 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 | `/api/demo` | stub that returns `{ok:true}`; NOT the real submit path, the form never calls it |
 | `/v2`, `/v2/sides`, `/v2/ledger` | 307 to `/` (the V2 exploration; the other directions live in git history) |
 | `/v2/clip` | noindex composition route the clip renderer (`scripts/clip/`) captures; the clips are in `public/site/clip/` |
-| `/lab`, `/lab/<direction>` | noindex, unlinked: six landing directions for the team to compare (receipt, compiler, pile, janus, comic, drop); notes and the pick in `docs/plans/2026-09-22-landing-v2/explore/README.md`; `node scripts/explore-check.mjs <url>` checks console and overflow at 1440, 390 and reduced motion |
+| `/mock`, `/mock/A` to `/mock/D` | noindex, unlinked: the router between the live page and the landing mockups (A Hours, B Two sides upgraded, C Departures, D The month sorted; list in `mock/shared/mocks.ts`); every mockup carries the switcher bar; notes per mockup in `docs/plans/2026-09-25-*`; `node scripts/explore-check.mjs <url>` checks console and overflow at 1440, 390 and reduced motion |
+| `/lab`, `/lab/*` | 307 to `/mock`: the 2026-09-22 directions were retired 2026-09-25 and live in git history (`a4a93f3`) |
 | `opengraph-image.jpg`, `twitter-image.jpg` | static social card under `src/app/` (the clip's poster), with `.alt.txt` files |
 
 ## Cross-host link contract
