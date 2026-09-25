@@ -63,8 +63,8 @@ function Sec({ id, side, landing, lit, children }: { id: string; side?: "priya" 
   );
 }
 
-/* the landing lives at /; /v2/sides is its old address and redirects there */
-const LANDING = new Set(["/", "/v2/sides"]);
+/* the landing lives at /; /v2/sides is its old address and redirects there; /lab/hours is its lab variant */
+const LANDING = new Set(["/", "/v2/sides", "/lab/hours"]);
 
 export function SidesNav() {
   const rail = useRef<HTMLDivElement>(null);
