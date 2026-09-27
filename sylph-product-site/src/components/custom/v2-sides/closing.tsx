@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mark } from "@/components/custom/site/mark";
-import { APP_LOGIN, DEMO, PRICING } from "@/components/custom/site/anchors";
+import { APP_LOGIN, CONTACT, DEMO, PRICING } from "@/components/custom/site/anchors";
 import { QBO_LIVE } from "./data";
 
 const TRUST = "Policies and receipts are encrypted in transit and at rest, and never used to train models.";
@@ -169,6 +169,7 @@ export function SidesFooter({ sampleNote = false }: { sampleNote?: boolean }) {
           <Link href={DEMO}>Book a demo</Link>
           <Link href={PRICING}>Pricing</Link>
           <a href={APP_LOGIN}>Log in</a>
+          <a href={CONTACT}>Contact</a>
           <Link href="/privacy">Privacy</Link>
         </nav>
         <p className="v2s-foot-fine">
