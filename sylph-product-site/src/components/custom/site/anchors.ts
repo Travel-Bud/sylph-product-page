@@ -4,6 +4,8 @@
 export const HOME = "/";
 /* Book a demo goes straight to Atharva's Calendly (Discord, 2026-09-14); the /demo form page stays reachable by URL. */
 export const DEMO = "https://calendly.com/atharva-sumant-januslabsinc/30min";
+/* Demo leads and direct contact both reach Atharva: the /demo form posts to this address too (demo-form.tsx LEAD_TO). */
+export const CONTACT = "mailto:atharva-sumant@januslabsinc.com";
 export const PRICING = "/pricing";
 /* The one cross-host link: the app lives on its own host (repo CLAUDE.md, cross-host link contract). */
 export const APP_LOGIN = "https://app.sylph-product.com/login";
