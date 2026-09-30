@@ -16,7 +16,7 @@ import { MbCourier, MbNavTint } from "./courier";
    docs/plans/2026-09-25-mock-b/NOTES.md). The same story, cast, chapters, panels and words as the
    2026-09-22 page; the seams became short handoff bands the charge is carried across, each chapter has its
    own composition and ground, and the tail shares those grounds. Rendered by / (with the site metadata and
-   JSON-LD) and by /mock/B (with the mockup switcher, passed as children). */
+   JSON-LD passed as children). */
 
 /* the grounds, in page order (b.css carries the same values as custom properties) */
 const G = {

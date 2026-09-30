@@ -14,10 +14,9 @@ The Next.js app lives in `sylph-product-site/`. Run every package command from i
 sylph-product-site/
   src/app/                          file routes (see Routes)
   src/app/hooks/useServerActions.ts demo-form submit hook
-  src/components/custom/mock/b/     the landing at /, "Two sides, upgraded" (Mock B, promoted 2026-09-25): landing.tsx composes it, rendered by / and /mock/B
-  src/components/custom/v2-sides/   the 2026-09-22 "Two sides" parts the landing still reuses (hero, cast, your-month, sound, scroll, closing) and Mock A builds on
+  src/components/custom/mock/b/     the landing at /, "Two sides, upgraded" (Mock B, promoted 2026-09-25): landing.tsx composes it, rendered by /
+  src/components/custom/v2-sides/   the 2026-09-22 "Two sides" parts the landing still reuses (hero, cast, sound, scroll, closing)
   src/components/custom/site/       the v3 panel library (site.css, sample-data.ts, anchors.ts); its panels are reused inside the landing's tiles
-  src/components/custom/mock/       the /mock landing mockups, one folder each (a, b, c, d) plus shared/ (the list and the switcher bar)
   src/app/legacy-fonts.ts           Satoshi and IBM Plex Mono, loaded only by /launching-soon, /terms and /dev through their layouts
   public/site/characters/           the Priya and Dana cast (matte clay renders, transparent WebP)
   src/components/custom/landing/    the July v5 landing, now only behind /launching-soon and the /dev/hero lab
@@ -77,8 +76,7 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 | `/api/demo` | stub that returns `{ok:true}`; NOT the real submit path, the form never calls it |
 | `/v2`, `/v2/sides`, `/v2/ledger` | 307 to `/` (the V2 exploration; the other directions live in git history) |
 | `/v2/clip` | noindex composition route the clip renderer (`scripts/clip/`) captures; the clips are in `public/site/clip/` |
-| `/mock`, `/mock/A` to `/mock/D` | noindex, unlinked: the router between the live page and the landing mockups (A Hours, B Two sides upgraded, C Departures, D The month sorted; list in `mock/shared/mocks.ts`); every mockup carries the switcher bar; notes per mockup in `docs/plans/2026-09-25-*`; `node scripts/explore-check.mjs <url>` checks console and overflow at 1440, 390 and reduced motion |
-| `/lab`, `/lab/*` | 307 to `/mock`: the 2026-09-22 directions were retired 2026-09-25 and live in git history (`a4a93f3`) |
+| `/mock`, `/mock/*`, `/lab`, `/lab/*` | 307 to `/`: the landing mockups (retired 2026-09-30) and the 2026-09-22 directions (retired 2026-09-25) live in git history. `node scripts/explore-check.mjs <url>` still checks any page for console errors and overflow at 1440, 390 and reduced motion |
 | `opengraph-image.jpg`, `twitter-image.jpg` | static social card under `src/app/` (the clip's poster), with `.alt.txt` files |
 
 ## Cross-host link contract
