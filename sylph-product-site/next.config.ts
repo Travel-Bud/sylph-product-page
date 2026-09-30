@@ -12,9 +12,11 @@ const nextConfig: NextConfig = {
       { source: "/v2", destination: "/", permanent: false },
       { source: "/v2/sides", destination: "/", permanent: false },
       { source: "/v2/ledger", destination: "/", permanent: false },
-      // the 2026-09-22 /lab directions were retired on 2026-09-25 for /mock (their code is in git history)
-      { source: "/lab", destination: "/mock", permanent: false },
-      { source: "/lab/:path*", destination: "/mock", permanent: false },
+      // the /lab directions (retired 2026-09-25) and the /mock mockups (retired 2026-09-30) live in git history
+      { source: "/lab", destination: "/", permanent: false },
+      { source: "/lab/:path*", destination: "/", permanent: false },
+      { source: "/mock", destination: "/", permanent: false },
+      { source: "/mock/:path*", destination: "/", permanent: false },
       {
         source: "/privacy",
         destination: "https://legal.januslabsinc.com/sylph/v1/privacy",
