@@ -3,7 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 /* No faces here: each surface loads its own (the landing and marketing pages through their <main>,
-   the pre-v3 routes through legacy-fonts.ts), so the root preloads nothing it does not use. */
+   /terms through legacy-fonts.ts), so the root preloads nothing it does not use. */
 
 /* Resolves the root social card (opengraph-image.jpg) to absolute URLs on every route, not only on /. */
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph-product.com";

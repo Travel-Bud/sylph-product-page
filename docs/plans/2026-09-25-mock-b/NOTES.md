@@ -1,7 +1,7 @@
 # Mock B, "Two sides, upgraded" (2026-09-25)
 
 Route `/mock/B` (noindex). Code in `src/components/custom/mock/b/`, page in `src/app/mock/B/page.tsx`.
-Captures: `mock-b-1440.jpg` (700px steps), `mock-b-390.jpg` (800px steps), `mock-b-1440-reduced.jpg`.
+Captures (pruned 2026-09-30, in git history): `mock-b-1440.jpg` (700px steps), `mock-b-390.jpg` (800px steps), `mock-b-1440-reduced.jpg`.
 
 The live page, the version a team could ship next week. Same story, cast, chapter order, panels and words;
 the fixes are all in composition, colour and the joins. Colour sits on the ground, never on the cards: Priya's

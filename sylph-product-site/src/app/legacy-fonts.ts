@@ -1,8 +1,8 @@
 import localFont from "next/font/local";
 import { IBM_Plex_Mono } from "next/font/google";
 
-/* The pre-v3 faces (Satoshi, IBM Plex Mono), loaded only by the routes that still render on them
-   (/launching-soon, /terms, /dev) through their own layouts. They used to load from the root layout,
+/* The pre-v3 faces (Satoshi, IBM Plex Mono), loaded only by /terms, the one route that still renders on them,
+   through its own layout. They used to load from the root layout,
    which preloaded six font files on every page, the landing included (Lighthouse, 2026-09-22). */
 const satoshi = localFont({
   src: [

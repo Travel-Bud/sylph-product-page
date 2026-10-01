@@ -15,20 +15,19 @@ sylph-product-site/
   src/app/                          file routes (see Routes)
   src/app/hooks/useServerActions.ts demo-form submit hook
   src/components/custom/mock/b/     the landing at /, "Two sides, upgraded" (Mock B, promoted 2026-09-25): landing.tsx composes it, rendered by /
-  src/components/custom/v2-sides/   the 2026-09-22 "Two sides" parts the landing still reuses (hero, cast, sound, scroll, closing)
-  src/components/custom/site/       the v3 panel library (site.css, sample-data.ts, anchors.ts); its panels are reused inside the landing's tiles
-  src/app/legacy-fonts.ts           Satoshi and IBM Plex Mono, loaded only by /launching-soon, /terms and /dev through their layouts
-  public/site/characters/           the Priya and Dana cast (matte clay renders, transparent WebP)
-  src/components/custom/landing/    the July v5 landing, now only behind /launching-soon and the /dev/hero lab
+  src/components/custom/v2-sides/   the 2026-09-22 "Two sides" parts the landing, /pricing and /demo still reuse (cast, sound, nav, closing, styles)
+  src/components/custom/site/       what remains of the v3 library (panels, objects, sample-data.ts, anchors.ts, site.css); reused inside the landing's tiles
   src/components/custom/sylph-identity/  brand marks, incl. sylph-bird-path.ts (see Invariant)
-  public/landing/                   landing images and video
-  next.config.ts                    image formats + the /privacy and /fresh redirects
+  src/app/legacy-fonts.ts           Satoshi and IBM Plex Mono, loaded only by /terms through its layout
+  public/site/                      characters (the Priya and Dana cast), objects, sound, clip (the social clip), video
+  scripts/                          shot.mjs (frame capture), explore-check.mjs (console and overflow check), clip/ (clip renderer)
+  next.config.ts                    image formats + the /privacy redirect and the retired-route redirects
   pnpm-workspace.yaml               allowBuilds (see below)
 ```
 
 ## Stack
 
-Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. Motion and 3D: framer-motion, gsap + @gsap/react, lenis (smooth scroll), three + @react-three/fiber, leva (dev tweak panel). Tests run on vitest.
+Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. Motion: gsap + @gsap/react, lenis (smooth scroll). Tests run on vitest (`--passWithNoTests`, since no tests exist yet).
 
 ## Commands
 
@@ -39,7 +38,7 @@ Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. Motion and 3D: frame
 | `pnpm build` / `pnpm start` | production build / serve it |
 | `pnpm lint` | eslint (eslint-config-next) |
 | `pnpm typecheck` | `tsc --noEmit` |
-| `pnpm test` | `vitest run` |
+| `pnpm test` | `vitest run --passWithNoTests` |
 
 All four gates (`typecheck`, `lint`, `test`, `build`) must exit 0 before a push.
 
@@ -50,7 +49,7 @@ All four gates (`typecheck`, `lint`, `test`, `build`) must exit 0 before a push.
 - `staging` is the working branch. Cut feature work from it and merge back into it.
 - `staging` into `main` is the deploy. Vercel builds `main` through its git integration; there is no workflow file in this repo.
 - Every other pushed branch gets a Vercel preview URL automatically.
-- The "Two sides" landing replaced Ben's v3 at `/` (2026-09-22, V2 exploration; plan and evidence under `docs/plans/2026-09-22-landing-v2*`), and Mock B, its upgrade, replaced it on 2026-09-25 (`docs/plans/2026-09-25-mock-b/NOTES.md`).
+- The "Two sides" landing replaced Ben's v3 at `/` (2026-09-22, V2 exploration; plan in `docs/plans/2026-09-22-landing-v2-directions.md`), and Mock B, its upgrade, replaced it on 2026-09-25 (`docs/plans/2026-09-25-mock-b/NOTES.md`).
 
 ## Environment variables
 
@@ -70,18 +69,17 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 | `/demo` | demo request page; `demo-form.tsx` posts through `useServerActions` to the email worker |
 | `/terms` | stub page, stays until a terms document is published |
 | `/privacy` | no page; `next.config.ts` issues a 308 to `https://legal.januslabsinc.com/sylph/v1/privacy` |
-| `/launching-soon` | leftover pre-launch page, still served |
-| `/fresh`, `/fresh/demo`, `/fresh/pricing` | 308 to `/`, `/demo`, `/pricing` (the preview was promoted 2026-09-08); `/fresh/lab/*` are Ben's design boards |
-| `/dev/hero` | hero lab, 404s in production unless `NEXT_PUBLIC_ENABLE_HERO_LAB=1` |
+| `/fresh`, `/fresh/demo`, `/fresh/pricing` | 308 to `/`, `/demo`, `/pricing` (the preview was promoted 2026-09-08) |
 | `/api/demo` | stub that returns `{ok:true}`; NOT the real submit path, the form never calls it |
 | `/v2`, `/v2/sides`, `/v2/ledger` | 307 to `/` (the V2 exploration; the other directions live in git history) |
+| `/v2/sounds` | noindex sound audition: a visitor's pick per slot is remembered and replaces that slot's file on the landing (`v2-sides/sound.ts`); waits on Ben's picks |
 | `/v2/clip` | noindex composition route the clip renderer (`scripts/clip/`) captures; the clips are in `public/site/clip/` |
-| `/mock`, `/mock/*`, `/lab`, `/lab/*` | 307 to `/`: the landing mockups (retired 2026-09-30) and the 2026-09-22 directions (retired 2026-09-25) live in git history. `node scripts/explore-check.mjs <url>` still checks any page for console errors and overflow at 1440, 390 and reduced motion |
+| `/mock/*`, `/lab/*`, `/fresh/lab/*`, `/launching-soon` | 307 to `/`: the landing mockups, the 2026-09-22 directions, Ben's v3 lab boards and the pre-launch page are retired and live in git history (the July v5 landing and its `/dev/hero` lab too, removed 2026-09-30). `node scripts/explore-check.mjs <url>` still checks any page for console errors and overflow at 1440, 390 and reduced motion |
 | `opengraph-image.jpg`, `twitter-image.jpg` | static social card under `src/app/` (the clip's poster), with `.alt.txt` files |
 
 ## Cross-host link contract
 
-- The only links from this site to the app are `https://app.sylph-product.com/login` (`APP_LOGIN` in `site/anchors.ts`, used by the landing's `mock/b/nav.tsx` and footer (`v2-sides/closing.tsx`), the 2026-09-22 `v2-sides/nav.tsx`, and the v3 `site/nav.tsx` and `footer.tsx`; the v5 `landing-nav.tsx` and `landing-footer.tsx` carry the same URL). The app never links back to this site.
+- The only links from this site to the app are `https://app.sylph-product.com/login` (`APP_LOGIN` in `site/anchors.ts`, used by the landing's `mock/b/nav.tsx`, the footer `v2-sides/closing.tsx`, and `v2-sides/nav.tsx` on `/pricing` and `/demo`). The app never links back to this site.
 - Legal documents live on `https://legal.januslabsinc.com/sylph/v1/` and are never rendered here. `/privacy` redirects there; `/terms` keeps a stub because no terms document is published yet.
 
 ## Demo-lead path
