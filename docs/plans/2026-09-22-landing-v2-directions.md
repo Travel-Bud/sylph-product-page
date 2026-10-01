@@ -60,4 +60,4 @@ No horizontal overflow at 390; H1 legible at 390.
 ## Gates
 
 typecheck, lint (no new findings), vitest, build; real-time CDP captures at 1440 and 390 via `scripts/shot.mjs`;
-reduced motion; console clean. Evidence under `docs/plans/2026-09-22-landing-v2/`.
+reduced motion; console clean. Evidence under `docs/plans/2026-09-22-landing-v2/` (pruned 2026-09-30, in git history).

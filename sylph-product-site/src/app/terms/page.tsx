@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { SylphBirdLogo } from "@/components/custom/sylph-identity";
+import { SylphBirdLogo } from "@/components/custom/sylph-identity/sylph-bird-logo";
 
 export default function TermsPage() {
   return (
