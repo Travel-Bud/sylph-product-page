@@ -1,15 +1,16 @@
 import Image from "next/image";
 import { DEMO } from "@/components/custom/site/anchors";
-import { NIGHT_FLIGHT } from "./film";
+import { NIGHT_FLIGHT_HD } from "./film";
 import { AdminScreen } from "./app-ui/admin-screen";
 
-/* Frame C's hero (Ben, 2026-10-05): the launch film's night flight, full bleed, the headline centred in its sky,
-   and the admin screen rising out of the clouds onto the paper below. */
+/* Frame C's hero (Ben, 2026-10-05): the launch film's night flight as a floating panel inset on the paper (a sharp
+   3840px render of the film's opening, 2026-10-06), the headline centred in its sky, and the admin screen rising out
+   of the clouds onto the paper below. */
 export function Hero() {
   return (
     <section className="lp-hero" id="top" aria-labelledby="hero-t">
       <div className="lp-hero-sky">
-        <Image src={NIGHT_FLIGHT.src} alt="" fill priority quality={80} sizes="100vw" placeholder="blur" blurDataURL={NIGHT_FLIGHT.blur} className="lp-hero-img" />
+        <Image src={NIGHT_FLIGHT_HD.src} alt="" fill priority quality={80} sizes="100vw" placeholder="blur" blurDataURL={NIGHT_FLIGHT_HD.blur} className="lp-hero-img" />
       </div>
       <span className="lp-hero-probe" data-nav-probe aria-hidden="true" />
       <div className="lp-wrap lp-hero-copy">

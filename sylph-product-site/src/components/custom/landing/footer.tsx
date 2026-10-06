@@ -3,7 +3,7 @@ import { APP_LOGIN, CONTACT, DEMO, PRICING } from "@/components/custom/site/anch
 import { Bird } from "./bird";
 import { TRUST } from "./faq";
 
-export function Footer() {
+export function Footer({ sampleNote = true }: { sampleNote?: boolean }) {
   return (
     <footer className="lp-foot">
       <div className="lp-wrap">
@@ -17,15 +17,18 @@ export function Footer() {
           </p>
           <nav className="lp-foot-links" aria-label="Footer">
             <a href={DEMO}>Book a demo</a>
-            <Link href={PRICING}>Pricing</Link>
+            <Link href={PRICING} prefetch={false}>
+              Pricing
+            </Link>
             <a href={APP_LOGIN}>Log in</a>
             <a href={CONTACT}>Contact</a>
-            <Link href="/privacy">Privacy</Link>
+            {/* a plain link: /privacy redirects to the legal host, and a prefetch would hit it cross-origin */}
+            <a href="/privacy">Privacy</a>
           </nav>
         </div>
         <p className="lp-foot-fine">
-          Product screens show sample data: the people, merchants, rules and amounts are invented. {TRUST} &copy; 2026 Janus
-          Labs.
+          {sampleNote && "Product screens show sample data: the people, merchants, rules and amounts are invented. "}
+          {TRUST} &copy; 2026 Janus Labs.
         </p>
       </div>
     </footer>

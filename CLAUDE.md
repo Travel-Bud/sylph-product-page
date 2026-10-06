@@ -15,8 +15,9 @@ sylph-product-site/
   src/app/                          file routes (see Routes)
   src/app/hooks/useServerActions.ts demo-form submit hook
   src/components/custom/landing/    the landing at / (2026-10-05 redesign): landing.tsx composes it; bento/ holds the seven feature tiles, app-ui/ the recreated product screens (sample data), iso.ts the "How it works" drawings
-  src/components/custom/v2-sides/   the 2026-09-22 "Two sides" parts /pricing and /demo still use (cast, sound, nav, closing, styles)
-  src/components/custom/site/       what remains of the v3 library (sample-data.ts, anchors.ts, fonts.ts, mark.tsx, motion.ts), used by /pricing, /demo and the landing
+  src/components/custom/landing/sub.css  /pricing and /demo on the landing's system (same nav and footer)
+  src/components/custom/v2-sides/   the 2026-09-22 "Two sides" parts the /v2 routes still use (nav, sound, sound audition, styles)
+  src/components/custom/site/       what remains of the v3 library (sample-data.ts, anchors.ts, fonts.ts, mark.tsx), used by the landing and the /v2 routes
   src/components/custom/sylph-identity/  brand marks, incl. sylph-bird-path.ts (see Invariant)
   src/app/legacy-fonts.ts           Satoshi and IBM Plex Mono, loaded only by /terms through its layout
   public/site/                      film (the launch-film stills the landing uses), characters (the Priya and Dana cast), sound, clip (the social clip), video
@@ -27,7 +28,7 @@ sylph-product-site/
 
 ## Stack
 
-Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. The landing uses no motion library (small hooks in `landing/hooks.ts`); gsap is still used by `v2-sides/cast.tsx`. Tests run on vitest (`--passWithNoTests`, since no tests exist yet).
+Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. The site uses no motion library (small hooks in `landing/hooks.ts`); `gsap` and `@gsap/react` stay in package.json but nothing imports them since 2026-10-06. Tests run on vitest (`--passWithNoTests`, since no tests exist yet).
 
 ## Commands
 
@@ -65,8 +66,8 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 | Route | Notes |
 |---|---|
 | `/` | the landing (`src/app/page.tsx` renders `landing/landing.tsx`: hero, problem, how it works, features bento, try it, questions, close), carries site metadata and JSON-LD |
-| `/pricing` | pricing page |
-| `/demo` | demo request page; `demo-form.tsx` posts through `useServerActions` to the email worker |
+| `/pricing` | pricing page (the landing's nav, footer and `sub.css`) |
+| `/demo` | demo request page: the wired `demo-form.tsx` posts through `useServerActions` to the email worker, or "Or pick a time now" opens Atharva's Calendly (`DEMO`) |
 | `/terms` | stub page, stays until a terms document is published |
 | `/privacy` | no page; `next.config.ts` issues a 308 to `https://legal.januslabsinc.com/sylph/v1/privacy` |
 | `/fresh`, `/fresh/demo`, `/fresh/pricing` | 308 to `/`, `/demo`, `/pricing` (the preview was promoted 2026-09-08) |
@@ -75,11 +76,11 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 | `/v2/sounds` | noindex sound audition: a visitor's pick per slot is remembered and replaces that slot's file in `v2-sides/sound.ts`; the landing has played no sound since the 2026-10-05 redesign |
 | `/v2/clip` | noindex composition route the clip renderer (`scripts/clip/`) captures; the clips are in `public/site/clip/` |
 | `/mock/*`, `/lab/*`, `/fresh/lab/*`, `/launching-soon` | 307 to `/`: the landing mockups, the 2026-09-22 directions, Ben's v3 lab boards and the pre-launch page are retired and live in git history (the July v5 landing and its `/dev/hero` lab too, removed 2026-09-30). `node scripts/explore-check.mjs <url>` still checks any page for console errors and overflow at 1440, 390 and reduced motion |
-| `opengraph-image.jpg`, `twitter-image.jpg` | static social card under `src/app/` (the clip's poster), with `.alt.txt` files |
+| `opengraph-image.jpg`, `twitter-image.jpg` | static social card under `src/app/` (the night-flight hero with the headline, 2026-10-06), with `.alt.txt` files |
 
 ## Cross-host link contract
 
-- The only links from this site to the app are `https://app.sylph-product.com/login` (`APP_LOGIN` in `site/anchors.ts`, used by the landing's `landing/nav.tsx` and `landing/footer.tsx`, and by `v2-sides/nav.tsx` and the footer `v2-sides/closing.tsx` on `/pricing` and `/demo`). The app never links back to this site.
+- The only links from this site to the app are `https://app.sylph-product.com/login` (`APP_LOGIN` in `site/anchors.ts`, used by `landing/nav.tsx` and `landing/footer.tsx` on `/`, `/pricing` and `/demo`, and by `v2-sides/nav.tsx` on `/v2/sounds`). The app never links back to this site.
 - Legal documents live on `https://legal.januslabsinc.com/sylph/v1/` and are never rendered here. `/privacy` redirects there; `/terms` keeps a stub because no terms document is published yet.
 
 ## Demo-lead path

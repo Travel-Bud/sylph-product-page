@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { BedDouble } from "lucide-react";
-import { NIGHT_FLIGHT, RECEIPT_PILE } from "./film";
+import { NIGHT_FLIGHT_HD, RECEIPT_PILE } from "./film";
 import { StatusTag } from "./app-ui/chip";
 
 /* The problem, as one contrast (option P1 of .design/frames/problem-options-*.png; Ben picks at the halfway check):
@@ -22,7 +22,7 @@ export function Problem() {
             </figcaption>
           </figure>
           <figure className="lp-pf lp-pf--sylph">
-            <Image src={NIGHT_FLIGHT.src} alt="" fill sizes="(max-width: 720px) 100vw, 50vw" quality={75} placeholder="blur" blurDataURL={NIGHT_FLIGHT.blur} className="lp-pf-img" />
+            <Image src={NIGHT_FLIGHT_HD.src} alt="" fill sizes="(max-width: 720px) 100vw, 50vw" quality={75} placeholder="blur" blurDataURL={NIGHT_FLIGHT_HD.blur} className="lp-pf-img" />
             <figcaption>
               <span className="lp-lab">With Sylph</span>
               <strong>Checked the moment money moves, with the reason.</strong>

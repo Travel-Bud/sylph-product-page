@@ -26,7 +26,7 @@ export function Close() {
                 <path d="M3 8h10M9 4l4 4-4 4" />
               </svg>
             </a>
-            <Link href={PRICING} className="lp-btn lp-btn--glass">
+            <Link href={PRICING} prefetch={false} className="lp-btn lp-btn--glass">
               Pricing
             </Link>
           </div>
