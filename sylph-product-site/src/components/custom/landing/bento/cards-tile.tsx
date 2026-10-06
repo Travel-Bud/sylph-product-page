@@ -23,8 +23,6 @@ export function CardsTile() {
       className="lp-tile--cards"
       title="Works on the cards you have."
       line="Connect the company cards and bank feeds you already use. Nothing new to issue."
-      hint="Switch a card on"
-      touchHint="Tap a switch"
       used={used}
     >
       <div className="ap lp-cards" data-all={all || undefined}>

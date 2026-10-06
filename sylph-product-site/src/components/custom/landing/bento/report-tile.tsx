@@ -24,7 +24,6 @@ export function ReportTile() {
       className="lp-tile--report"
       title="Reports build themselves."
       line="Matched charges file into the month's report. At month end it is already done."
-      hint="Scroll to watch it build"
       used={q > 0.15}
     >
       <div ref={ref} className="ap lp-rp" data-ready={ready || undefined}>

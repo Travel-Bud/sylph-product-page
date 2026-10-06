@@ -25,8 +25,6 @@ export function LimitTile() {
       className="lp-tile--limit"
       title="Change a limit, see what changes."
       line="Every rule is a sentence with a number in it. Move the number."
-      hint="Drag the limit"
-      touchHint="Drag or tap + and -"
       used={used}
     >
       <div className="ap lp-limit">
