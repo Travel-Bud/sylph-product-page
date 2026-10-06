@@ -3,9 +3,9 @@ import { Landing } from "@/components/custom/landing/landing";
 
 /* The landing (2026-10-05 redesign, components/custom/landing; docs/plans/2026-10-05-landing-redesign.md).
    The social card is app/opengraph-image.jpg. */
-const TITLE = "Sylph: the expense policy that enforces itself";
+const TITLE = "Sylph: Stop chasing receipts. Handle exceptions instead.";
 const DESCRIPTION =
-  "Write your travel and expense policy once, in plain English. Sylph checks every receipt, card swipe and booking against it, and shows finance only what breaks a rule. Works with the cards and banks you already use.";
+  "Sylph checks every card swipe, receipt and booking against your policy as it happens, so finance stops chasing receipts and handles only the exceptions.";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph-product.com";
 
