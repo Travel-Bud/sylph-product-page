@@ -66,6 +66,5 @@ Built as above; the old Mock B landing (`mock/b`) and the parts only it used (`s
 `site/site.css`, `v2-sides/chapters.css`, `v2-sides/reveal`, `v2-sides/scroll`, `public/site/objects`) are removed.
 Product screens follow application-v2's tokens and nav and the 2026-10-05 captures, with fictional data.
 
-Follow-ups: `lenis` and `@gsap/react` are now unused dependencies (left in place to avoid a lockfile rewrite with
-the local pnpm 10); the social card (`opengraph-image.jpg`) still shows the old clip poster; `/pricing` and `/demo`
+`lenis` went with it (no other user; `@gsap/react` stays, `site/motion.ts` still needs it). Follow-ups: the social card (`opengraph-image.jpg`) still shows the old clip poster; `/pricing` and `/demo`
 keep the old faces and the Two sides styling; unused character figures remain in `v2-sides/cast.tsx`.
