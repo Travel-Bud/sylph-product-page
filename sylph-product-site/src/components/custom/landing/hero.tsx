@@ -11,19 +11,14 @@ export function Hero() {
       <HeroSky />
       <span className="lp-hero-probe" data-nav-probe aria-hidden="true" />
       <div className="lp-wrap lp-hero-copy">
-        <p className="lp-kick lp-kick--night">Corporate travel and expense</p>
         <h1 id="hero-t" className="lp-h1">
           <span className="lp-line">
-            <span>The expense policy</span>
+            <span>Stop chasing receipts.</span>
           </span>{" "}
           <span className="lp-line">
-            <span>that enforces itself.</span>
+            <span>Handle exceptions instead.</span>
           </span>
         </h1>
-        <p className="lp-hero-lede">
-          Write your travel and expense policy once, in plain English. Sylph checks every receipt, card swipe and booking
-          against it, and shows finance only what breaks a&nbsp;rule.
-        </p>
         <div className="lp-hero-cta">
           <a href={DEMO} className="lp-btn lp-btn--bone">
             Book a demo
