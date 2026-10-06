@@ -85,9 +85,9 @@ export function Shell({ active, children }: { active: string; children: React.Re
             Collapse
           </div>
           <div className="ap-user">
-            <b>DR</b>
+            <b>CB</b>
             <span>
-              Dana Reyes
+              Claire Bennett
               <small>Admin &middot; Fieldstone</small>
             </span>
             <ChevronDown strokeWidth={1.75} />

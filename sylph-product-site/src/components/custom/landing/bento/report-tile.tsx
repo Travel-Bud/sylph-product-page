@@ -40,7 +40,7 @@ export function ReportTile() {
           <div className="lp-rp-h">
             <span>
               <b>September travel, New York</b>
-              <small>Priya Shah, Sales</small>
+              <small>Emma Collins, Sales</small>
             </span>
             {ready ? <Chip v="ok">Ready to seal</Chip> : <Chip v="gray">Filing</Chip>}
           </div>
