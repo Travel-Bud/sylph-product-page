@@ -60,8 +60,6 @@ export function SetupTile() {
       className="lp-tile--setup"
       title="Set up in about an hour."
       line="It took us about an hour for a 10-person company."
-      hint="Press and hold"
-      touchHint="Press and hold"
       used={p > 0}
     >
       <div className="ap lp-setup" data-done={done || undefined}>

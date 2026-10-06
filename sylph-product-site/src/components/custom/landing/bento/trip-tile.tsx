@@ -59,8 +59,6 @@ export function TripTile() {
       className="lp-tile--trip"
       title="Book a trip in one sentence."
       line="Type the whole trip as one line. Every fare comes back checked against your policy."
-      hint="Click the search line"
-      touchHint="Tap the search line"
       used={phase !== "idle"}
     >
       <div className="ap lp-trip">
