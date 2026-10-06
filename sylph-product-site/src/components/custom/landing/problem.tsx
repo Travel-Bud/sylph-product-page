@@ -5,7 +5,8 @@ import { StatusTag } from "./app-ui/chip";
 
 /* The problem, as one contrast (option P1 of .design/frames/problem-options-*.png; Ben picks at the halfway check):
    today the policy is checked after the money is spent, by a person, line by line; with Sylph it is checked the
-   moment money moves, with the reason. The two launch-film stills carry the feeling; the labels carry the claim. */
+   moment money moves, with the reason. The two launch-film stills carry the feeling; the labels carry the claim.
+   The landscape stills cover tall cards, so they render about twice a phone's width (hence the 200vw size). */
 export function Problem() {
   return (
     <section className="lp-problem" data-settle aria-labelledby="problem-t">
@@ -15,14 +16,14 @@ export function Problem() {
         </h2>
         <div className="lp-problem-grid">
           <figure className="lp-pf lp-pf--today" data-rv="clip">
-            <Image src={RECEIPT_PILE_HD.src} alt="" fill sizes="(max-width: 720px) 100vw, 50vw" quality={75} className="lp-pf-img" />
+            <Image src={RECEIPT_PILE_HD.src} alt="" fill sizes="(max-width: 720px) 200vw, 60vw" quality={75} className="lp-pf-img" />
             <figcaption>
               <span className="lp-lab">Today</span>
               <strong>Checked weeks later, by a person, line by line.</strong>
             </figcaption>
           </figure>
           <figure className="lp-pf lp-pf--sylph" data-rv="clip">
-            <Image src={NIGHT_FLIGHT_HD.src} alt="" fill sizes="(max-width: 720px) 100vw, 50vw" quality={75} className="lp-pf-img" />
+            <Image src={NIGHT_FLIGHT_HD.src} alt="" fill sizes="(max-width: 720px) 200vw, 60vw" quality={75} className="lp-pf-img" />
             <figcaption>
               <span className="lp-lab">With Sylph</span>
               <strong>Checked the moment money moves, with the reason.</strong>
