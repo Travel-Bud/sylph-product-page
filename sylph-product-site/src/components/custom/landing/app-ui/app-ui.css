@@ -55,7 +55,7 @@
 /* window: the 248px rail, the 56px top bar with the org chip and the bell, 40px page gutters */
 .ap-window {
   display: grid; grid-template-columns: 248px minmax(0, 1fr);
-  background: var(--ap-bg); border-radius: 14px; overflow: hidden;
+  background: var(--ap-bg); border-radius: 10px; overflow: hidden;
   box-shadow: 0 0 0 1px rgba(16, 27, 22, 0.1), 0 40px 80px -40px rgba(10, 20, 16, 0.45), 0 16px 32px -16px rgba(10, 20, 16, 0.18);
 }
 .ap-side { display: flex; flex-direction: column; padding: 0 12px 14px; background: var(--ap-side); border-right: 1px solid var(--ap-side-line); }
@@ -159,7 +159,7 @@
   .ap { font-size: 13px; }
   .ap-activity { display: none; }
   .ap-needs { grid-column: auto; grid-row: auto; }
-  .ap-window { grid-template-columns: 1fr; border-radius: 12px; }
+  .ap-window { grid-template-columns: 1fr; border-radius: 8px; }
   .ap-side { display: none; }
   .ap-top { height: 48px; padding: 0 14px; }
   .ap-page { padding: 4px 16px 20px; }

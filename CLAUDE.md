@@ -28,7 +28,7 @@ sylph-product-site/
 
 ## Stack
 
-Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. The site uses no motion library (small hooks in `landing/hooks.ts`); `gsap` and `@gsap/react` stay in package.json but nothing imports them since 2026-10-06. Tests run on vitest (`--passWithNoTests`, since no tests exist yet).
+Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. The site uses no motion library: small hooks in `landing/hooks.ts` and CSS (the hero's load-in and the section reveals are in `landing.css`). Tests run on vitest (`--passWithNoTests`, since no tests exist yet).
 
 ## Commands
 

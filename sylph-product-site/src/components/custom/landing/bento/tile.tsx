@@ -25,7 +25,7 @@ export function Tile({
 }) {
   const coarse = useCoarsePointer();
   return (
-    <article className={`lp-tile ${className}`} aria-labelledby={`${id}-t`} data-used={used || undefined}>
+    <article className={`lp-tile ${className}`} aria-labelledby={`${id}-t`} data-used={used || undefined} data-rv>
       <div className="lp-tile-head">
         <h3 id={`${id}-t`}>{title}</h3>
         <p>{line}</p>
