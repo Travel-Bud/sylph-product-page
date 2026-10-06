@@ -68,3 +68,12 @@ Product screens follow application-v2's tokens and nav and the 2026-10-05 captur
 
 `lenis` went with it (no other user; `@gsap/react` stays, `site/motion.ts` still needs it). Follow-ups: the social card (`opengraph-image.jpg`) still shows the old clip poster; `/pricing` and `/demo`
 keep the old faces and the Two sides styling; unused character figures remain in `v2-sides/cast.tsx`.
+
+## Polish (2026-10-06, after Ben saw it live)
+
+The hero is full bleed again: the rounded floating panel read as cheap on load. The load-in now reveals in order
+(the sky fades in once its image has arrived, the headline rises line by line behind masks, then the lede, the
+buttons and the dashboard), sections rise in more slowly, and the photographs open with a clip. Marketing containers
+use 10 to 12px corners; product UI keeps the app's own. The receipt pile is a sharp 3840px version like the hero.
+`gsap` and `@gsap/react` are removed. A full-resolution Blender render of the night-flight frame replaces the hero image
+once the GPU is free.

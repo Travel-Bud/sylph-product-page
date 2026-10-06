@@ -13,7 +13,7 @@ export function Close() {
   return (
     <section className="lp-close" aria-labelledby="close-t">
       <div className="lp-wrap lp-close-grid">
-        <div className="lp-close-copy">
+        <div className="lp-close-copy" data-rv>
           <p className="lp-kick lp-kick--night">Your numbers</p>
           <h2 id="close-t" className="lp-h2">
             Try it on last month&rsquo;s statement.
@@ -56,7 +56,7 @@ export function Close() {
           </table>
         </div>
 
-        <div className="ap lp-insight" role="img" aria-label="An Insights finding Sylph writes from a card statement, with sample figures">
+        <div className="ap lp-insight" data-rv role="img" aria-label="An Insights finding Sylph writes from a card statement, with sample figures">
           <p className="lp-insight-k ap-num">What Sylph finds on a statement</p>
           <div className="ap-card lp-insight-card">
             <span className="ap-chip ap-chip--block">Act now</span>
