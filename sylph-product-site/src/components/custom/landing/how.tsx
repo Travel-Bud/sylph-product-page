@@ -12,7 +12,7 @@ const STEPS = [
 export function How() {
   const art = howDrawings();
   return (
-    <section className="lp-how" id="how" aria-labelledby="how-t">
+    <section className="lp-how lp-panel" id="how" data-panel data-settle aria-labelledby="how-t">
       <div className="lp-wrap">
         <div className="lp-how-head" data-rv>
           <div>

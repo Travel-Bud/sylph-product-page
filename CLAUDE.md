@@ -28,7 +28,7 @@ sylph-product-site/
 
 ## Stack
 
-Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. The site uses no motion library: small hooks in `landing/hooks.ts` and CSS (the hero's load-in and the section reveals are in `landing.css`). Tests run on vitest (`--passWithNoTests`, since no tests exist yet).
+Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. The site uses no motion library: small hooks in `landing/hooks.ts` and CSS (the hero's load-in and the section reveals are in `landing.css`), plus two scroll helpers: `landing/panels.tsx` widens the night panels into place, and `landing/settle.tsx` is the desktop settle between sections (`docs/plans/2026-10-06-landing-flow.md`). Tests run on vitest (`--passWithNoTests`, since no tests exist yet).
 
 ## Commands
 

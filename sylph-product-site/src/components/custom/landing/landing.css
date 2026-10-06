@@ -55,7 +55,7 @@
 .lp-h1 { font-size: clamp(44px, 6.1vw, 88px); line-height: 0.98; font-weight: 500; letter-spacing: -0.045em; }
 .lp-h1 .lp-line { display: block; overflow: hidden; padding-bottom: 0.12em; margin-bottom: -0.12em; }
 .lp-h1 .lp-line > span { display: block; }
-.lp-h2 { font-size: clamp(34px, 4.2vw, 60px); line-height: 1.03; font-weight: 500; letter-spacing: -0.036em; text-wrap: balance; }
+.lp-h2 { font-size: clamp(32px, 3.6vw, 52px); line-height: 1.03; font-weight: 500; letter-spacing: -0.036em; text-wrap: balance; }
 .lp-lab { display: block; font-family: var(--font-plex-mono), monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; }
 
 /* ---------- buttons ---------- */
@@ -103,10 +103,10 @@
 .lp-hero-rise::after { content: ""; position: absolute; inset: auto -2px -2px; height: 120px; background: linear-gradient(rgba(243, 242, 237, 0), var(--paper) 88%); pointer-events: none; }
 
 /* ---------- problem ---------- */
-.lp-problem { padding: 144px 0 136px; }
+.lp-problem { padding: 104px 0 96px; }
 .lp-problem-h { text-align: center; max-width: 900px; margin: 0 auto; }
-.lp-problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 56px; }
-.lp-pf { position: relative; height: 560px; border-radius: 10px; overflow: hidden; background: var(--night); color: var(--on-night); }
+.lp-problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+.lp-pf { position: relative; height: 480px; border-radius: 10px; overflow: hidden; background: var(--night); color: var(--on-night); }
 .lp-pf-img { object-fit: cover; }
 .lp-pf--today .lp-pf-img { object-position: 50% 70%; }
 .lp-pf--sylph .lp-pf-img { object-position: 78% 40%; }
@@ -125,12 +125,19 @@
 .lp-pf-why b { color: var(--ap-amber); }
 
 /* ---------- how it works (night) ---------- */
-.lp-how { padding: 128px 0 120px; background: var(--night); color: var(--on-night); }
+/* night panels (panels.tsx): the night is a rounded layer behind the section's content. At rest, and under reduced
+   motion, it sits inset from the page edge; with script it widens to full bleed as the section comes into place. */
+.lp-panel { --panel-inset: 24px; --panel-r: 28px; position: relative; isolation: isolate; }
+.lp-panel::before { content: ""; position: absolute; inset: 0 var(--panel-inset); z-index: -1; border-radius: var(--panel-r); background: var(--night); }
+.lp[data-panels="on"] .lp-panel::before { inset: 0; transform: scaleX(var(--s, 1)); will-change: transform; }
+.lp-end::before { border-radius: var(--panel-r) var(--panel-r) 0 0; }
+.lp-end .lp-foot { background: none; }
+.lp-how { padding: 104px 0 96px; color: var(--on-night); }
 .lp-how-head { display: grid; grid-template-columns: 1fr 380px; gap: 64px; align-items: end; }
 .lp-how-head .lp-h2 { margin-top: 24px; }
 .lp-how-head .lp-h2 span { display: block; }
 .lp-how-aside { font-size: 17px; line-height: 1.6; color: var(--on-night-2); }
-.lp-sheet { position: relative; margin-top: 72px; padding: 24px 24px 32px; }
+.lp-sheet { position: relative; margin-top: 48px; padding: 24px 24px 32px; }
 .lp-sheet > i { position: absolute; width: 14px; height: 14px; border: 0 solid rgba(237, 242, 239, 0.4); }
 .lp-sheet > i:nth-child(1) { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
 .lp-sheet > i:nth-child(2) { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
@@ -151,11 +158,11 @@
 .lp[data-io="on"] .lp-steps [data-rv]:nth-child(4) { transition-delay: 0.24s; }
 
 /* ---------- bento ---------- */
-.lp-bento { padding: 144px 0 128px; }
+.lp-bento { padding: 104px 0 96px; }
 .lp-bento-head { display: grid; grid-template-columns: 1fr 420px; gap: 24px 64px; align-items: end; }
 .lp-bento-head .lp-kick { grid-column: 1 / -1; }
 .lp-bento-lede { font-size: 17px; line-height: 1.6; color: var(--ink-2); }
-.lp-bento-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; margin-top: 56px; }
+.lp-bento-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; margin-top: 40px; }
 .lp-tile { position: relative; display: flex; flex-direction: column; min-width: 0; padding: 28px 28px 24px; border-radius: 12px; background: var(--stone); box-shadow: inset 0 0 0 1px var(--line-2); }
 .lp-tile--flag { grid-column: span 7; grid-row: span 2; }
 .lp-tile--receipt { grid-column: span 5; grid-row: span 2; }
@@ -415,14 +422,14 @@
   .lp-hero-cta { flex-direction: column; gap: 10px; margin-top: 28px; }
   .lp-hero-cta .lp-btn { width: 100%; }
   .lp-hero-rise { width: calc(100% - 20px); margin-top: 48px; }
-  .lp-problem { padding: 96px 0 88px; }
+  .lp-problem { padding: 80px 0 72px; }
   .lp-problem-h { text-align: left; }
   .lp-problem-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 32px; }
   .lp-pf { height: 440px; border-radius: 8px; }
   .lp-pf figcaption { inset: 20px 20px auto; }
   .lp-pf-card { inset: auto 12px 12px; }
   .lp-pf-why { flex-direction: column; gap: 4px; }
-  .lp-how { padding: 88px 0 80px; }
+  .lp-how { padding: 80px 0 72px; }
   .lp-how-head .lp-h2 span { display: inline; }
   .lp-how-aside { font-size: 16px; }
   .lp-sheet { margin-top: 40px; padding: 16px 16px 8px; }
@@ -431,7 +438,7 @@
   .lp-step { padding: 0 0 32px; }
   .lp-step + .lp-step { border-left: 0; border-top: 1px dashed var(--on-night-line); padding-top: 24px; }
   .lp-step p { max-width: none; }
-  .lp-bento { padding: 96px 0 88px; }
+  .lp-bento { padding: 80px 0 72px; }
   .lp-bento-head { grid-template-columns: 1fr; }
   .lp-bento-lede { font-size: 16px; }
   .lp-bento-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 36px; }
@@ -467,7 +474,7 @@
 }
 
 /* ---------- try it (night): the policy you can edit, and the week it re-checks ---------- */
-.lp-try { padding: 136px 0; background: var(--night); color: var(--on-night); }
+.lp-try { padding: 104px 0 96px; color: var(--on-night); }
 .lp-try-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: start; }
 .lp-try-copy .lp-h2 { margin-top: 24px; }
 .lp-try-lede { margin-top: 24px; max-width: 440px; font-size: 18px; line-height: 1.6; color: var(--on-night-2); }
@@ -510,7 +517,7 @@
 .lp-pol-sum { padding: 12px 24px 16px; border-top: 1px solid var(--ap-line); font-size: 11.5px; font-weight: 500; color: var(--ap-muted); }
 
 /* ---------- questions ---------- */
-.lp-faq { padding: 136px 0; }
+.lp-faq { padding: 104px 0 96px; }
 .lp-faq-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: start; }
 .lp-faq-head { position: sticky; top: 112px; }
 .lp-faq-head .lp-h2 { margin-top: 24px; }
@@ -528,7 +535,7 @@
 .lp-qa p { padding: 0 32px 24px 52px; max-width: 640px; font-size: 16px; line-height: 1.6; color: var(--ink-2); }
 
 /* ---------- close (night) and footer ---------- */
-.lp-close { padding: 136px 0 120px; background: var(--night); color: var(--on-night); }
+.lp-close { padding: 104px 0 88px; color: var(--on-night); }
 .lp-close-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: 72px; align-items: center; }
 .lp-close-copy .lp-h2 { margin-top: 24px; }
 .lp-close-lede { margin-top: 24px; max-width: 460px; font-size: 18px; line-height: 1.6; color: var(--on-night-2); }
@@ -568,7 +575,8 @@
   .lp-faq-head { position: static; }
 }
 @media (max-width: 720px) {
-  .lp-try, .lp-faq { padding: 88px 0; }
+  .lp-try, .lp-faq { padding: 80px 0 72px; }
+  .lp-panel { --panel-inset: 10px; --panel-r: 20px; }
   .lp-try-lede, .lp-close-lede { font-size: 16px; }
   .lp-pol { border-radius: 10px; }
   .lp-pol-h { padding: 14px 16px; }
@@ -582,7 +590,7 @@
   .lp-qa summary { grid-template-columns: 32px 1fr 16px; padding: 20px 0; }
   .lp-qa-q { font-size: 17px; }
   .lp-qa p { padding: 0 0 20px 44px; font-size: 15px; }
-  .lp-close { padding: 88px 0 72px; }
+  .lp-close { padding: 80px 0 64px; }
   .lp-close-cta .lp-btn { flex: 1; }
   .lp-insight-card { grid-template-columns: minmax(0, 1fr) auto; padding: 16px; }
   .lp-insight-card > .ap-chip { grid-column: 1 / -1; justify-self: start; }

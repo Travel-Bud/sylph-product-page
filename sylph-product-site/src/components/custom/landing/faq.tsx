@@ -34,7 +34,7 @@ const QA: { q: string; a: string }[] = [
 
 export function Faq() {
   return (
-    <section className="lp-faq" id="questions" aria-labelledby="faq-t">
+    <section className="lp-faq" id="questions" data-settle aria-labelledby="faq-t">
       <div className="lp-wrap lp-faq-grid">
         <div className="lp-faq-head" data-rv>
           <Kicker>Questions</Kicker>

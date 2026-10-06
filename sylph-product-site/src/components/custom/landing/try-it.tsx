@@ -53,7 +53,7 @@ export function TryIt() {
   const changed = beat > 0;
 
   return (
-    <section className="lp-try" id="try" aria-labelledby="try-t">
+    <section className="lp-try lp-panel" id="try" data-panel data-settle aria-labelledby="try-t">
       <div className="lp-wrap lp-try-grid">
         <div className="lp-try-copy" data-rv>
           <Kicker night>Try it</Kicker>

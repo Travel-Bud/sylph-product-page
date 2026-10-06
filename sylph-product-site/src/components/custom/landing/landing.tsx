@@ -11,6 +11,8 @@ import { Faq } from "./faq";
 import { Close } from "./close";
 import { Footer } from "./footer";
 import { Reveal } from "./reveal";
+import { Panels } from "./panels";
+import { Settle } from "./settle";
 
 /* The landing at / (2026-10-05 redesign, Ben's mix of the frames: C's hero, A's night section, C's live policy, plus
    the problem contrast and the features bento). Plan: docs/plans/2026-10-05-landing-redesign.md. Rendered by
@@ -22,6 +24,8 @@ export function Landing({ children }: { children?: React.ReactNode }) {
         Skip to content
       </a>
       <Reveal />
+      <Panels />
+      <Settle />
       <Nav />
       <Hero />
       <Problem />
@@ -29,8 +33,10 @@ export function Landing({ children }: { children?: React.ReactNode }) {
       <Bento />
       <TryIt />
       <Faq />
-      <Close />
-      <Footer />
+      <div className="lp-panel lp-end" data-panel data-settle>
+        <Close />
+        <Footer />
+      </div>
       {children}
     </main>
   );
