@@ -7,7 +7,7 @@ import { AdminScreen } from "./app-ui/admin-screen";
    below. On load the sky fades in once it has arrived and the copy reveals line by line (landing.css, "load-in"). */
 export function Hero() {
   return (
-    <section className="lp-hero" id="top" aria-labelledby="hero-t">
+    <section className="lp-hero" id="top" data-settle aria-labelledby="hero-t">
       <HeroSky />
       <span className="lp-hero-probe" data-nav-probe aria-hidden="true" />
       <div className="lp-wrap lp-hero-copy">

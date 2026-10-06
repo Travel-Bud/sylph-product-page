@@ -26,8 +26,6 @@ export function useMedia(query: string) {
 }
 
 export const useReducedMotion = () => useMedia("(prefers-reduced-motion: reduce)");
-/** Phones and tablets, whose primary pointer cannot hover: tiles show tap hints there. */
-export const useCoarsePointer = () => useMedia("(hover: none), (pointer: coarse)");
 
 /** True once the element has been at least `threshold` visible (then stays true). */
 export function useSeen(ref: RefObject<Element | null>, threshold = 0.35) {

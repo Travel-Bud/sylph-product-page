@@ -80,8 +80,6 @@ export function ReceiptTile() {
       className="lp-tile--receipt"
       title="Receipts find their own charge."
       line="Text a photo, forward the email or drop it in. Each one finds its charge."
-      hint="Drag the receipt"
-      touchHint="Tap the receipt"
       used={phase !== "idle"}
     >
       <div className="ap lp-rc" data-phase={phase}>

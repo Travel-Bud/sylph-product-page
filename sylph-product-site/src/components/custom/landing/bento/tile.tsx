@@ -1,16 +1,12 @@
 "use client";
 
-import { useCoarsePointer } from "../hooks";
-
-/* One bento tile: a short title, one line, the working piece, and an idle hint that names the gesture
-   ("Drag the receipt" with a mouse, "Tap the receipt" on a phone) until the visitor has used it. */
+/* One bento tile: a short title, one line and the working piece. `used` marks that the visitor has used the piece,
+   which stops its idle cue (landing.css, [data-used]). */
 export function Tile({
   id,
   className,
   title,
   line,
-  hint,
-  touchHint,
   used,
   children,
 }: {
@@ -18,12 +14,9 @@ export function Tile({
   className: string;
   title: string;
   line: string;
-  hint: string;
-  touchHint?: string;
   used: boolean;
   children: React.ReactNode;
 }) {
-  const coarse = useCoarsePointer();
   return (
     <article className={`lp-tile ${className}`} aria-labelledby={`${id}-t`} data-used={used || undefined} data-rv>
       <div className="lp-tile-head">
@@ -31,10 +24,6 @@ export function Tile({
         <p>{line}</p>
       </div>
       <div className="lp-tile-stage">{children}</div>
-      <p className={`lp-hint${used ? " is-used" : ""}`} aria-hidden="true">
-        <i />
-        {coarse && touchHint ? touchHint : hint}
-      </p>
     </article>
   );
 }

@@ -33,8 +33,6 @@ export function FlagTile() {
       className="lp-tile--flag"
       title="Every flag shows its reason."
       line="Open a flagged charge: the rule, the limit and the policy line it came from."
-      hint="Hover a flagged charge"
-      touchHint="Tap a flagged charge"
       used={used}
     >
       <div ref={ref} className="ap lp-flag">
