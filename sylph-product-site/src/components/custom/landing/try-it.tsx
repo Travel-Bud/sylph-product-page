@@ -91,30 +91,33 @@ export function TryIt() {
                 <em className="ap-num">{String(i + 1).padStart(2, "0")}</em>
                 <span className="lp-pol-s">
                   {l.before}{" "}
-                  <span className="lp-val">
-                    <button type="button" onClick={() => set(l.code, vals[l.code] - l.step)} aria-label={`Lower: ${l.before} ${l.after}`}>
-                      <Minus strokeWidth={2} />
-                    </button>
-                    <label>
-                      {l.unit === "$" && <span aria-hidden="true">$</span>}
-                      <input
-                        type="number"
-                        inputMode="numeric"
-                        min={l.min}
-                        max={l.max}
-                        step={l.step}
-                        value={vals[l.code]}
-                        onChange={(e) => set(l.code, e.target.valueAsNumber, false)}
-                        onBlur={(e) => set(l.code, e.target.valueAsNumber)}
-                        aria-label={`${l.before} ${l.unit === "$" ? "dollars" : "hours"} ${l.after}`}
-                        style={{ width: `${String(vals[l.code]).length + 0.6}ch` }}
-                      />
-                    </label>
-                    <button type="button" onClick={() => set(l.code, vals[l.code] + l.step)} aria-label={`Raise: ${l.before} ${l.after}`}>
-                      <Plus strokeWidth={2} />
-                    </button>
+                  <span className="lp-keep">
+                    <span className="lp-val">
+                      <button type="button" onClick={() => set(l.code, vals[l.code] - l.step)} aria-label={`Lower: ${l.before} ${l.after}`}>
+                        <Minus strokeWidth={2} />
+                      </button>
+                      <label>
+                        {l.unit === "$" && <span aria-hidden="true">$</span>}
+                        <input
+                          type="number"
+                          inputMode="numeric"
+                          min={l.min}
+                          max={l.max}
+                          step={l.step}
+                          value={vals[l.code]}
+                          onChange={(e) => set(l.code, e.target.valueAsNumber, false)}
+                          onBlur={(e) => set(l.code, e.target.valueAsNumber)}
+                          aria-label={`${l.before} ${l.unit === "$" ? "dollars" : "hours"} ${l.after}`}
+                          style={{ width: `${String(vals[l.code]).length + 0.6}ch` }}
+                        />
+                      </label>
+                      <button type="button" onClick={() => set(l.code, vals[l.code] + l.step)} aria-label={`Raise: ${l.before} ${l.after}`}>
+                        <Plus strokeWidth={2} />
+                      </button>
+                    </span>
+                    {l.after === "." && "."}
                   </span>
-                  {l.after === "." ? "." : ` ${l.after}`}
+                  {l.after !== "." && ` ${l.after}`}
                 </span>
                 <code className="ap-num">{l.code}</code>
               </li>

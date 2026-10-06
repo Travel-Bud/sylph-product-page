@@ -415,8 +415,10 @@
   .lp-nav-login { font-size: 14px; }
   .lp-hero { padding-top: 72px; }
   .lp-hero-sky { inset: 0 0 220px; }
-  .lp-hero-img { object-position: 74% 30%; }
+  .lp-hero-drift { bottom: auto; height: 640px; -webkit-mask-image: linear-gradient(#000 74%, transparent); mask-image: linear-gradient(#000 74%, transparent); }
+  .lp-hero-img { object-position: 50% 50%; }
   .lp-hero-copy { padding-top: 56px; }
+  .lp-hero-copy .lp-h1 { font-size: clamp(36px, 11vw, 44px); }
   .lp-hero-copy .lp-h1 .lp-line { overflow: visible; }
   .lp-hero-copy .lp-h1 .lp-line > span { text-wrap: balance; }
   .lp-hero-cta { flex-direction: column; gap: 10px; margin-top: 28px; }
@@ -488,6 +490,8 @@
 .lp-pol-sp { flex: 1; }
 .lp-pol-h small { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ap-muted); }
 .lp-pol-lines { padding: 8px 0; }
+/* the stepper and a closing full stop stay on one line */
+.lp-keep { white-space: nowrap; }
 .lp-pol-lines li { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 10px 24px; font-size: 18px; letter-spacing: -0.01em; }
 .lp-pol-lines em { font-style: normal; font-size: 11.5px; font-weight: 500; color: var(--ap-fg5); }
 .lp-pol-lines code { font-size: 11px; font-weight: 500; color: var(--ap-muted); }
@@ -581,6 +585,7 @@
   .lp-pol { border-radius: 10px; }
   .lp-pol-h { padding: 14px 16px; }
   .lp-pol-lines li { grid-template-columns: 24px minmax(0, 1fr); padding: 8px 16px; font-size: 16px; }
+  .lp-cards-m b { white-space: normal; }
   .lp-pol-lines code { display: none; }
   .lp-pol-sep { padding: 10px 16px; font-size: 10px; }
   .lp-pol-rows li { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; padding: 12px 16px; }
