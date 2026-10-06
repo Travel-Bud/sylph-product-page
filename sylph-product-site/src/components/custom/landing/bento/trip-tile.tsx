@@ -65,7 +65,7 @@ export function TripTile() {
     >
       <div className="ap lp-trip">
         <div className="ap-card lp-trip-card">
-          <p className="lp-trip-q">Where are we headed, Priya?</p>
+          <p className="lp-trip-q">Where are we headed, Emma?</p>
           <button type="button" className={`lp-omni is-${phase}`} onClick={phase === "done" ? reset : run} aria-label={phase === "done" ? "Start again" : `Plan a trip: ${TRIP_SENTENCE}`}>
             {phase === "idle" ? <span className="lp-omni-ghost">{TRIP_SENTENCE}</span> : <span className="lp-omni-typed ap-num">{TRIP_SENTENCE.slice(0, n)}</span>}
             <i className="lp-caret" aria-hidden="true" />

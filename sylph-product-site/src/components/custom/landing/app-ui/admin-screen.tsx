@@ -11,8 +11,8 @@ const NEEDS = [
 ];
 
 const ACTIVITY = [
-  { who: "Priya Shah", verb: "submitted", what: "sms-receipt-0912.jpg", when: "9/12/2026" },
-  { who: "Priya Shah", verb: "added a note to", what: "Marriott Marquis", when: "9/12/2026" },
+  { who: "Emma Collins", verb: "submitted", what: "sms-receipt-0912.jpg", when: "9/12/2026" },
+  { who: "Emma Collins", verb: "added a note to", what: "Marriott Marquis", when: "9/12/2026" },
   { who: "Lee Park", verb: "submitted", what: "hertz-folio.pdf", when: "9/11/2026" },
 ];
 
@@ -21,13 +21,13 @@ export function AdminScreen() {
     <div className="ap" role="img" aria-label="The Sylph admin dashboard: one report waiting for review and what needs finance today, with sample data">
       <Shell active="dashboard">
         <div className="ap-page">
-          <p className="ap-hello">Good morning, Dana</p>
+          <p className="ap-hello">Good morning, Claire</p>
           <div className="ap-dash">
             <div className="ap-card ap-focus">
               <p className="ap-focus-k">Expense reports &middot; needs your review</p>
               <h5>September travel, New York needs your review: 2 lines over policy.</h5>
               <p className="ap-focus-amt ap-num">$973.25</p>
-              <p className="ap-focus-who">Priya Shah &middot; Sales &middot; 5 entries &middot; in queue 5h</p>
+              <p className="ap-focus-who">Emma Collins &middot; Sales &middot; 5 entries &middot; in queue 5h</p>
               <div className="ap-focus-cta">
                 <span className="ap-btn ap-btn--ink">Review report</span>
                 <span className="ap-btn">All reports</span>
