@@ -21,7 +21,7 @@ export function Nav({ solid: always = false }: { solid?: boolean }) {
   return (
     <header className={`lp-nav${solid ? " is-solid" : ""}`}>
       <div className="lp-wrap lp-nav-in">
-        <Link href="/" className="lp-brand" aria-label="Sylph, home">
+        <Link href="/" prefetch={false} className="lp-brand" aria-label="Sylph, home">
           <Bird className="lp-brand-mark" />
           <span>Sylph</span>
         </Link>
