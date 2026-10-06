@@ -1,22 +1,18 @@
-import { Newsreader, Hanken_Grotesk } from "next/font/google";
+import { Hanken_Grotesk, IBM_Plex_Mono } from "next/font/google";
 
-// The marketing surface's voice — loaded ONLY by routes that render under
-// .sylph-lp (/, /demo, /pricing) via the variable classes on their <main>,
-// so neither font ships to app pages (which stay on Satoshi).
-//
-// Newsreader: the calm editorial serif that carries the display sizes.
-// Hanken Grotesk: the working grotesque for body and UI.
-export const newsreader = Newsreader({
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  variable: "--font-newsreader",
-  display: "swap",
-});
-
+/* The landing's faces are the product's own (brief, 2026-10-05): Hanken Grotesk for every word, IBM Plex Mono
+   for labels, rule codes and amounts. Loaded only by the landing's <main>. */
 export const hanken = Hanken_Grotesk({
   subsets: ["latin"],
   variable: "--font-hanken",
   display: "swap",
 });
 
-export const landingFonts = `${newsreader.variable} ${hanken.variable}`;
+export const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-plex-mono",
+  display: "swap",
+});
+
+export const landingFonts = `${hanken.variable} ${plexMono.variable}`;
