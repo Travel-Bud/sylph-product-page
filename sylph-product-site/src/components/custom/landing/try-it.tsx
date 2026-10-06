@@ -54,7 +54,7 @@ export function TryIt() {
   return (
     <section className="lp-try" id="try" aria-labelledby="try-t">
       <div className="lp-wrap lp-try-grid">
-        <div className="lp-try-copy">
+        <div className="lp-try-copy" data-rv>
           <p className="lp-kick lp-kick--night">Try it</p>
           <h2 id="try-t" className="lp-h2">
             Change a limit. Watch every charge re&#8209;check.
@@ -76,7 +76,7 @@ export function TryIt() {
           </ol>
         </div>
 
-        <div className="ap lp-pol">
+        <div className="ap lp-pol" data-rv>
           <div className="lp-pol-h">
             <Bird />
             <strong>T&amp;E Policy 2026</strong>

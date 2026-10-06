@@ -11,7 +11,7 @@ export function Bento() {
   return (
     <section className="lp-bento" id="features" aria-labelledby="bento-t">
       <div className="lp-wrap">
-        <div className="lp-bento-head">
+        <div className="lp-bento-head" data-rv>
           <p className="lp-kick">Features</p>
           <h2 id="bento-t" className="lp-h2">
             See what it does.

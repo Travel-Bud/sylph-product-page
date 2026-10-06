@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { BedDouble } from "lucide-react";
-import { NIGHT_FLIGHT_HD, RECEIPT_PILE } from "./film";
+import { NIGHT_FLIGHT_HD, RECEIPT_PILE_HD } from "./film";
 import { StatusTag } from "./app-ui/chip";
 
 /* The problem, as one contrast (option P1 of .design/frames/problem-options-*.png; Ben picks at the halfway check):
@@ -10,19 +10,19 @@ export function Problem() {
   return (
     <section className="lp-problem" aria-labelledby="problem-t">
       <div className="lp-wrap">
-        <h2 id="problem-t" className="lp-h2 lp-problem-h">
+        <h2 id="problem-t" className="lp-h2 lp-problem-h" data-rv>
           Most expense policies are checked too late.
         </h2>
         <div className="lp-problem-grid">
-          <figure className="lp-pf lp-pf--today">
-            <Image src={RECEIPT_PILE.src} alt="" fill sizes="(max-width: 720px) 100vw, 50vw" quality={75} placeholder="blur" blurDataURL={RECEIPT_PILE.blur} className="lp-pf-img" />
+          <figure className="lp-pf lp-pf--today" data-rv="clip">
+            <Image src={RECEIPT_PILE_HD.src} alt="" fill sizes="(max-width: 720px) 100vw, 50vw" quality={75} className="lp-pf-img" />
             <figcaption>
               <span className="lp-lab">Today</span>
               <strong>Checked weeks later, by a person, line by line.</strong>
             </figcaption>
           </figure>
-          <figure className="lp-pf lp-pf--sylph">
-            <Image src={NIGHT_FLIGHT_HD.src} alt="" fill sizes="(max-width: 720px) 100vw, 50vw" quality={75} placeholder="blur" blurDataURL={NIGHT_FLIGHT_HD.blur} className="lp-pf-img" />
+          <figure className="lp-pf lp-pf--sylph" data-rv="clip">
+            <Image src={NIGHT_FLIGHT_HD.src} alt="" fill sizes="(max-width: 720px) 100vw, 50vw" quality={75} className="lp-pf-img" />
             <figcaption>
               <span className="lp-lab">With Sylph</span>
               <strong>Checked the moment money moves, with the reason.</strong>

@@ -13,7 +13,7 @@ export function How() {
   return (
     <section className="lp-how" id="how" aria-labelledby="how-t">
       <div className="lp-wrap">
-        <div className="lp-how-head">
+        <div className="lp-how-head" data-rv>
           <div>
             <p className="lp-kick lp-kick--night">How it works</p>
             <h2 id="how-t" className="lp-h2">

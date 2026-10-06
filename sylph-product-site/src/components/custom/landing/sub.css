@@ -10,7 +10,7 @@
 /* ---------- pricing ---------- */
 .lp-plans { padding: 56px 0 96px; }
 .lp-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.lp-tier { display: flex; flex-direction: column; padding: 32px 28px 28px; border-radius: 18px; background: var(--stone); box-shadow: inset 0 0 0 1px var(--line-2); }
+.lp-tier { display: flex; flex-direction: column; padding: 32px 28px 28px; border-radius: 12px; background: var(--stone); box-shadow: inset 0 0 0 1px var(--line-2); }
 .lp-tier.is-hi { background: var(--night); color: var(--on-night); box-shadow: 0 40px 80px -48px rgba(10, 20, 16, 0.6); }
 .lp-tier-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .lp-tier h2 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
@@ -49,7 +49,7 @@
 .lp-demo-or { position: relative; margin: 24px 0; text-align: center; font-family: var(--font-plex-mono), monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
 .lp-demo-or::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1px solid var(--line); }
 .lp-demo-or span { position: relative; padding: 0 12px; background: var(--paper); }
-.lp-demo-cal { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px; border-radius: 14px; background: var(--night); color: var(--on-night); transition: transform 0.2s var(--ease), box-shadow 0.2s; }
+.lp-demo-cal { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 24px; border-radius: 10px; background: var(--night); color: var(--on-night); transition: transform 0.2s var(--ease), box-shadow 0.2s; }
 .lp-demo-cal:hover { transform: translateY(-1px); box-shadow: 0 20px 40px -24px rgba(10, 20, 16, 0.6); }
 .lp-demo-cal b { display: block; font-size: 18px; font-weight: 600; letter-spacing: -0.015em; }
 .lp-demo-cal small { display: block; margin-top: 4px; font-size: 14px; color: var(--on-night-2); }
@@ -57,7 +57,7 @@
 .lp-demo-cal:hover svg { transform: translateX(3px); }
 
 /* the wired form, restyled from outside */
-.lp-demo-form .demo-form { padding: 32px 28px 28px; border-radius: 18px; background: var(--white); box-shadow: 0 0 0 1px rgba(16, 27, 22, 0.08), 0 40px 80px -48px rgba(16, 27, 22, 0.45); color: var(--ink); }
+.lp-demo-form .demo-form { padding: 32px 28px 28px; border-radius: 12px; background: var(--white); box-shadow: 0 0 0 1px rgba(16, 27, 22, 0.08), 0 40px 80px -48px rgba(16, 27, 22, 0.45); color: var(--ink); }
 .lp-demo-form .form-head { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
 .lp-demo-form .form-sub { margin-top: 8px; font-size: 14.5px; line-height: 1.5; color: var(--ink-2); }
 .lp-demo-form form > .field:first-of-type { margin-top: 24px; }
@@ -90,12 +90,12 @@
   .lp-sub-head { padding: 120px 0 8px; }
   .lp-sub-lede { font-size: 17px; }
   .lp-plans { padding: 40px 0 72px; }
-  .lp-tier { padding: 24px 20px 20px; border-radius: 16px; }
+  .lp-tier { padding: 24px 20px 20px; border-radius: 10px; }
   .lp-tier-price b { font-size: 38px; }
   .lp-every { padding: 72px 0 88px; }
   .lp-every-cols { grid-template-columns: 1fr; }
   .lp-demo { padding: 112px 0 80px; }
-  .lp-demo-form .demo-form { padding: 24px 20px 20px; border-radius: 16px; }
+  .lp-demo-form .demo-form { padding: 24px 20px 20px; border-radius: 10px; }
   .lp-demo-form .field.two { grid-template-columns: 1fr; }
   .lp-demo-cal { padding: 16px 20px; }
 }

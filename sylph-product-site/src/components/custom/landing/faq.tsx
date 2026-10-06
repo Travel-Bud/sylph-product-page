@@ -35,13 +35,13 @@ export function Faq() {
   return (
     <section className="lp-faq" id="questions" aria-labelledby="faq-t">
       <div className="lp-wrap lp-faq-grid">
-        <div className="lp-faq-head">
+        <div className="lp-faq-head" data-rv>
           <p className="lp-kick">Questions</p>
           <h2 id="faq-t" className="lp-h2">
             What finance asks first.
           </h2>
         </div>
-        <ol className="lp-faq-list">
+        <ol className="lp-faq-list" data-rv>
           {QA.map((x, i) => (
             <li key={x.q}>
               <details className="lp-qa">
