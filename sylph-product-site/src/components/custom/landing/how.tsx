@@ -1,4 +1,5 @@
 import { howDrawings } from "./iso";
+import { Kicker } from "./kicker";
 
 /* Frame A's night section (Ben, 2026-10-05): four technical drawings of how a charge gets checked, on one sheet. */
 const STEPS = [
@@ -15,7 +16,7 @@ export function How() {
       <div className="lp-wrap">
         <div className="lp-how-head" data-rv>
           <div>
-            <p className="lp-kick lp-kick--night">How it works</p>
+            <Kicker night>How it works</Kicker>
             <h2 id="how-t" className="lp-h2">
               <span>Write the policy once.</span> <span>Sylph checks every charge.</span>
             </h2>
