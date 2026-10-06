@@ -1,4 +1,5 @@
 import { QBO_LIVE } from "@/components/custom/site/sample-data";
+import { Kicker } from "./kicker";
 
 /* What finance asks first. Plain answers; the only setup claim is the one we can make. */
 export const TRUST = "Encrypted in transit and at rest. Never used to train models.";
@@ -36,7 +37,7 @@ export function Faq() {
     <section className="lp-faq" id="questions" aria-labelledby="faq-t">
       <div className="lp-wrap lp-faq-grid">
         <div className="lp-faq-head" data-rv>
-          <p className="lp-kick">Questions</p>
+          <Kicker>Questions</Kicker>
           <h2 id="faq-t" className="lp-h2">
             What finance asks first.
           </h2>

@@ -5,6 +5,7 @@ import { ReceiptTile } from "./receipt-tile";
 import { ReportTile } from "./report-tile";
 import { SetupTile } from "./setup-tile";
 import { TripTile } from "./trip-tile";
+import { Kicker } from "../kicker";
 
 /* The features, as working pieces (Ben, 2026-10-05): tiles sized by importance, each doing its job when touched. */
 export function Bento() {
@@ -12,7 +13,7 @@ export function Bento() {
     <section className="lp-bento" id="features" aria-labelledby="bento-t">
       <div className="lp-wrap">
         <div className="lp-bento-head" data-rv>
-          <p className="lp-kick">Features</p>
+          <Kicker>Features</Kicker>
           <h2 id="bento-t" className="lp-h2">
             See what it does.
           </h2>

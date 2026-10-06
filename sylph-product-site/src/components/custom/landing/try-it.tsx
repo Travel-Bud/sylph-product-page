@@ -5,6 +5,7 @@ import { Minus, Plus } from "lucide-react";
 import { Bird } from "./bird";
 import { KindIcon, StatusTag } from "./app-ui/chip";
 import { LIMITS, WEEK, money, type Verdict, type WeekCharge } from "./data";
+import { Kicker } from "./kicker";
 
 /* Try it (frame C's live policy, Ben 2026-10-05): four plain-English limits you can change, and the week's charges
    re-checked against them as you type. The same deterministic logic for every charge, so the same answer every time. */
@@ -55,7 +56,7 @@ export function TryIt() {
     <section className="lp-try" id="try" aria-labelledby="try-t">
       <div className="lp-wrap lp-try-grid">
         <div className="lp-try-copy" data-rv>
-          <p className="lp-kick lp-kick--night">Try it</p>
+          <Kicker night>Try it</Kicker>
           <h2 id="try-t" className="lp-h2">
             Change a limit. Watch every charge re&#8209;check.
           </h2>

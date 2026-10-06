@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronDown, ExternalLink } from "lucide-react";
 import { DEMO, PRICING } from "@/components/custom/site/anchors";
+import { Kicker } from "./kicker";
 
 /* The close: the offer (thirty minutes on last month's statement) beside the kind of finding Sylph writes when it
    reads one, in the shape of an Insights card in the app today (.design/product-current/06). Sample figures. */
@@ -14,7 +15,7 @@ export function Close() {
     <section className="lp-close" aria-labelledby="close-t">
       <div className="lp-wrap lp-close-grid">
         <div className="lp-close-copy" data-rv>
-          <p className="lp-kick lp-kick--night">Your numbers</p>
+          <Kicker night>Your numbers</Kicker>
           <h2 id="close-t" className="lp-h2">
             Try it on last month&rsquo;s statement.
           </h2>

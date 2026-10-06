@@ -6,6 +6,7 @@ import "@/components/custom/landing/sub.css";
 import { Nav } from "@/components/custom/landing/nav";
 import { Footer } from "@/components/custom/landing/footer";
 import { DemoForm } from "./demo-form";
+import { Kicker } from "@/components/custom/landing/kicker";
 
 export const metadata: Metadata = {
   title: "Book a Sylph demo",
@@ -31,7 +32,7 @@ export default function DemoPage() {
       <section className="lp-demo" id="lead" aria-labelledby="demo-t" tabIndex={-1}>
         <div className="lp-wrap lp-demo-grid">
           <div className="lp-demo-copy">
-            <p className="lp-kick">Book a demo</p>
+            <Kicker>Book a demo</Kicker>
             <h1 id="demo-t" className="lp-h2 lp-sub-h1">
               See your month close.
             </h1>

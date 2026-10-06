@@ -5,6 +5,7 @@ import "@/components/custom/landing/landing.css";
 import "@/components/custom/landing/sub.css";
 import { Nav } from "@/components/custom/landing/nav";
 import { Footer } from "@/components/custom/landing/footer";
+import { Kicker } from "@/components/custom/landing/kicker";
 
 export const metadata: Metadata = {
   title: "Sylph pricing",
@@ -107,7 +108,7 @@ export default function PricingPage() {
 
       <section className="lp-sub-head" aria-labelledby="pricing-t">
         <div className="lp-wrap">
-          <p className="lp-kick">Pricing</p>
+          <Kicker>Pricing</Kicker>
           <h1 id="pricing-t" className="lp-h2 lp-sub-h1">
             Simple pricing, per employee.
           </h1>
@@ -157,7 +158,7 @@ export default function PricingPage() {
       <section className="lp-every" aria-labelledby="every-t">
         <div className="lp-wrap lp-every-grid">
           <div>
-            <p className="lp-kick lp-kick--night">On every plan</p>
+            <Kicker night>On every plan</Kicker>
             <h2 id="every-t" className="lp-h2">
               Both sides of the charge.
             </h2>
