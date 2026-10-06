@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { siteFonts } from "@/components/custom/site/fonts";
 import { DEMO } from "@/components/custom/site/anchors";
-import "@/components/custom/v2-sides/sides.css";
-import "@/components/custom/v2-sides/pricing.css";
-import { SidesNav } from "@/components/custom/v2-sides/nav";
-import { SidesFooter } from "@/components/custom/v2-sides/closing";
-import { Head } from "@/components/custom/v2-sides/cast";
+import { landingFonts } from "@/components/custom/landing/fonts";
+import "@/components/custom/landing/landing.css";
+import "@/components/custom/landing/sub.css";
+import { Nav } from "@/components/custom/landing/nav";
+import { Footer } from "@/components/custom/landing/footer";
 
 export const metadata: Metadata = {
   title: "Sylph pricing",
@@ -75,28 +73,25 @@ const TIERS: Tier[] = [
   },
 ];
 
-/* What every plan does, told from each side of the charge. Product truth only (SHARED-BRIEF). */
+/* What every plan does, for the people who spend and the people who close the books. The month-end files are the
+   ones the app builds today (statement PDF, Excel workbook, audit package). */
 const SIDES = [
   {
-    who: "priya" as const,
-    name: "Priya",
-    role: "Spends it",
-    lines: ["Texts a photo of the receipt and gets an answer that names the rule.", "Nothing to chase at month end."],
+    who: "For the people who spend",
+    lines: ["Text a photo of the receipt and get an answer that names the rule.", "Nothing to chase at month end."],
   },
   {
-    who: "dana" as const,
-    name: "Dana",
-    role: "Closes the books",
+    who: "For the people who close the books",
     lines: [
-      "Sees only the exceptions, each with its rule, threshold and amount.",
-      "At month end the report is already there: PDF, XLSX and a GL journal CSV.",
+      "Only the exceptions arrive, each with its rule, threshold and amount.",
+      "At month end the report is already there: a statement PDF, an Excel workbook and an audit package.",
     ],
   },
 ];
 
 function Check() {
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg viewBox="0 0 16 16" aria-hidden="true">
       <path d="M3 8.5l3.2 3L13 4.5" />
     </svg>
   );
@@ -104,40 +99,41 @@ function Check() {
 
 export default function PricingPage() {
   return (
-    <main className={`v2s ${siteFonts}`} id="main">
-      <a href="#plans" className="v2s-skip">
+    <main className={`lp lp-sub ${landingFonts}`} id="main">
+      <a href="#plans" className="lp-skip">
         Skip to content
       </a>
-      <SidesNav />
+      <Nav solid />
 
-      <section className="v2p-head" aria-labelledby="pricing-t">
-        <div className="v2s-wrap v2p-head-in">
-          <h1 id="pricing-t" className="v2s-h2 v2s-h2--xl">
+      <section className="lp-sub-head" aria-labelledby="pricing-t">
+        <div className="lp-wrap">
+          <p className="lp-kick">Pricing</p>
+          <h1 id="pricing-t" className="lp-h2 lp-sub-h1">
             Simple pricing, per employee.
           </h1>
-          <p className="v2s-lede">
-            Every plan includes matching, currency normalization and deterministic enforcement. Booking carries no
-            markup on any plan.
+          <p className="lp-sub-lede">
+            Every plan includes matching, currency normalization and deterministic enforcement. Booking carries no markup
+            on any plan.
           </p>
         </div>
       </section>
 
-      <section className="v2p-tiers" id="plans" aria-label="Plans" tabIndex={-1}>
-        <div className="v2s-wrap">
-          <ul className="v2p-grid">
+      <section className="lp-plans" id="plans" aria-label="Plans" tabIndex={-1}>
+        <div className="lp-wrap">
+          <ul className="lp-tiers">
             {TIERS.map((t) => (
-              <li key={t.name} className={`v2p-tier${t.highlighted ? " is-hi" : ""}`}>
-                <div className="v2p-tier-top">
-                  <h2 className="v2p-name">{t.name}</h2>
-                  <span className="v2p-size">{t.size}</span>
+              <li key={t.name} className={`lp-tier${t.highlighted ? " is-hi" : ""}`}>
+                <div className="lp-tier-top">
+                  <h2>{t.name}</h2>
+                  <span className="lp-tier-size">{t.size}</span>
                 </div>
-                <p className="v2p-price">
-                  <span className="v2p-num">{t.price}</span>
-                  {t.period && <span className="v2p-period">{t.period}</span>}
+                <p className="lp-tier-price">
+                  <b>{t.price}</b>
+                  {t.period && <span>{t.period}</span>}
                 </p>
-                {t.bundle && <p className="v2p-bundle">{t.bundle}</p>}
-                <p className="v2p-desc">{t.description}</p>
-                <ul className="v2p-feats">
+                {t.bundle && <p className="lp-tier-bundle">{t.bundle}</p>}
+                <p className="lp-tier-desc">{t.description}</p>
+                <ul className="lp-tier-feats">
                   {t.features.map((f) => (
                     <li key={f}>
                       <Check />
@@ -145,34 +141,31 @@ export default function PricingPage() {
                     </li>
                   ))}
                 </ul>
-                <Link href={DEMO} className={`v2s-btn v2s-btn--lg ${t.highlighted ? "v2s-btn--ink" : "v2s-btn--line"} v2p-cta`}>
+                <a href={DEMO} className={`lp-btn${t.highlighted ? " lp-btn--bone" : ""}`}>
                   {t.cta}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
-          <p className="v2p-fine">
-            Billed per employee who expensed that month. Booking carries no markup on any plan, so the subscription is
-            the whole bill. Figures and capabilities are subject to change before general availability.
+          <p className="lp-plans-fine">
+            Billed per employee who expensed that month. Booking carries no markup on any plan, so the subscription is the
+            whole bill. Figures and capabilities are subject to change before general availability.
           </p>
         </div>
       </section>
 
-      <section className="v2p-sides" aria-labelledby="sides-t">
-        <div className="v2s-wrap">
-          <h2 id="sides-t" className="v2p-sides-k">
-            On every plan, both sides of the charge
-          </h2>
-          <div className="v2p-sides-grid">
+      <section className="lp-every" aria-labelledby="every-t">
+        <div className="lp-wrap lp-every-grid">
+          <div>
+            <p className="lp-kick lp-kick--night">On every plan</p>
+            <h2 id="every-t" className="lp-h2">
+              Both sides of the charge.
+            </h2>
+          </div>
+          <div className="lp-every-cols">
             {SIDES.map((s) => (
-              <div key={s.who} className={`v2p-side v2p-side--${s.who}`}>
-                <p className="v2p-side-who">
-                  <Head who={s.who} size={44} />
-                  <span>
-                    <strong>{s.name}</strong>
-                    <span>{s.role}</span>
-                  </span>
-                </p>
+              <div key={s.who}>
+                <h3>{s.who}</h3>
                 <ul>
                   {s.lines.map((l) => (
                     <li key={l}>{l}</li>
@@ -184,7 +177,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <SidesFooter />
+      <Footer sampleNote={false} />
     </main>
   );
 }

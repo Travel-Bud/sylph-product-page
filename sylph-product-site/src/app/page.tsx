@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { UpgradedLanding } from "@/components/custom/mock/b/landing";
+import { Landing } from "@/components/custom/landing/landing";
 
-/* The landing: "Two sides" (direction C of the 2026-09-22 V2 exploration, promoted to the root the same day;
-   docs/plans/2026-09-22-landing-v2-directions.md), upgraded on 2026-09-25 to Mock B (components/custom/mock/b,
-   docs/plans/2026-09-25-mock-b/NOTES.md). The social card is app/opengraph-image.jpg. */
-const TITLE = "Sylph: stop chasing receipts";
+/* The landing (2026-10-05 redesign, components/custom/landing; docs/plans/2026-10-05-landing-redesign.md).
+   The social card is app/opengraph-image.jpg. */
+const TITLE = "Sylph: the expense policy that enforces itself";
 const DESCRIPTION =
-  "Your team texts a photo of each receipt. Sylph checks it against your policy, files it, and shows finance only what breaks a rule. Works with the cards and banks you already use.";
+  "Write your travel and expense policy once, in plain English. Sylph checks every receipt, card swipe and booking against it, and shows finance only what breaks a rule. Works with the cards and banks you already use.";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://sylph-product.com";
 
@@ -43,8 +42,8 @@ const JSON_LD = {
 
 export default function LandingPage() {
   return (
-    <UpgradedLanding>
+    <Landing>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }} />
-    </UpgradedLanding>
+    </Landing>
   );
 }
