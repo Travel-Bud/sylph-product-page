@@ -244,7 +244,7 @@ function sorted(t: Theme) {
     const [e, g] = iso.p(tx + 14, ty + 14 + i * 2, z + 2);
     iso.dot(e, g, 2.6, t.warn);
   });
-  iso.caption = "SORTED AS IT HAPPENS";
+  iso.caption = "SORTED AS IT HAPPENS*";
   const [a, b] = iso.p(0, 38, 0);
   iso.label(a - 58, b + 14, "FILED", t.text);
   iso.label(a - 58, b + 29, "THE REST");

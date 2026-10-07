@@ -3,7 +3,8 @@ import { APP_LOGIN, CONTACT, DEMO, PRICING } from "@/components/custom/site/anch
 import { Bird } from "./bird";
 import { TRUST } from "./faq";
 
-export function Footer({ sampleNote = true }: { sampleNote?: boolean }) {
+/* chargeNote: the footnote to the landing's asterisked timing claims (Sylph checks a card charge when the bank posts it). */
+export function Footer({ sampleNote = true, chargeNote = false }: { sampleNote?: boolean; chargeNote?: boolean }) {
   return (
     <footer className="lp-foot">
       <div className="lp-wrap">
@@ -26,6 +27,7 @@ export function Footer({ sampleNote = true }: { sampleNote?: boolean }) {
             <a href="/privacy">Privacy</a>
           </nav>
         </div>
+        {chargeNote && <p className="lp-foot-fine">*Card charges are checked when your bank posts them.</p>}
         <p className="lp-foot-fine">
           {sampleNote && "Product screens show sample data: the people, merchants, rules and amounts are invented. "}
           {TRUST} &copy; 2026 Janus Labs.

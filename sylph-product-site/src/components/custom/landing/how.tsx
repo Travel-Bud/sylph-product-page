@@ -5,7 +5,7 @@ import { Kicker } from "./kicker";
 const STEPS = [
   { t: "Bring your policy", d: "Upload the PDF you have, or answer a few questions and Sylph drafts one." },
   { t: "Approve the rules", d: "Each line becomes a rule with a code. Nothing runs until a person approves it." },
-  { t: "Every charge is checked", d: "Card swipes, receipts and bookings are checked as they happen, not at month end." },
+  { t: "Every charge is checked", d: "Card swipes, receipts and bookings are checked as they happen*, not at month end." },
   { t: "Finance sees exceptions", d: "The rest files itself. Each exception arrives with the rule it broke and a note." },
 ];
 
