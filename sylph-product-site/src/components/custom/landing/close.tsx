@@ -6,8 +6,8 @@ import { Kicker } from "./kicker";
 /* The close: the offer (thirty minutes on last month's statement) beside the kind of finding Sylph writes when it
    reads one, in the shape of an Insights card in the app today (.design/product-current/06). Sample figures. */
 const PRICES = [
-  { plan: "Small business", note: "up to 100 people", one: "$25", both: "$40" },
-  { plan: "Mid-size", note: "", one: "$35", both: "$60" },
+  { plan: "Sylph", note: "Expense and Flights, up to 1,000 people", price: "$20" },
+  { plan: "Enterprise", note: "more than 1,000 people", price: "Custom" },
 ];
 
 export function Close() {
@@ -32,13 +32,11 @@ export function Close() {
             </Link>
           </div>
           <table className="lp-price">
-            <caption>Per active employee a month</caption>
+            <caption>Per seat, per month</caption>
             <thead>
               <tr>
                 <th scope="col">Plan</th>
-                <th scope="col">Expense</th>
-                <th scope="col">Flights</th>
-                <th scope="col">Both</th>
+                <th scope="col">Price</th>
               </tr>
             </thead>
             <tbody>
@@ -48,9 +46,7 @@ export function Close() {
                     {p.plan}
                     {p.note && <small>{p.note}</small>}
                   </th>
-                  <td>{p.one}</td>
-                  <td>{p.one}</td>
-                  <td>{p.both}</td>
+                  <td>{p.price}</td>
                 </tr>
               ))}
             </tbody>

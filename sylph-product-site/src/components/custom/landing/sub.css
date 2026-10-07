@@ -10,6 +10,7 @@
 /* ---------- pricing ---------- */
 .lp-plans { padding: 56px 0 96px; }
 .lp-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.lp-tiers--two { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 880px; }
 .lp-tier { display: flex; flex-direction: column; padding: 32px 28px 28px; border-radius: 12px; background: var(--stone); box-shadow: inset 0 0 0 1px var(--line-2); }
 .lp-tier.is-hi { background: var(--night); color: var(--on-night); box-shadow: 0 40px 80px -48px rgba(10, 20, 16, 0.6); }
 .lp-tier-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
@@ -83,7 +84,7 @@
 .lp-demo-form .demo-success p { max-width: 320px; font-size: 15px; line-height: 1.55; color: var(--ink-2); }
 
 @media (max-width: 1100px) {
-  .lp-tiers { grid-template-columns: 1fr; }
+  .lp-tiers, .lp-tiers--two { grid-template-columns: 1fr; }
   .lp-every-grid, .lp-demo-grid { grid-template-columns: 1fr; gap: 40px; }
 }
 @media (max-width: 720px) {
