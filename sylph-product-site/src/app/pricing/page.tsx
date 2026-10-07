@@ -10,7 +10,7 @@ import { Kicker } from "@/components/custom/landing/kicker";
 export const metadata: Metadata = {
   title: "Sylph pricing",
   description:
-    "Per-employee pricing for Sylph. Every plan includes receipt matching, currency normalization, deterministic policy enforcement and audit-grade reports.",
+    "Sylph is $20 a seat a month. Every plan includes receipt matching, currency normalization, deterministic policy enforcement and audit-grade reports.",
 };
 
 type Tier = {
@@ -27,40 +27,22 @@ type Tier = {
 
 const TIERS: Tier[] = [
   {
-    name: "Small business",
-    size: "Up to 100 people",
-    price: "$25",
-    period: "per active employee, per month, for Expense or Flights",
-    bundle: "Expense and Flights together, $40",
-    description: "Policy enforcement and receipt matching for teams up to 100 employees.",
+    name: "Sylph",
+    size: "Up to 1,000 people",
+    price: "$20",
+    period: "per seat, per month, Expense and Flights together",
+    description: "Policy enforcement, receipt matching and booking in one plan, for teams up to 1,000 people.",
     highlighted: true,
     features: [
-      "Up to 100 employees",
       "Receipt reading: photos, scans, multipage PDFs",
+      "Policy PDF drafted into rules",
       "Deterministic rule engine with nested conditions",
       "Receipt to charge matching",
       "Currency normalization",
-      "Verdicts as charges land",
+      "Verdicts as receipts meet charges",
       "Duplicate detection",
-      "Audit-grade PDF reports",
+      "Audit log and audit-grade PDF reports",
       "Email support",
-    ],
-    cta: "Book a demo",
-  },
-  {
-    name: "Mid-size",
-    size: "101 to 1,000 people",
-    price: "$35",
-    period: "per active employee, per month, for Expense or Flights",
-    bundle: "Expense and Flights together, $60",
-    description: "Adds the audit log, dedicated onboarding and priority support, for 101 to 1,000 employees.",
-    features: [
-      "101 to 1,000 employees",
-      "Everything in Small business",
-      "Policy PDF drafted into rules",
-      "Priority support",
-      "Audit log and compliance reports",
-      "Dedicated onboarding",
     ],
     cta: "Book a demo",
   },
@@ -69,7 +51,7 @@ const TIERS: Tier[] = [
     size: "More than 1,000 people",
     price: "Custom",
     description: "Dedicated service for more than 1,000 employees.",
-    features: ["More than 1,000 employees", "Everything in Mid-size", "Dedicated account manager", "Custom integrations", "Volume discounts"],
+    features: ["More than 1,000 employees", "Everything in Sylph", "Dedicated account manager", "Custom integrations", "Volume discounts"],
     cta: "Contact sales",
   },
 ];
@@ -110,7 +92,7 @@ export default function PricingPage() {
         <div className="lp-wrap">
           <Kicker>Pricing</Kicker>
           <h1 id="pricing-t" className="lp-h2 lp-sub-h1">
-            Simple pricing, per employee.
+            One price: $20 a seat a month.
           </h1>
           <p className="lp-sub-lede">
             Every plan includes matching, currency normalization and deterministic enforcement. Booking carries no markup
@@ -121,7 +103,7 @@ export default function PricingPage() {
 
       <section className="lp-plans" id="plans" aria-label="Plans" tabIndex={-1}>
         <div className="lp-wrap">
-          <ul className="lp-tiers">
+          <ul className="lp-tiers lp-tiers--two">
             {TIERS.map((t) => (
               <li key={t.name} className={`lp-tier${t.highlighted ? " is-hi" : ""}`}>
                 <div className="lp-tier-top">
@@ -149,8 +131,7 @@ export default function PricingPage() {
             ))}
           </ul>
           <p className="lp-plans-fine">
-            Billed per employee who expensed that month. Booking carries no markup on any plan, so the subscription is the
-            whole bill. Figures and capabilities are subject to change before general availability.
+            Billed per seat, per month. Booking carries no markup on any plan, so the subscription is the whole bill. Figures and capabilities are subject to change before general availability.
           </p>
         </div>
       </section>
