@@ -26,7 +26,7 @@ export function Problem() {
             <Image src={NIGHT_FLIGHT_HD.src} alt="" fill sizes="(max-width: 720px) 200vw, 60vw" quality={75} className="lp-pf-img" />
             <figcaption>
               <span className="lp-lab">With Sylph</span>
-              <strong>Checked the moment money moves, with the reason.</strong>
+              <strong>Checked the moment money moves*, with the reason.</strong>
             </figcaption>
             <div className="ap lp-pf-card" role="img" aria-label="A hotel charge flagged at the swipe: $62 over the $350 nightly cap, rule L-007">
               <div className="ap-card lp-pf-verdict">
@@ -47,7 +47,7 @@ export function Problem() {
                   <span>
                     <b>L-007</b>&ensp;$62 over the $350 nightly cap
                   </span>
-                  <span>Checked at the swipe</span>
+                  <span>Checked at the swipe*</span>
                 </p>
               </div>
             </div>

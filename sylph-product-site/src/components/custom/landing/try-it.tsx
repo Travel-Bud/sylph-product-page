@@ -62,7 +62,7 @@ export function TryIt() {
           </h2>
           <p className="lp-try-lede">
             Your policy is the source. Change a number and this week&rsquo;s charges are checked again, the same way Sylph
-            checks each one as it happens.
+            checks each one as it happens*.
           </p>
           <ol className="lp-try-points">
             <li>

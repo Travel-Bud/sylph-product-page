@@ -35,7 +35,7 @@ export function Landing({ children }: { children?: React.ReactNode }) {
       <Faq />
       <div className="lp-panel lp-end" data-panel data-settle>
         <Close />
-        <Footer />
+        <Footer chargeNote />
       </div>
       {children}
     </main>

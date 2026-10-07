@@ -573,6 +573,7 @@
 .lp-foot-links { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 15px; font-weight: 500; }
 .lp-foot-links a:hover { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 1px; }
 .lp-foot-fine { margin-top: 28px; max-width: 760px; font-size: 13px; line-height: 1.6; color: var(--on-night-2); }
+.lp-foot-fine + .lp-foot-fine { margin-top: 6px; }
 
 @media (max-width: 1100px) {
   .lp-try-grid, .lp-faq-grid, .lp-close-grid { grid-template-columns: 1fr; gap: 48px; }
