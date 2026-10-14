@@ -1,32 +1,32 @@
 import Image from "next/image";
 import { BedDouble } from "lucide-react";
-import { NIGHT_FLIGHT_HD, RECEIPT_PILE_HD } from "./film";
+import { SCENE } from "./film";
 import { StatusTag } from "./app-ui/chip";
 
-/* The problem, as one contrast (option P1 of .design/frames/problem-options-*.png; Ben picks at the halfway check):
-   today the policy is checked after the money is spent, by a person, line by line; with Sylph it is checked the
-   moment money moves, with the reason. The two launch-film stills carry the feeling; the labels carry the claim.
-   The landscape stills cover tall cards, so they render about twice a phone's width (hence the 200vw size). */
+/* The problem, as one scene (2026-10-13; it replaces the two-card contrast of 2026-10-05). The track pins the card
+   while scrolling scrubs the clip (scenes.tsx): a gust clears the receipt pile until one receipt is left, the caption
+   turns from today to Sylph, and the verdict on that one charge rises. Reduced motion shows the settled end: the last
+   receipt, the Sylph caption and its verdict. */
 export function Problem() {
   return (
-    <section className="lp-problem" data-settle aria-labelledby="problem-t">
-      <div className="lp-wrap">
-        <h2 id="problem-t" className="lp-h2 lp-problem-h" data-rv>
-          Most expense policies are checked too late.
-        </h2>
-        <div className="lp-problem-grid">
-          <figure className="lp-pf lp-pf--today" data-rv="clip">
-            <Image src={RECEIPT_PILE_HD.src} alt="" fill sizes="(max-width: 720px) 200vw, 60vw" quality={75} className="lp-pf-img" />
-            <figcaption>
-              <span className="lp-lab">Today</span>
-              <strong>Checked weeks later, by a person, line by line.</strong>
-            </figcaption>
-          </figure>
-          <figure className="lp-pf lp-pf--sylph" data-rv="clip">
-            <Image src={NIGHT_FLIGHT_HD.src} alt="" fill sizes="(max-width: 720px) 200vw, 60vw" quality={75} className="lp-pf-img" />
-            <figcaption>
-              <span className="lp-lab">With Sylph</span>
-              <strong>Checked the moment money moves*, with the reason.</strong>
+    <section className="lp-problem" data-scene data-settle aria-labelledby="problem-t">
+      <div className="lp-scene-stage lp-problem-stage">
+        <div className="lp-wrap lp-problem-in">
+          <h2 id="problem-t" className="lp-h2 lp-problem-h" data-rv>
+            Most expense policies are checked too late.
+          </h2>
+          <figure className="lp-pf lp-pf--scene">
+            <Image src={SCENE.exception.end} alt="" fill sizes="(max-width: 720px) 200vw, 100vw" quality={75} className="lp-scene-end" />
+            <video className="lp-scene-v" data-scrub data-src={SCENE.exception.clip} poster={SCENE.exception.start} muted playsInline preload="none" aria-hidden="true" />
+            <figcaption className="lp-pf-cap">
+              <span className="lp-pf-cap-today">
+                <span className="lp-lab">Today</span>
+                <strong>Checked weeks later, by a person, line by line.</strong>
+              </span>
+              <span className="lp-pf-cap-sylph">
+                <span className="lp-lab">With Sylph</span>
+                <strong>Checked the moment money moves*, with the reason.</strong>
+              </span>
             </figcaption>
             <div className="ap lp-pf-card" role="img" aria-label="A hotel charge flagged at the swipe: $62 over the $350 nightly cap, rule L-007">
               <div className="ap-card lp-pf-verdict">
