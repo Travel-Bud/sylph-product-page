@@ -102,20 +102,23 @@
 .lp-hero-rise .ap-window { max-height: 640px; }
 .lp-hero-rise::after { content: ""; position: absolute; inset: auto -2px -2px; height: 120px; background: linear-gradient(rgba(243, 242, 237, 0), var(--paper) 88%); pointer-events: none; }
 
-/* ---------- problem ---------- */
+/* ---------- problem: one film card (2026-10-13). These are its settled rules; the scroll is under "scroll scenes" ---------- */
 .lp-problem { padding: 104px 0 96px; }
 .lp-problem-h { text-align: center; max-width: 900px; margin: 0 auto; }
-.lp-problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
 .lp-pf { position: relative; height: 480px; border-radius: 10px; overflow: hidden; background: var(--night); color: var(--on-night); }
-.lp-pf-img { object-fit: cover; }
-.lp-pf--today .lp-pf-img { object-position: 50% 70%; }
-.lp-pf--sylph .lp-pf-img { object-position: 78% 40%; }
 .lp-pf::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10, 20, 16, 0.8) 0%, rgba(10, 20, 16, 0.22) 38%, rgba(10, 20, 16, 0) 60%); }
 .lp-pf figcaption { position: absolute; z-index: 2; inset: 32px 32px auto; }
 .lp-pf strong { display: block; margin-top: 12px; max-width: 470px; font-size: clamp(24px, 2.4vw, 34px); line-height: 1.14; font-weight: 500; letter-spacing: -0.025em; }
-.lp-pf--today .lp-lab { color: rgba(237, 242, 239, 0.72); }
-.lp-pf--sylph .lp-lab { color: var(--aurora); }
+.lp-pf--scene { height: 600px; margin-top: 40px; }
+.lp-scene-end { object-fit: cover; }
+.lp-pf--scene .lp-scene-end { object-position: 50% 62%; }
+.lp-pf-cap { display: grid; }
+.lp-pf-cap > span { display: block; grid-area: 1 / 1; }
+.lp-pf-cap-today { visibility: hidden; }
+.lp-pf-cap-today .lp-lab { color: rgba(237, 242, 239, 0.72); }
+.lp-pf-cap-sylph .lp-lab { color: var(--aurora); }
 .lp-pf-card { position: absolute; z-index: 2; inset: auto 32px 32px; }
+.lp-pf--scene .lp-pf-card { left: auto; width: min(480px, calc(100% - 64px)); }
 .lp-pf-verdict { box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(16, 27, 22, 0.06); }
 .lp-pf-row { display: grid; grid-template-columns: 32px 1fr auto; gap: 12px; align-items: center; padding: 14px 16px; }
 .lp-pf-row b { display: block; font-weight: 650; font-size: 13.5px; }
@@ -137,25 +140,19 @@
 .lp-how-head .lp-h2 { margin-top: 24px; }
 .lp-how-head .lp-h2 span { display: block; }
 .lp-how-aside { font-size: 17px; line-height: 1.6; color: var(--on-night-2); }
-.lp-sheet { position: relative; margin-top: 48px; padding: 24px 24px 32px; }
-.lp-sheet > i { position: absolute; width: 14px; height: 14px; border: 0 solid rgba(237, 242, 239, 0.4); }
-.lp-sheet > i:nth-child(1) { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
-.lp-sheet > i:nth-child(2) { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
-.lp-sheet > i:nth-child(3) { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
-.lp-sheet > i:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
-.lp-sheet-meta { display: flex; justify-content: space-between; gap: 16px; font-family: var(--font-plex-mono), monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--on-night-2); }
-.lp-steps { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 16px; }
-.lp-step { padding: 0 20px; }
-.lp-step + .lp-step { border-left: 1px dashed var(--on-night-line); }
-.lp-step-art { display: block; width: 100%; height: auto; }
-.lp-step h3 { display: flex; align-items: baseline; gap: 12px; margin-top: 16px; font-size: 21px; font-weight: 500; letter-spacing: -0.015em; }
+/* one charge taken apart (2026-10-13): the steps beside the exploded clip; settled rules, the scroll is below */
+.lp-how-body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: center; margin-top: 48px; }
+.lp-step { position: relative; padding: 16px 0 16px 22px; }
+.lp-step + .lp-step { border-top: 1px dashed var(--on-night-line); }
+.lp-step::before { content: ""; position: absolute; left: 0; top: 20px; bottom: 20px; width: 2px; border-radius: 2px; background: var(--aurora); opacity: 0; }
+.lp-step h3 { display: flex; align-items: baseline; gap: 12px; font-size: 21px; font-weight: 500; letter-spacing: -0.015em; }
 .lp-step-n { font-family: var(--font-plex-mono), monospace; font-size: 12px; letter-spacing: 0.1em; color: var(--aurora); }
-.lp-step p { margin-top: 8px; max-width: 270px; font-size: 15.5px; line-height: 1.6; color: var(--on-night-2); }
+.lp-step p { margin-top: 6px; max-width: 420px; font-size: 15.5px; line-height: 1.6; color: var(--on-night-2); }
+.lp-how-film { position: relative; margin: 0; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: var(--night-2); }
+.lp-how-tag { position: absolute; z-index: 2; left: calc(var(--x) * 100%); top: calc(var(--y) * 100%); display: none; padding: 5px 11px; border-radius: 999px; transform: translate(-50%, -50%); background: rgba(10, 20, 16, 0.78); color: var(--on-night); font-size: 13px; font-weight: 500; white-space: nowrap; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.lp-how-tag--rule b { color: var(--aurora); font-weight: 500; }
+.lp-how-exc { position: absolute; z-index: 3; left: 16px; bottom: 16px; width: min(440px, calc(100% - 32px)); }
 
-/* entrance for [data-rv], only when motion is allowed and script has run (see reveal.tsx) */
-.lp[data-io="on"] .lp-steps [data-rv]:nth-child(2) { transition-delay: 0.08s; }
-.lp[data-io="on"] .lp-steps [data-rv]:nth-child(3) { transition-delay: 0.16s; }
-.lp[data-io="on"] .lp-steps [data-rv]:nth-child(4) { transition-delay: 0.24s; }
 
 /* ---------- bento ---------- */
 .lp-bento { padding: 104px 0 96px; }
@@ -404,8 +401,9 @@
   .lp-tile--limit, .lp-tile--cards { grid-column: span 3; }
   .lp-tile--setup { grid-column: span 6; }
   .lp-how-head { grid-template-columns: 1fr; gap: 20px; }
-  .lp-steps { grid-template-columns: repeat(2, 1fr); row-gap: 40px; }
-  .lp-step:nth-child(3) { border-left: 0; }
+}
+@media (max-width: 900px) {
+  .lp-how-body { grid-template-columns: 1fr; gap: 28px; }
 }
 
 @media (max-width: 720px) {
@@ -426,20 +424,20 @@
   .lp-hero-rise { width: calc(100% - 20px); margin-top: 48px; }
   .lp-problem { padding: 80px 0 72px; }
   .lp-problem-h { text-align: left; }
-  .lp-problem-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 32px; }
   .lp-pf { height: 440px; border-radius: 8px; }
+  .lp-pf--scene { height: 520px; margin-top: 32px; }
+  .lp-pf--scene .lp-pf-card { inset: auto 12px 12px; width: auto; }
   .lp-pf figcaption { inset: 20px 20px auto; }
   .lp-pf-card { inset: auto 12px 12px; }
   .lp-pf-why { flex-direction: column; gap: 4px; }
   .lp-how { padding: 80px 0 72px; }
   .lp-how-head .lp-h2 span { display: inline; }
   .lp-how-aside { font-size: 16px; }
-  .lp-sheet { margin-top: 40px; padding: 16px 16px 8px; }
-  .lp-sheet-meta span:last-child { display: none; }
-  .lp-steps { grid-template-columns: 1fr; }
-  .lp-step { padding: 0 0 32px; }
-  .lp-step + .lp-step { border-left: 0; border-top: 1px dashed var(--on-night-line); padding-top: 24px; }
-  .lp-step p { max-width: none; }
+  .lp-how-body { margin-top: 36px; }
+  .lp-step { padding: 14px 0 14px 18px; }
+  .lp-step h3 { font-size: 18px; }
+  .lp-step p { max-width: none; font-size: 14.5px; }
+  .lp-how-exc { left: 8px; bottom: 8px; width: calc(100% - 16px); }
   .lp-bento { padding: 80px 0 72px; }
   .lp-bento-head { grid-template-columns: 1fr; }
   .lp-bento-lede { font-size: 16px; }
@@ -639,4 +637,91 @@
 .lp[data-io="on"] [data-rv].is-in { opacity: 1; transform: none; clip-path: inset(0); }
 .lp[data-io="on"] .lp-bento-grid > [data-rv]:nth-child(even) { transition-delay: 0.06s; }
 .lp[data-io="on"] .lp-bento-grid > [data-rv]:nth-child(7) { transition-delay: 0.12s; }
-.lp[data-io="on"] .lp-problem-grid > [data-rv]:nth-child(2) { transition-delay: 0.1s; }
+
+/* ---------- scroll scenes (2026-10-13; scenes.tsx, docs/plans/2026-10-13-scroll-scenes.md) ----------
+   Without motion (reduced motion, no script) every scene is the settled section above: its last frame, its final
+   copy. With motion allowed, each [data-scene] becomes a tall track whose stage sticks to the viewport while
+   scenes.tsx runs --p from 0 to 1, and everything below reads --p. */
+.lp-scene-v, .lp-hero-paper { display: none; }
+
+/* the features' card scene, settled: the card face on, the three lines together */
+.lp-cardscene { margin-bottom: 72px; }
+.lp-pf--card { height: 560px; }
+.lp-card-lines { position: absolute; z-index: 2; left: 40px; right: 40px; bottom: 36px; display: grid; gap: 8px; }
+.lp-card-line { max-width: 18ch; font-size: clamp(24px, 2.6vw, 38px); line-height: 1.08; font-weight: 500; letter-spacing: -0.025em; text-wrap: balance; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .lp [data-scene] { --p: 0; }
+  .lp-scene-stage, .lp-hero-stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+  .lp-scene-v { display: block; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .lp-scene-end { display: none; }
+
+  /* hero: the loop takes over from the still and the dive from the loop; the copy lifts away, the dashboard sinks,
+     paper arrives and the dashboard lands on it. --dock-top is the dashboard's resting offset (scenes.tsx). */
+  .lp-hero { height: 290vh; height: 290svh; padding-top: 0; }
+  .lp-hero-stage { padding-top: 88px; }
+  .lp-hero-sky { inset: 0; }
+  .lp-hero-sky .lp-scene-v { object-position: 50% 32%; opacity: 0; transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+  .lp-hero-sky .lp-hero-loop[data-ready] { opacity: 1; }
+  .lp-hero-sky .lp-hero-dive[data-ready] { opacity: clamp(0, calc(var(--p) * 28), 1); transition: none; }
+  .lp-hero-paper { display: block; position: absolute; inset: 0; z-index: 1; background: var(--paper); opacity: clamp(0, calc((var(--p) - 0.8) * 6), 1); pointer-events: none; }
+  .lp-hero-copy { opacity: clamp(0, calc(1 - var(--p) * 5), 1); transform: translateY(calc(var(--p) * -180px)); }
+  .lp-hero-dock {
+    --sink: clamp(0, calc(var(--p) / 0.18), 1);
+    --rise: clamp(0, calc((var(--p) - 0.72) / 0.26), 1);
+    position: relative;
+    z-index: 3;
+    transform: translateY(calc((1 - var(--rise)) * var(--sink) * 75svh + var(--rise) * (14svh - var(--dock-top, 632px))));
+  }
+  .lp-hero-probe { height: calc(100% - 135svh); }
+
+  /* problem: the caption turns from today to Sylph, then the verdict rises */
+  .lp-problem { height: 260vh; height: 260svh; padding: 0; }
+  .lp-problem-stage { display: flex; flex-direction: column; padding: 104px 0 28px; }
+  .lp-problem-in { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .lp-pf--scene { flex: 1; height: auto; min-height: 0; margin-top: 32px; }
+  .lp-pf-cap-today { visibility: visible; opacity: clamp(0, calc(1 - (var(--p) - 0.14) * 6), 1); }
+  .lp-pf-cap-sylph { opacity: clamp(0, calc((var(--p) - 0.6) * 6), 1); }
+  .lp-pf--scene .lp-pf-card { opacity: clamp(0, calc((var(--p) - 0.74) * 6), 1); transform: translateY(calc((1 - clamp(0, calc((var(--p) - 0.74) * 6), 1)) * 24px)); }
+
+  /* how it works: a step owns [s0, s1) of the track; the labels name the layers, then the exception arrives */
+  .lp-how { height: 300vh; height: 300svh; padding: 0; }
+  .lp-how-stage { display: flex; flex-direction: column; padding: 104px 0 36px; }
+  .lp-how-in { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .lp-how-body { flex: 1; min-height: 0; margin-top: 36px; }
+  .lp-how-film { width: min(100%, calc((100svh - 380px) * 16 / 9)); justify-self: end; }
+  .lp-step { --on: calc(clamp(0, calc((var(--p) - var(--s0)) * 30), 1) * clamp(0, calc((var(--s1) - var(--p)) * 30), 1)); opacity: calc(0.4 + 0.6 * var(--on)); }
+  .lp-step::before { opacity: var(--on); }
+  .lp-step p { max-height: calc(var(--on) * 6.4em); opacity: var(--on); overflow: hidden; }
+  .lp-how-tag { display: block; opacity: calc(clamp(0, calc((var(--p) - var(--a)) * 14), 1) * clamp(0, calc((var(--b) - var(--p)) * 14), 1)); }
+  .lp-how-exc { opacity: clamp(0, calc((var(--p) - 0.77) * 8), 1); transform: translateY(calc((1 - clamp(0, calc((var(--p) - 0.77) * 8), 1)) * 16px)); }
+
+  /* features: the card turns while the three lines trade sides, one per third of the track */
+  .lp-bento { padding-top: 0; }
+  .lp-bento-in { padding-top: 96px; }
+  .lp-cardscene { height: 250vh; height: 250svh; margin-bottom: 0; }
+  .lp-cardscene-stage { display: flex; flex-direction: column; padding: 96px 0 28px; }
+  .lp-cardscene-in { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .lp-pf--card { flex: 1; height: auto; min-height: 0; }
+  .lp-card-lines { inset: 0; display: block; }
+  .lp-card-line { position: absolute; top: 50%; left: 48px; opacity: var(--q); transform: translateY(calc(-50% + (1 - var(--q)) * 24px)); }
+  .lp-card-line:nth-child(1) { --q: clamp(0, calc((0.34 - var(--p)) * 9), 1); }
+  .lp-card-line:nth-child(2) { --q: calc(clamp(0, calc((var(--p) - 0.36) * 9), 1) * clamp(0, calc((0.64 - var(--p)) * 9), 1)); left: auto; right: 48px; text-align: right; }
+  .lp-card-line:nth-child(3) { --q: clamp(0, calc((var(--p) - 0.66) * 9), 1); }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 900px) {
+  .lp-how-film { width: 100%; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 720px) {
+  .lp-hero-stage { padding-top: 72px; }
+  .lp-hero-sky .lp-scene-v { object-position: 89.6% 50%; }
+  .lp-problem-stage { padding: 88px 0 16px; }
+  .lp-how-stage { padding: 88px 0 20px; }
+  .lp-how-aside { display: none; }
+  .lp-how-body { margin-top: 20px; gap: 16px; align-content: start; }
+  .lp-how-film { order: -1; }
+  .lp-step { padding: 10px 0 10px 18px; }
+  .lp-cardscene-stage { padding: 80px 0 16px; }
+  .lp-pf--card .lp-scene-v { inset: 22% 0 auto; height: auto; aspect-ratio: 16 / 9; -webkit-mask-image: linear-gradient(transparent, #000 24%, #000 72%, transparent); mask-image: linear-gradient(transparent, #000 24%, #000 72%, transparent); transform: scale(1.35); }
+  .lp-card-line, .lp-card-line:nth-child(2) { top: auto; bottom: 28px; left: 20px; right: 20px; text-align: left; transform: translateY(calc((1 - var(--q)) * 20px)); max-width: none; }
+}

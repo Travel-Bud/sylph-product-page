@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { getImageProps } from "next/image";
-import { NIGHT_FLIGHT_HD, NIGHT_FLIGHT_PHONE } from "./film";
+import { NIGHT_FLIGHT_HD, NIGHT_FLIGHT_PHONE, SCENE } from "./film";
 
 /* The hero's sky reveals once the photograph has actually arrived: it rests on the night colour, then fades and
    settles into place. No blurred placeholder swapping to sharp (that read as a pop). Server render and no-script
    show the image as is; reduced motion skips the fade. Phones get a cut of the render in a shorter box (landing.css):
-   stretched to cover the whole tall hero, the render's aurora read soft (2026-10-06). */
+   stretched to cover the whole tall hero, the render's aurora read soft (2026-10-06).
+   Over the still, two clips made from it (2026-10-13, scenes.tsx): the same sky alive in a loop, and the dive into
+   the clouds that scrolling scrubs. Each stays hidden until it can play, so the still is always the first paint. */
 export function HeroSky() {
   const img = useRef<HTMLImageElement>(null);
   const [phase, setPhase] = useState<"ssr" | "wait" | "in">("ssr");
@@ -29,6 +31,8 @@ export function HeroSky() {
           <source media="(max-width: 720px)" srcSet={phone.srcSet} sizes={phone.sizes} />
           <img {...wide} alt="" ref={img} fetchPriority="high" onLoad={() => setPhase("in")} />
         </picture>
+        <video className="lp-scene-v lp-hero-loop" data-loop data-src={SCENE.auroraLoop} muted loop playsInline preload="none" aria-hidden="true" />
+        <video className="lp-scene-v lp-hero-dive" data-scrub data-src={SCENE.dive} muted playsInline preload="none" aria-hidden="true" />
       </div>
     </div>
   );
