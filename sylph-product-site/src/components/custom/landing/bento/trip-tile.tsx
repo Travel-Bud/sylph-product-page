@@ -58,7 +58,6 @@ export function TripTile() {
       id="trip"
       className="lp-tile--trip"
       title="Book a trip in one sentence."
-      line="Type the whole trip as one line. Every fare comes back checked against your policy."
       used={phase !== "idle"}
     >
       <div className="ap lp-trip">
