@@ -60,21 +60,6 @@ export function TryIt() {
           <h2 id="try-t" className="lp-h2">
             Change a limit. Watch every charge re&#8209;check.
           </h2>
-          <p className="lp-try-lede">
-            Your policy is the source. Change a number and this week&rsquo;s charges are checked again, the same way Sylph
-            checks each one as it happens*.
-          </p>
-          <ol className="lp-try-points">
-            <li>
-              <span>01</span>Every verdict names the rule that decided it.
-            </li>
-            <li>
-              <span>02</span>The same charge always gets the same answer.
-            </li>
-            <li>
-              <span>03</span>Blocked spend stays off the reimbursement total.
-            </li>
-          </ol>
         </div>
 
         <div className="ap lp-pol" data-rv>

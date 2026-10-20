@@ -32,7 +32,6 @@ export function FlagTile() {
       id="flag"
       className="lp-tile--flag"
       title="Every flag shows its reason."
-      line="Open a flagged charge: the rule, the limit and the policy line it came from."
       used={used}
     >
       <div ref={ref} className="ap lp-flag">

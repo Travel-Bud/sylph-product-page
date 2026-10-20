@@ -133,7 +133,7 @@
 .lp-end::before { border-radius: var(--panel-r) var(--panel-r) 0 0; }
 .lp-end .lp-foot { background: none; }
 .lp-how { padding: 104px 0 96px; color: var(--on-night); }
-.lp-how-head { display: grid; grid-template-columns: 1fr 380px; gap: 64px; align-items: end; }
+.lp-how-head { display: grid; grid-template-columns: 1fr; gap: 64px; align-items: end; }
 .lp-how-head .lp-h2 { margin-top: 24px; }
 .lp-how-head .lp-h2 span { display: block; }
 .lp-how-aside { font-size: 17px; line-height: 1.6; color: var(--on-night-2); }
