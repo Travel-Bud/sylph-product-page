@@ -4,35 +4,42 @@ import { AdminScreen } from "./app-ui/admin-screen";
 
 /* Frame C's hero (Ben, 2026-10-05): the launch film's night flight full bleed (a sharp 3840px version of the film's
    opening, 2026-10-06), the headline centred in its sky, and the admin screen rising out of the clouds onto the paper
-   below. On load the sky fades in once it has arrived and the copy reveals line by line (landing.css, "load-in"). */
+   below. On load the sky fades in once it has arrived and the copy reveals line by line (landing.css, "load-in").
+   Scrolling (2026-10-13, scenes.tsx): the stage pins while the camera dives into the clouds; the headline lifts away,
+   the dashboard sinks out of the way, the frame whites out to paper and the dashboard lands on it. */
 export function Hero() {
   return (
-    <section className="lp-hero" id="top" data-settle aria-labelledby="hero-t">
-      <HeroSky />
+    <section className="lp-hero" id="top" data-scene data-settle aria-labelledby="hero-t">
       <span className="lp-hero-probe" data-nav-probe aria-hidden="true" />
-      <div className="lp-wrap lp-hero-copy">
-        <h1 id="hero-t" className="lp-h1">
-          <span className="lp-line">
-            <span>Stop chasing receipts.</span>
-          </span>{" "}
-          <span className="lp-line">
-            <span>Handle exceptions instead.</span>
-          </span>
-        </h1>
-        <div className="lp-hero-cta">
-          <a href={DEMO} className="lp-btn lp-btn--bone">
-            Book a demo
-            <svg viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" />
-            </svg>
-          </a>
-          <a href="#how" className="lp-btn lp-btn--glass">
-            See how it works
-          </a>
+      <div className="lp-hero-stage">
+        <HeroSky />
+        <div className="lp-hero-paper" aria-hidden="true" />
+        <div className="lp-wrap lp-hero-copy">
+          <h1 id="hero-t" className="lp-h1">
+            <span className="lp-line">
+              <span>Stop chasing receipts.</span>
+            </span>{" "}
+            <span className="lp-line">
+              <span>Handle exceptions instead.</span>
+            </span>
+          </h1>
+          <div className="lp-hero-cta">
+            <a href={DEMO} className="lp-btn lp-btn--bone">
+              Book a demo
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M3 8h10M9 4l4 4-4 4" />
+              </svg>
+            </a>
+            <a href="#how" className="lp-btn lp-btn--glass">
+              See how it works
+            </a>
+          </div>
         </div>
-      </div>
-      <div className="lp-hero-rise">
-        <AdminScreen />
+        <div className="lp-hero-dock" data-dock>
+          <div className="lp-hero-rise">
+            <AdminScreen />
+          </div>
+        </div>
       </div>
     </section>
   );
