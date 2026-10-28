@@ -15,6 +15,15 @@ export const NIGHT_FLIGHT_HD = {
   height: 2160,
   blur: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAJABADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDylrCZDyCDVsr51m8Us2GQL5YdclueefxNWp+prPk+8aqxzyjc/9k=",
 };
+/* The scroll scenes' clips (Seedance 2.5 from these stills, 2026-10-13; docs/plans/2026-10-13-scroll-scenes.md). The
+   loop starts and ends on the hero still; the scrubbed clips are encoded all-intra so any frame seeks at once. */
+export const SCENE = {
+  auroraLoop: "/site/scroll/aurora-loop.mp4",
+  dive: "/site/scroll/dive.mp4",
+  exception: { clip: "/site/scroll/exception.mp4", start: "/site/scroll/exception-start.jpg", end: "/site/scroll/exception-end.jpg" },
+  exploded: { clip: "/site/scroll/exploded.mp4", start: "/site/scroll/exploded-start.jpg", end: "/site/scroll/exploded-end.jpg" },
+  card: { clip: "/site/scroll/card.mp4", start: "/site/scroll/card-start.jpg" },
+};
 /* The phone cut of the same render (1728x2160 from x=2054: the aurora's arc and its brightest curtains). Phones show it
    in a box about 640px tall over the hero's upper half, so the render is scaled down there as it is on desktop; at full
    size its aurora is a soft glow. */

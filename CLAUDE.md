@@ -14,13 +14,13 @@ The Next.js app lives in `sylph-product-site/`. Run every package command from i
 sylph-product-site/
   src/app/                          file routes (see Routes)
   src/app/hooks/useServerActions.ts demo-form submit hook
-  src/components/custom/landing/    the landing at / (2026-10-05 redesign): landing.tsx composes it; bento/ holds the seven feature tiles, app-ui/ the recreated product screens (sample data), iso.ts the "How it works" drawings
+  src/components/custom/landing/    the landing at / (2026-10-05 redesign): landing.tsx composes it; bento/ holds the seven feature tiles, app-ui/ the recreated product screens (sample data), scenes.tsx and card-scene.tsx the scroll scenes
   src/components/custom/landing/sub.css  /pricing and /demo on the landing's system (same nav and footer)
   src/components/custom/v2-sides/   the 2026-09-22 "Two sides" parts the /v2 routes still use (nav, sound, sound audition, styles)
   src/components/custom/site/       what remains of the v3 library (sample-data.ts, anchors.ts, fonts.ts, mark.tsx), used by the landing and the /v2 routes
   src/components/custom/sylph-identity/  brand marks, incl. sylph-bird-path.ts (see Invariant)
   src/app/legacy-fonts.ts           Satoshi and IBM Plex Mono, loaded only by /terms through its layout
-  public/site/                      film (the launch-film stills the landing uses), characters (the Priya and Dana cast), sound, clip (the social clip), video
+  public/site/                      film (the launch-film stills the landing uses), scroll (the scroll scenes' Seedance clips and frames), characters (the Priya and Dana cast), sound, clip (the social clip), video
   scripts/                          shot.mjs (frame capture), explore-check.mjs (console and overflow check), clip/ (clip renderer)
   next.config.ts                    image formats + the /privacy redirect and the retired-route redirects
   pnpm-workspace.yaml               allowBuilds (see below)
@@ -28,7 +28,7 @@ sylph-product-site/
 
 ## Stack
 
-Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. The site uses no motion library: small hooks in `landing/hooks.ts` and CSS (the hero's load-in and the section reveals are in `landing.css`), plus two scroll helpers: `landing/panels.tsx` widens the night panels into place, and `landing/settle.tsx` is the desktop settle between sections (`docs/plans/2026-10-06-landing-flow.md`). Tests run on vitest (`--passWithNoTests`, since no tests exist yet).
+Next.js 16.1.6, React 19.2.3, Tailwind 4, pnpm 11, node 26. The site uses no motion library: small hooks in `landing/hooks.ts` and CSS (the hero's load-in and the section reveals are in `landing.css`), plus three scroll helpers: `landing/panels.tsx` widens the night panels into place, `landing/settle.tsx` is the desktop settle between sections (`docs/plans/2026-10-06-landing-flow.md`), and `landing/scenes.tsx` drives the scroll scenes: pinned tracks that scrub video clips (`docs/plans/2026-10-13-scroll-scenes.md`). The scrubbed clips must be encoded all-intra (`-g 1 -bf 0`) or seeking stutters. Tests run on vitest (`--passWithNoTests`, since no tests exist yet).
 
 ## Commands
 

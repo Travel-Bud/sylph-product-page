@@ -13,10 +13,12 @@ import { Footer } from "./footer";
 import { Reveal } from "./reveal";
 import { Panels } from "./panels";
 import { Settle } from "./settle";
+import { Scenes } from "./scenes";
 
 /* The landing at / (2026-10-05 redesign, Ben's mix of the frames: C's hero, A's night section, C's live policy, plus
-   the problem contrast and the features bento). Plan: docs/plans/2026-10-05-landing-redesign.md. Rendered by
-   src/app/page.tsx, which passes the site metadata's JSON-LD as children. */
+   the problem contrast and the features bento). Plan: docs/plans/2026-10-05-landing-redesign.md; the scroll scenes:
+   docs/plans/2026-10-13-scroll-scenes.md. Rendered by src/app/page.tsx, which passes the site metadata's JSON-LD as
+   children. */
 export function Landing({ children }: { children?: React.ReactNode }) {
   return (
     <main className={`lp ${landingFonts}`} id="main">
@@ -26,6 +28,7 @@ export function Landing({ children }: { children?: React.ReactNode }) {
       <Reveal />
       <Panels />
       <Settle />
+      <Scenes />
       <Nav />
       <Hero />
       <Problem />
