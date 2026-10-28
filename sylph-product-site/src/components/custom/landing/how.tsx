@@ -7,14 +7,9 @@ import { TRIP_CHARGES } from "./data";
 
 /* Frame A's night section (Ben, 2026-10-05), told since 2026-10-13 as one charge taken apart (scenes.tsx): while the
    track pins, the policy, the receipt and the card charge separate, the four steps light up in turn, and the last step
-   brings the exception with the rule it broke. Each step owns a quarter of the track ([s0, s1) of --p). Reduced motion
-   shows every step and the exploded frame. */
-const STEPS = [
-  { t: "Bring your policy", d: "Upload the PDF you have, or answer a few questions and Sylph drafts one." },
-  { t: "Approve the rules", d: "Each line becomes a rule with a code. Nothing runs until a person approves it." },
-  { t: "Every charge is checked", d: "Card swipes, receipts and bookings are checked as they happen*, not at month end." },
-  { t: "Finance sees exceptions", d: "The rest files itself. Each exception arrives with the rule it broke and a note." },
-];
+   brings the exception with the rule it broke. Each step owns a quarter of the track ([s0, s1) of --p). Titles only
+   (Ben, 2026-10-19). Reduced motion shows every step and the exploded frame. */
+const STEPS = ["Bring your policy", "Approve the rules", "Every charge is checked", "Finance sees exceptions"];
 const EDGES = [-1, 0.25, 0.5, 0.75, 2];
 const dinner = TRIP_CHARGES.find((c) => c.id === "sk")!;
 
@@ -32,20 +27,15 @@ export function How() {
                 <span>Write the policy once.</span> <span>Sylph checks every charge.</span>
               </h2>
             </div>
-            <p className="lp-how-aside">
-              Your policy stays in plain English. Every rule points back to the line it came from, and every flag names its
-              rule.
-            </p>
           </div>
           <div className="lp-how-body">
             <ol className="lp-steps">
               {STEPS.map((s, i) => (
-                <li key={s.t} className="lp-step" style={at({ "--s0": EDGES[i], "--s1": EDGES[i + 1] })}>
+                <li key={s} className="lp-step" style={at({ "--s0": EDGES[i], "--s1": EDGES[i + 1] })}>
                   <h3>
                     <span className="lp-step-n">{String(i + 1).padStart(2, "0")}</span>
-                    {s.t}
+                    {s}
                   </h3>
-                  <p>{s.d}</p>
                 </li>
               ))}
             </ol>
