@@ -14,7 +14,8 @@ The Next.js app lives in `sylph-product-site/`. Run every package command from i
 sylph-product-site/
   src/app/                          file routes (see Routes)
   src/app/hooks/useServerActions.ts demo-form submit hook
-  src/components/custom/landing/    the landing at / (2026-10-05 redesign): landing.tsx composes it; bento/ holds the seven feature tiles, app-ui/ the recreated product screens (sample data), scenes.tsx and card-scene.tsx the scroll scenes
+  public/landing/                   the landing served at / since 2026-10-30 (v8): one static page (index.html, its own CSS and JS) and its images, built in the studio run landing-ramp; next.config.ts rewrites / to it
+  src/components/custom/landing/    the 2026-10-05 landing, no longer served at / (the rewrite overrides it), plus the nav, footer and sub.css that /pricing and /demo use: landing.tsx composes it; bento/ holds the seven feature tiles, app-ui/ the recreated product screens (sample data), scenes.tsx and card-scene.tsx the scroll scenes
   src/components/custom/landing/sub.css  /pricing and /demo on the landing's system (same nav and footer)
   src/components/custom/v2-sides/   the 2026-09-22 "Two sides" parts the /v2 routes still use (nav, sound, sound audition, styles)
   src/components/custom/site/       what remains of the v3 library (sample-data.ts, anchors.ts, fonts.ts, mark.tsx), used by the landing and the /v2 routes
@@ -50,7 +51,7 @@ All four gates (`typecheck`, `lint`, `test`, `build`) must exit 0 before a push.
 - `staging` is the working branch. Cut feature work from it and merge back into it.
 - `staging` into `main` is the deploy. Vercel builds `main` through its git integration; there is no workflow file in this repo.
 - Every other pushed branch gets a Vercel preview URL automatically.
-- The landing at `/` is the 2026-10-05 redesign (`docs/plans/2026-10-05-landing-redesign.md`). It replaced Mock B ("Two sides, upgraded", 2026-09-25), which lives in git history.
+- The landing at `/` is the v8 page (2026-10-30): `public/landing/index.html`, served through a `beforeFiles` rewrite in `next.config.ts`. It is built outside this repo (studio run landing-ramp, `python3 tools/build_v6.py --prod`) and copied in whole; edit it there, not here. Removing the rewrite restores the 2026-10-05 redesign (`docs/plans/2026-10-05-landing-redesign.md`), which replaced Mock B ("Two sides, upgraded", 2026-09-25), which lives in git history.
 
 ## Environment variables
 
@@ -65,7 +66,7 @@ Two variables, both `NEXT_PUBLIC_*`, so they bake into the bundle at build time.
 
 | Route | Notes |
 |---|---|
-| `/` | the landing (`src/app/page.tsx` renders `landing/landing.tsx`: hero, problem, how it works, features bento, try it, questions, close), carries site metadata and JSON-LD |
+| `/` | the v8 landing, `public/landing/index.html` via the rewrite: its own head carries the title, description, canonical, social card and Vercel Web Analytics. `src/app/page.tsx` (the 2026-10-05 landing with its metadata and JSON-LD) is still built but not served at `/` |
 | `/pricing` | pricing page (the landing's nav, footer and `sub.css`) |
 | `/demo` | demo request page: the wired `demo-form.tsx` posts through `useServerActions` to the email worker, or "Or pick a time now" opens Atharva's Calendly (`DEMO`) |
 | `/terms` | stub page, stays until a terms document is published |
