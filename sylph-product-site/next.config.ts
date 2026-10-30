@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: { formats: ["image/avif", "image/webp"], qualities: [75, 80] },
+  // the v8 landing (2026-10-30): a static page built in the studio run landing-ramp (`tools/build_v6.py --prod`), served at /.
+  // The 2026-10-05 landing (src/app/page.tsx) stays in the tree; removing this rewrite brings it back.
+  async rewrites() {
+    return { beforeFiles: [{ source: "/", destination: "/landing/index.html" }], afterFiles: [], fallback: [] };
+  },
   async redirects() {
     return [
       // the /fresh preview was promoted to the root on 2026-09-08
