@@ -218,9 +218,10 @@ main .eyebrow i + i, footer .eyebrow i + i { display: none; }
 /* section: product */
 
 /* the journey's dashboard scenes (02 the ask, 03 the check, 04 the policy, 06 the month): each scene is a bar (its
-   number), then the component's own head and its dashboard, laid on the paper with no
-   panel around it. Each dashboard sits in a white app window with a night rail, an EXAMPLE pill, a row of KPI tiles
-   and one floating chip that idles. The policy scene keeps its night panel. */
+   number), then the component's own head and its dashboard, laid on the paper with no panel around it. Each dashboard
+   sits in a white app window with the app's four places as tabs on its top edge (the scene's own a folder tab joined to
+   the window), an EXAMPLE tag, a row of KPI tiles and one chip that rises in once and holds still. The policy scene
+   keeps its night panel. (v9 #rail-1, Ben's pick 2026-11-01, review/v9/components/BRIEF.md; it replaced the dark rail) */
 :is(#ask, #check, #rules, #month) .vcard { position: relative; padding: 0; background: none; box-shadow: none; border-radius: 0; }
 :is(#ask, #check, #rules, #month) .vcard.night { padding: 56px 56px 60px; border-radius: 34px; background: linear-gradient(160deg, #102A20, #0B1A14); box-shadow: inset 0 0 0 1px rgba(159, 217, 178, .12), 0 50px 100px -50px rgba(0, 0, 0, .5); }
 :is(#ask, #check, #rules, #month) .vcard .h2 { font-size: clamp(40px, 4.45vw, 64px); line-height: 1.04; }
@@ -242,21 +243,32 @@ main .eyebrow i + i, footer .eyebrow i + i { display: none; }
 .sbar { position: relative; z-index: 3; display: flex; align-items: center; min-height: 14px; margin-bottom: 24px; }
 .sbar .eyebrow { margin: 0; }
 @media (max-width: 640px) { .sbar { flex-direction: column; align-items: stretch; gap: 16px; min-height: 0; margin-bottom: 24px; } :is(#ask, #check, #rules, #month) .vcard.night { padding: 28px 18px 32px; border-radius: 26px; } }
-:is(#ask, #check, #rules, #month) .vcard .tile { --tile: #fff; padding: 0 20px 20px 84px; border-radius: 20px; background: #fff; box-shadow: var(--sh-hero); }
+/* the window: the tab row stands on its top edge, so it keeps 44 px above it */
+:is(#ask, #check, #rules, #month) .vcard .tile { --tile: #fff; margin-top: 44px; padding: 0 20px 20px; border-radius: 20px; background: #fff; box-shadow: var(--sh-hero); }
 :is(#ask, #check, #rules, #month) .vcard.night .tile { background: #fff; }
 :is(#ask, #check, #rules, #month) .vcard.night .tile .say { color: var(--ink); }
-:is(#ask, #check, #rules, #month) .vcard.night .tile > .rail { background: #1B3027; }
-:is(#ask, #check, #rules, #month) .vcard .tile > .rail { position: absolute; left: 0; top: 0; bottom: 0; width: 60px; display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 18px; border-radius: 20px 0 0 20px; background: var(--night); }
-:is(#ask, #check, #rules, #month) .rail .rb { display: grid; place-items: center; width: 30px; height: 30px; margin-bottom: 12px; border-radius: 50%; background: #2EDE97; color: var(--night); }
-:is(#ask, #check, #rules, #month) .rail .rb svg { width: 17px; height: 16px; }
-:is(#ask, #check, #rules, #month) .rail i { width: 22px; height: 4px; border-radius: 2px; background: rgba(241, 239, 230, .2); }
-:is(#ask, #check, #rules, #month) .rail i.on { background: #2EDE97; }
 :is(#ask, #check, #rules, #month) .vcard .tile .say { height: 58px; margin: 0 0 14px; border-bottom: 1px solid rgba(14, 40, 30, .07); font-size: 15px; font-weight: 600; }
-:is(#ask, #check, #rules, #month) .vcard .tile .say > span { justify-content: flex-start; padding-right: 150px; }
-:is(#ask, #check, #rules, #month) .vcard .tile > .xpill { position: absolute; right: 20px; top: 17px; z-index: 2; height: 24px; padding: 0 10px; border-radius: 999px; background: var(--pine-1); color: #08744D; font: 500 10.5px/24px var(--mono); letter-spacing: .12em; }
-:is(#ask, #check, #rules, #month) .vcard .tile > .xpill::before { content: ""; display: inline-block; width: 6px; height: 6px; margin: 0 7px 1px 0; border-radius: 50%; background: var(--pine-hi); animation: xp-live 2.4s ease-in-out infinite; }
-@keyframes xp-live { 50% { opacity: .35; } }
-/* KPI tiles: potadot's inner tiles, a light tint on white with no shadow, mono label over a bold figure */
+:is(#ask, #check, #rules, #month) .vcard .tile .say > span { justify-content: flex-start; padding-right: 96px; }
+/* the example marker: a small outlined tag, still */
+:is(#ask, #check, #rules, #month) .vcard .tile > .xpill { position: absolute; right: 20px; top: 19px; z-index: 2; height: 20px; padding: 0 7px; border-radius: 5px; box-shadow: inset 0 0 0 1px rgba(8, 116, 77, .3); color: #08744D; font: 500 10px/20px var(--mono); letter-spacing: .12em; }
+/* the tabs: the four places as words on the page, the scene's own a white folder tab joined to the window by concave
+   corners, the bird small at the start of the row */
+:is(#ask, #check, #rules, #month) .tile > .wtabs { position: absolute; left: 16px; bottom: calc(100% - 1px); z-index: 3; display: flex; align-items: flex-end; height: 44px; }
+.wtabs .vb { display: grid; place-items: center; width: 36px; height: 40px; margin-right: 0; color: var(--pine); }
+.wtabs .vb svg { width: 26px; height: 25px; }
+.wtabs .t { position: relative; height: 40px; padding: 0 17px; font: 500 14px/39px var(--sans); letter-spacing: -0.005em; color: #69716D; white-space: nowrap; }
+.wtabs .t.on { height: 44px; padding-top: 4px; border-radius: 12px 12px 0 0; background: #fff; color: #0E1A15; box-shadow: inset 0 1px 0 rgba(14, 40, 30, .05); }
+.wtabs .t.on::before, .wtabs .t.on::after { content: ""; position: absolute; bottom: 0; width: 11px; height: 11px; }
+.wtabs .t.on::before { right: 100%; background: radial-gradient(circle at 0 0, transparent 10.5px, #fff 11.2px); }
+.wtabs .t.on::after { left: 100%; background: radial-gradient(circle at 100% 0, transparent 10.5px, #fff 11.2px); }
+#rules .vcard.night .wtabs .vb { color: var(--aurora); }
+#rules .vcard.night .wtabs .t:not(.on) { color: rgba(241, 239, 230, .66); }
+/* the tabs arrive once with their window: the words come in left to right and the scene's tab rises out of the edge */
+.tile .wtabs > * { opacity: 0; transform: translateY(6px); transition: opacity .6s var(--expo), transform .9s var(--expo); transition-delay: calc(var(--i) * 60ms); }
+.tile .wtabs .t.on { clip-path: inset(100% -12px 0 -12px); transition: opacity .3s, clip-path .8s var(--expo), transform .8s var(--expo); transition-delay: .15s; }
+.tile.arrived .wtabs > * { opacity: 1; transform: none; }
+.tile.arrived .wtabs .t.on { clip-path: inset(0 -12px 0 -12px); }
+/* KPI tiles: a light tint on white with no shadow, mono label over a bold figure */
 :is(#ask, #check, #rules, #month) .kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
 :is(#ask, #check, #rules, #month) .kpis.wide { grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.6fr); }
 :is(#ask, #check, #rules, #month) .kpis > div { padding: 12px 14px 13px; border-radius: 12px; background: #F5F7F6; }
@@ -269,27 +281,30 @@ main .eyebrow i + i, footer .eyebrow i + i { display: none; }
 :is(#ask, #check, #rules, #month) .kchart.in .kb i { height: var(--h); }
 /* the inner cards lose their tray shadows inside the window; the window carries the depth */
 :is(#ask, #check, #rules, #month) .vcard .tile .card { box-shadow: 0 0 0 1px rgba(14, 40, 30, .07); }
-/* one chip floats off each window's edge, rises in after it, and idles */
+/* one chip sits off each window's edge, rises in after it, and holds still */
 :is(#ask, #check, #rules, #month) .chipf { position: absolute; right: -26px; bottom: -24px; z-index: 4; display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 10px; border-radius: 14px; background: #fff; box-shadow: 0 12px 32px -8px rgba(14, 26, 21, .22), 0 0 0 1px rgba(14, 40, 30, .05);
   opacity: 0; transform: translateY(14px); transition: opacity .6s var(--expo), transform 1.2s cubic-bezier(.34, 1.4, .64, 1); }
 :is(#ask, #check, #rules, #month) .chipf.in { opacity: 1; transform: none; }
-:is(#ask, #check, #rules, #month) .chipf.in.idle { animation: chip-float 5s ease-in-out infinite; }
-@keyframes chip-float { 50% { transform: translateY(-5px); } }
 :is(#ask, #check, #rules, #month) .chipf .ci { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; background: var(--pine-1); color: #08744D; font: 700 14px/1 var(--mono); }
 :is(#ask, #check, #rules, #month) .chipf.fl .ci { background: var(--amber-1); color: var(--amber); } :is(#ask, #check, #rules, #month) .chipf.dr .ci { background: var(--plum-1); color: var(--plum); }
 :is(#ask, #check, #rules, #month) .chipf small { display: block; font: 500 10px/1.2 var(--mono); letter-spacing: .1em; color: #6B746F; }
 :is(#ask, #check, #rules, #month) .chipf b { display: block; margin-top: 3px; font-size: 14px; font-weight: 700; color: var(--pine); }
 :is(#ask, #check, #rules, #month) .chipf.fl b { color: var(--amber); } :is(#ask, #check, #rules, #month) .chipf.dr b { color: var(--plum); }
 @media (max-width: 900px) {
-  :is(#ask, #check, #rules, #month) .vcard .tile { padding: 0 12px 12px; } :is(#ask, #check, #rules, #month) .vcard .tile > .rail { display: none; }
-  :is(#ask, #check, #rules, #month) .vcard .tile .say > span { padding-right: 0; } :is(#ask, #check, #rules, #month) .vcard .tile > .xpill { display: none; }
+  :is(#ask, #check, #rules, #month) .vcard .tile { margin-top: 38px; padding: 0 12px 12px; }
+  :is(#ask, #check, #rules, #month) .vcard .tile .say > span { padding-right: 76px; }
+  :is(#ask, #check, #rules, #month) .vcard .tile > .xpill { right: 12px; top: 17px; }
+  :is(#ask, #check, #rules, #month) .tile > .wtabs { left: 8px; height: 38px; }
+  .wtabs .vb { width: 30px; height: 34px; margin-right: 0; }
+  .wtabs .vb svg { width: 23px; height: 22px; }
+  .wtabs .t { height: 34px; padding: 0 13px; font-size: 13.5px; line-height: 33px; }
+  .wtabs .t.on { height: 38px; }
   :is(#ask, #check, #rules, #month) .kpis, :is(#ask, #check, #rules, #month) .kpis.wide { grid-template-columns: repeat(3, minmax(0, 1fr)); } :is(#ask, #check, #rules, #month) .kchart { display: none; }
-  :is(#ask, #month) .vcard .tile > .xpill { display: block; right: 12px; padding: 0 8px; } :is(#ask, #month) .vcard .tile > .xpill::before { display: none; } :is(#ask, #month) .vcard .tile .say > span { padding-right: 76px; }
-  #rules #policy .tile > .xpill { display: block; right: 12px; padding: 0 8px; } #rules #policy .tile > .xpill::before { display: none; } #rules #policy .tile .say > span { padding-right: 76px; } #rules #policy .split { row-gap: 72px; }
-  #check #how .tile > .xpill { display: block; right: 12px; padding: 0 8px; } #check #how .tile > .xpill::before { display: none; } #check #how .tile .say > span { padding-right: 76px; }
+  #rules #policy .split { row-gap: 72px; }
   :is(#ask, #check, #rules, #month) .kpis b { font-size: 20px; } :is(#ask, #check, #rules, #month) .chipf { right: 8px; bottom: -40px; }
 }
-@media (prefers-reduced-motion: reduce) { :is(#ask, #check, #rules, #month) .chipf { opacity: 1; transform: none; transition: none; } :is(#ask, #check, #rules, #month) .chipf.in.idle { animation: none; } }
+@media (max-width: 420px) { .wtabs .t { padding: 0 10px; font-size: 13px; } .wtabs .vb { width: 26px; } }
+@media (prefers-reduced-motion: reduce) { :is(#ask, #check, #rules, #month) .chipf { opacity: 1; transform: none; transition: none; } .tile .wtabs > *, .tile .wtabs .t.on { transition: none; } }
 
 /* section: s-ask */
 
@@ -733,7 +748,9 @@ main .eyebrow i + i, footer .eyebrow i + i { display: none; }
 #system .r::after { content: ""; position: absolute; inset: calc(var(--ro, 0) * -1px); border: 2px solid rgba(10, 124, 83, var(--ra, 0)); border-radius: calc(12px + var(--ro, 0) * 1px); pointer-events: none; }
 #system .ic { position: relative; width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--sunk); box-shadow: inset 0 0 0 1px var(--line); color: var(--grey); }
 #system .ic svg { width: 18px; height: 18px; }
-#system .ic img { position: absolute; inset: 0; width: 40px; height: 40px; object-fit: cover; object-position: 50% 6%; border-radius: 10px; opacity: 0; box-shadow: 0 0 0 1px var(--line); }
+#system .ic img { position: absolute; inset: 0; width: 40px; height: 53.4px; object-fit: cover; object-position: 50% 0; border-radius: 3px; opacity: 0; box-shadow: 0 0 0 1px rgba(21, 21, 19, .07), 0 7px 12px -7px rgba(21, 21, 19, .4);
+  -webkit-mask-image: linear-gradient(180deg, #000 0, #000 calc(var(--f, -20px) - 7px), transparent calc(var(--f, -20px) + 7px)); mask-image: linear-gradient(180deg, #000 0, #000 calc(var(--f, -20px) - 7px), transparent calc(var(--f, -20px) + 7px)); }
+#system .ic img.read { -webkit-mask-image: none; mask-image: none; }
 #system .m { min-width: 0; padding-top: 1px; }
 #system .m b { display: block; font-weight: 500; font-size: 15.5px; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #system .m .sub { display: block; font-size: 13px; line-height: 18px; color: var(--grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -749,8 +766,7 @@ main .eyebrow i + i, footer .eyebrow i + i { display: none; }
 #system .chip .ask { color: var(--grey); }
 #system .chip .ok { color: var(--pine); }
 #system .chip.done { background: var(--pine-1); box-shadow: none; }
-#system .fly { position: absolute; left: 0; top: 0; z-index: 6; width: 150px; height: 200px; object-fit: cover; object-position: 50% 0; border-radius: 14px; pointer-events: none; opacity: 0;
-  box-shadow: 0 18px 36px -14px rgba(21, 21, 19, .45), 0 2px 6px rgba(21, 21, 19, .12); }
+#system .rc-air { position: absolute; left: 0; top: 0; z-index: 6; pointer-events: none; }
 #system .lb.ok, #system .tk { color: #08744D; }
 @media (max-width: 1000px) {
 #system .pair { grid-template-columns: minmax(0, 1fr); }
@@ -763,13 +779,13 @@ main .eyebrow i + i, footer .eyebrow i + i { display: none; }
 #system .pair { gap: 10px; }
 #system .hd { height: 48px; padding: 0 14px; }
 #system .th { padding: 14px; gap: 8px; }
-#system .s2, #system .photo, #system .fly { width: 112px; }
+#system .s2, #system .photo { width: 112px; }
 #system .s2, #system .photo { height: 150px; }
 #system .sub .lg, #system .bb .lg { display: none; }
 #system .rows { padding: 8px; }
 #system .r { grid-template-areas: "ic b a" "ic s chip" "ic tk tk"; grid-template-columns: 36px minmax(0, 1fr) auto; column-gap: 12px; padding: 11px; }
 #system .ic { grid-area: ic; width: 36px; height: 36px; }
-#system .ic img { width: 36px; height: 36px; }
+#system .ic img { width: 36px; height: 48px; }
 #system .m { display: contents; }
 #system .m b { grid-area: b; min-width: 0; }
 #system .m .sub { grid-area: s; min-width: 0; align-self: center; }
@@ -1255,7 +1271,7 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 120; pointer-even
           <div class="hd"><span class="av"><svg aria-hidden="true"><use href="#bird"/></svg></span><b>Sylph</b><small>Text message</small></div>
           <div class="th">
             <p class="bb in" id="rcB1">Hi Daniel, could you reply with a photo of the receipt for $84.20 at Sushi Kanda on Oct&nbsp;14?</p>
-            <div class="s2" id="rcSlot2"><span class="typ" id="rcTyp"><i></i><i></i><i></i></span><img class="photo" id="rcPhoto" src="/landing/assets/receipt-sk.webp" alt="Daniel's photo of the Sushi Kanda receipt"></div>
+            <div class="s2" id="rcSlot2"><span class="typ" id="rcTyp"><i></i><i></i><i></i></span><img class="photo" id="rcPhoto" src="/landing/assets/receipt-photo.webp" alt="Daniel's photo of the Sushi Kanda receipt"></div>
             <p class="who" id="rcWho">Daniel Mercer</p>
             <div class="reply" id="rcReply"><p class="bb in" id="rcB3">Thanks, it's matched<span class="lg"> to the charge</span>.</p></div>
           </div>
@@ -1289,9 +1305,7 @@ body::after { content: ""; position: fixed; inset: 0; z-index: 120; pointer-even
             </div>
           </div>
         </div>
-      </div>
-      <img class="fly" id="rcFly" src="/landing/assets/receipt-sk.webp" alt="" aria-hidden="true">
-    </div>
+      </div>    </div>
   </div></article>
     </div>
   </section>
@@ -2155,7 +2169,7 @@ window.SylphLoop = (() => {
   const $ = id => document.getElementById(id), M = SylphMotion;
   const tile = $('rcTile'), cards = [$('rcMsg'), $('rcCh')], rows = [...$('rcCh').querySelectorAll('.r')], row = rows[0];
   const b1 = $('rcB1'), typ = $('rcTyp'), dots = [...typ.children], s2 = $('rcSlot2'), photo = $('rcPhoto'), who = $('rcWho'), reply = $('rcReply'), b3 = $('rcB3');
-  const slot = $('rcSlot'), thumb = slot.querySelector('img'), ico = slot.querySelector('svg'), fly = $('rcFly');
+  const slot = $('rcSlot'), thumb = slot.querySelector('img'), ico = slot.querySelector('svg');
   const tks = $('rcTks'), ticks = [...tks.children], chip = $('rcChip'), ask = $('rcAsk'), ok = $('rcOk'), grow = $('rcGrow');
   // the ledger keeps the height it has with the tick line open, so the tile never changes height as the row opens
   const ch = $('rcCh'), TK = 30;
@@ -2163,11 +2177,99 @@ window.SylphLoop = (() => {
   reserve(); addEventListener('resize', reserve); if (document.fonts) document.fonts.ready.then(reserve);
   const says = [$('rcSay1'), $('rcSay2'), $('rcSay3')];
   const surf = SylphThink.surface(chip);
-  // one loop: Sylph's text goes out, Daniel types and sends a photo, the photo flies onto its charge, the status thinks
-  // while the fields that tie them tick, and Matched grows out of the link; then the thread and that row reset
+  /* the flight (direction B's, review/v9/directions/b), on this loop's clock. Daniel's photo leaves the thread as the
+     card's dots (the card's hex grid, its eight pines graded by position, dot size carrying the image): the table round
+     the receipt lifts away up and to the right as air, and the receipt's own dots travel up out of the thread, over the
+     seam and down onto the $84.20 charge, foot first, where a reading front turns them into the crisp receipt just
+     before the row reads Matched. */
+  const PAL = ['#065238', '#086045', '#0A6E4F', '#0A7C53', '#0F8A5C', '#139564', '#1CAD75', '#25C686'], HI = '#25C686';
+  // the two images the dots are drawn from, small and inline, so a canvas can read them from file:// too
+  // (site/assets/receipt-photo.webp at 180 × 240 and receipt-sk.webp at 60 × 80)
+  const pic = s => { const i = new Image(); i.src = 'data:image/webp;base64,' + s; return i; };
+  const PH64 = ('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');
+  const SC64 = ('UklGRnIDAABXRUJQVlA4IGYDAACwDwCdASo8AFAAPm0yk0ekIqGhJNVdoIANiWkADqn/Jd890B2H5lMmJlP/W9g3+6mLMEgHZj9qB2k/nwqQYmdtgTQjT8fq7YeTad3GOl2GujpD525XTYfdouIRc6ztADJAu9HFFh6uyF3gx+zLKCwaUiMAAtXeVOfNUK2Y5Y+6cylHxFZ+AAD+/H5W6wfYZfi/WVZZG1wxuUVBynBDXIG5RWGmFkcjSGF/ONlAkxE0ME0Ut+cE7Jfj71z3WzqXx36JQorXnOzvpZUyECj09fMA7tPxsHu8qi8Az+b+l1MBDY/j+fIitlgJxdrqKaPnyYvyC3MLUY99L9zrgiWWgDCdq+0YGIkvtAHVaF+8ifLx6tIX0AEWHf5Mzbl3uYy41FQk8KUW/Mkq/TxG8kl6Rj/5pDb/sN1f7qIVKOEiDYw9t/Y7VdnryZl8MNqYIaJGV9LtaoLreSN9o9ZTUM6gmvjuFseYcETV8nDFmFFJr17l0MMyQD/fVAM999UCxBhnr5SeW6d8asaa52OTWp7La97o6aFMFwIt8ZFXtmHLtZHmhk4N0l2PgFS7unsvMZCnNzoXBpmRobd/NhI+QfCYwxyE08dIQnzMvT0Gz/0pAuFDIWNuFpVGHbAmwFBFGfffrmIZV2hHgmlY4AHYIpfQU6LE5wCOXHy5rrgu1FLLeKA5uZCCchfIL/3yRlIPDDtNCnQX2ua5EPE7xw6RvNnEd8SAlpz0u4XwOC2J4fQY0VsFwq1nI2byBvGOiSEHydvVrL19fxL1qrKbBcl5lG6GCmfEs1cgQKPr6Pr9WjO7ZBw5h7ufAcDar2vCffEUopqjMwK2ndY5+/jka0v4iJrTI2JJV9LO9YwWKX+/9RWuNTtP7EAvd4YL7wVpChhC0OxeRuWUgGeh4GL7BVAFhgVKQkmCBNZFVjHwPf8s/6mzZFph+M1zJ71I15ojj+z938jFJs4mN36YwbQxL1xnftulhkM1fcxv7gke+iW3D2lJZcAb9ynykznQbsRO/81XdUCVa9jZZAWwkDRAbrwLPqyH+hJcANvy/jboXIHlLizt4s9DuODtd4W9kS/8CowSZuQC8jBshGoKR7c6nkgunOES8/VEMr15LRrjso6b2JoBeaFp+Bxn1GRumaKklbLpoqPlHY8ZSTAAAAA=');
+  const smooth = u => { u = M.clamp(u); return u * u * (3 - 2 * u); }, settle = u => { u = M.clamp(u); return 1 - Math.pow(1 - u, 4) * (1 + 4 * u); };
+  const mulberry = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let q = Math.imul(a ^ a >>> 15, 1 | a); q = q + Math.imul(q ^ q >>> 7, 61 | q) ^ q; return ((q ^ q >>> 14) >>> 0) / 4294967296; };
+  // a source as the card's halftone at w × h: a hex-packed grid of pitch sp, each dot sized by its cell's darkness
+  const halftone = (img, w, h, sp, o) => {
+    const c = document.createElement('canvas'); c.width = Math.round(w); c.height = Math.round(h);
+    const g = c.getContext('2d', { willReadFrequently: true }), s = Math.max(c.width / img.naturalWidth, c.height / img.naturalHeight);
+    g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, (c.width - img.naturalWidth * s) / 2, 0, img.naturalWidth * s, img.naturalHeight * s);
+    const px = g.getImageData(0, 0, c.width, c.height).data, L = i => (.2126 * px[i] + .7152 * px[i + 1] + .0722 * px[i + 2]) / 255, out = [];
+    for (let j = 0, y = sp * .5; y < h; j++, y += sp * .866) for (let x = sp * .5 + (j & 1) * sp / 2; x < w; x += sp) {
+      let sum = 0, n = 0; const r = sp * .45;
+      for (let yy = Math.max(0, Math.floor(y - r)); yy <= Math.min(c.height - 1, Math.ceil(y + r)); yy++) for (let xx = Math.max(0, Math.floor(x - r)); xx <= Math.min(c.width - 1, Math.ceil(x + r)); xx++) { sum += L((yy * c.width + xx) * 4); n++; }
+      const v = M.clamp(((1 - (n ? sum / n : 1)) - o.lo) / (o.hi - o.lo));
+      out.push({ x, y, v, r: sp * (o.floor + o.span * Math.pow(v, o.gamma || 1)) });
+    }
+    return out;
+  };
+  // the receipt as it lies in the photo (360 × 480): its four corners, so each of its dots leaves from where it really is
+  const RC = { tl: [106, 104], tr: [244, 99], bl: [58, 480], br: [262, 476] }, lerp = (a, b, u) => a + (b - a) * u;
+  // the canvas the dots are drawn on, over the tile and bleeding round it (BL px) for the air
+  const BL = 160, phSrc = pic(PH64), scSrc = pic(SC64);
+  const air = document.createElement('canvas'); air.className = 'rc-air'; air.setAttribute('aria-hidden', 'true'); tile.appendChild(air);
+  let F = null;   // the dots, built once the sources are decoded and the tile is laid out, again after a resize
+  addEventListener('resize', () => { F = null; });
+  const buildFlight = () => {
+    const pw = photo.offsetWidth, ph = photo.offsetHeight, tw = thumb.offsetWidth, th = thumb.offsetHeight;
+    if (!pw || !tw || !phSrc.naturalWidth || !scSrc.naturalWidth) return null;
+    const phone = innerWidth < 640, sp = phone ? 4.2 : 5.2, k = pw / 360, rnd = mulberry(11);
+    const inRc = (x, y) => { const u = x / k, v = y / k, ty = (v - 100) / 380; if (ty < 0 || ty > 1) return false; return u > lerp(RC.tl[0], RC.bl[0], ty) && u < lerp(RC.tr[0], RC.br[0], ty); };
+    // the table and everything round the receipt: it goes as air
+    const airDots = halftone(phSrc, pw, ph, sp, { floor: .1, span: .44, lo: .1, hi: .95 }).filter(d => !inRc(d.x, d.y))
+      .map(d => ({ x: d.x, y: d.y, r: d.r, c: PAL[M.clamp(Math.floor((.62 * d.y / ph + .38 * d.x / pw) * 8), 0, 7)], a: rnd(), b: rnd(), s: rnd() }));
+    // the receipt: each dot of it on the charge leaves from the same place on the paper in the photo, so the sheet flies as one shape
+    const fl = halftone(scSrc, tw, th, phone ? 1.9 : 2.1, { floor: .16, span: .5, lo: .02, hi: .45, gamma: .9 }).map(d => {
+      const u = d.x / tw, v = d.y / th, top = [lerp(RC.tl[0], RC.tr[0], u), lerp(RC.tl[1], RC.tr[1], u)], bot = [lerp(RC.bl[0], RC.br[0], u), lerp(RC.bl[1], RC.br[1], u)];
+      return { sx: lerp(top[0], bot[0], v) * k, sy: lerp(top[1], bot[1], v) * k, tx: d.x, ty: d.y, r0: sp * .2, r: d.r, u, v,
+        c: PAL[M.clamp(Math.floor((.62 * v + .38 * u) * 8), 0, 7)], a: rnd(), b: rnd(), s: rnd() };
+    });
+    return { airDots, fl, th };
+  };
+  // the flight's beats on the loop's clock: the photo turns to dots just before the lift, the receipt lands by T.land,
+  // is read while the fields tick, and the photo is back in the thread once its receipt has landed
+  const G = { gone: 3.4, back: 5.0, read: 4.75, rd: .5, fly: .85 };
+  const flight = (t) => {
+    // the receipt on its charge shows behind its reading front, a field at a time, as the ticks come in
+    const fr = M.clamp((t - G.read) / G.rd), Fe = 7, fp = fr * (thumb.offsetHeight + 2 * Fe) - Fe;
+    thumb.style.setProperty('--f', fp.toFixed(1) + 'px'); thumb.classList.toggle('read', fr >= 1);
+    if (!F) F = buildFlight(); if (!F) return;
+    // the canvas bleeds round the tile for the air, but never past the sides of the page, so it can't make it scroll
+    const tb = tile.getBoundingClientRect(), OX = M.clamp(tb.left, 0, BL), OR = M.clamp(document.documentElement.clientWidth - tb.right, 0, BL);
+    const W = Math.round(tb.width + OX + OR), H = Math.round(tb.height + 2 * BL), dpr = Math.min(2, devicePixelRatio || 1);
+    const CW = Math.round(W * dpr), CH = Math.round(H * dpr);
+    if (air.width !== CW || air.height !== CH) { air.width = CW; air.height = CH; air.style.width = W + 'px'; air.style.height = H + 'px'; }
+    air.style.left = -OX + 'px'; air.style.top = -BL + 'px';
+    const g = air.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+    if (t < G.gone - .2 || fr >= 1) return;
+    const show = smooth((t - (G.gone - .2)) / .35), s2r = s2.getBoundingClientRect(), rr = row.getBoundingClientRect();
+    const px = s2r.left - tb.left + OX + photo.offsetLeft, py = s2r.top - tb.top + BL + photo.offsetTop;
+    const qx = rr.left - tb.left + OX + slot.offsetLeft, qy = rr.top - tb.top + BL + slot.offsetTop, minX = OX - tb.left + 16;
+    // the photo's air: it holds, then lifts away up and to the right and is gone
+    for (const d of F.airDots) {
+      const u = M.clamp((t - T.lift - d.a * .45) / 1.5); if (u >= 1) continue;
+      const e = u * u;
+      g.globalAlpha = show * (1 - smooth(u)); g.fillStyle = d.c; g.beginPath();
+      g.arc(px + d.x + e * (40 + 120 * d.b) + Math.sin(d.s * 9 + u * 4) * 8 * u, py + d.y - e * (80 + 170 * d.s), d.r * (1 - .4 * u), 0, 6.2832); g.fill();
+    }
+    // the receipt's dots: foot first, up out of the thread, over the seam and down onto the charge along the old
+    // flight's curve, loosening a little on the way and tightening as they land
+    for (const d of F.fl) {
+      const ax = px + d.sx, ay = py + d.sy, bx = qx + d.tx, by = qy + d.ty;
+      if (fr > 0) { const qq = M.clamp((fp - d.ty) / Fe); if (qq >= 1) continue;
+        if (qq > 0) { const kk = qq < .3 ? 1 + .7 * qq / .3 : 1.7 * (1 - smooth((qq - .3) / .7)); g.globalAlpha = 1; g.fillStyle = HI; g.beginPath(); g.arc(bx, by - 5 * qq * qq, d.r * kk, 0, 6.2832); g.fill(); continue; } }
+      const st = T.lift + (1 - d.v) * .2 + d.a * .1, e = settle((t - st) / G.fly), loose = Math.sin(Math.PI * e), v = 1 - e;
+      const c1x = ax + (bx - ax) * .3 + (d.b - .5) * 36, c1y = ay - 150 - d.s * 30, c2x = Math.max(minX, bx - 140 + (d.a - .5) * 40), c2y = by - 90 + (d.b - .5) * 24;
+      const x = v * v * v * ax + 3 * v * v * e * c1x + 3 * v * e * e * c2x + e * e * e * bx + (d.s - .5) * 12 * loose;
+      const y = v * v * v * ay + 3 * v * v * e * c1y + 3 * v * e * e * c2y + e * e * e * by + (d.a - .5) * 12 * loose;
+      g.globalAlpha = show; g.fillStyle = d.c; g.beginPath(); g.arc(x, y, (d.r0 + (d.r - d.r0) * e) * (1 + .7 * loose), 0, 6.2832); g.fill();
+    }
+    g.globalAlpha = 1;
+  };
+  // one loop: Sylph's text goes out, Daniel types and sends a photo, the photo flies onto its charge as dots, the status
+  // thinks while the fields that tie them tick, and Matched grows out of the link; then the thread and that row reset
   const L = 11.6, T = { b1: .8, type: 1.9, photo: 2.85, lift: 3.6, land: 4.75, think: 4.8, ticks: 5.0, grow: 5.6, b3: 7.0, reset: 10.6 };  // the match grows over 1.4 s (Ben, 2026-10-30)
-  const ease = g => g < .5 ? 4 * g ** 3 : 1 - (-2 * g + 2) ** 3 / 2;
-  const bez = (a, b, c, d, u) => { const v = 1 - u; return v * v * v * a + 3 * v * v * u * b + 3 * v * u * u * c + u * u * u * d; };
   let cyc = -1;
   const at = (now) => {
     const c = Math.floor(now / L), t = now - c * L;
@@ -2183,7 +2285,7 @@ window.SylphLoop = (() => {
     says.forEach((el, i) => { el.style.opacity = (sl[i].e * (1 - sl[i].x)).toFixed(3); el.style.transform = `translateY(${((1 - sl[i].e) * 8 - sl[i].x * 8).toFixed(2)}px)`; });
     says[0].querySelector('svg').style.transform = `rotate(${(270 * M.spring(t - .4, .45, .72)).toFixed(1)}deg)`;
     // the floating chip says the photo was read only once it has been: from the ticks to the reset
-    const cf = tile.querySelector('.chipf'); if (cf) { const on = t >= T.ticks && t < T.reset; cf.classList.toggle('in', on); cf.classList.toggle('idle', on && t >= T.ticks + 1.3); }
+    const cf = tile.querySelector('.chipf'); if (cf) cf.classList.toggle('in', t >= T.ticks && t < T.reset);
     // the thread: bubbles spring out of their tails and leave easing in when the loop resets
     const gone = M.exit(t, T.reset, .2);
     const bub = (el, a) => { el.style.opacity = (M.enter(t, a, .3) * (1 - gone)).toFixed(3); el.style.transform = `scale(${(t > a ? .9 + .1 * M.spring(t - a, 2.4, .62) : .9).toFixed(4)})`; };
@@ -2191,33 +2293,18 @@ window.SylphLoop = (() => {
     b1.style.opacity = (c > 0 ? 1 : M.enter(t, T.b1, .3)).toFixed(3);
     b1.style.transform = `scale(${(c > 0 ? 1 : t > T.b1 ? .9 + .1 * M.spring(t - T.b1, 2.4, .62) : .9).toFixed(4)})`;
     // Daniel types (three grey dots in a grey bubble), then the photo itself arrives, springing up from its corner
-    const typing = t >= T.type && t < T.photo, PH = photo.offsetHeight;
+    const typing = t >= T.type && t < T.photo;
     typ.style.opacity = (M.enter(t, T.type, .25) * (1 - M.exit(t, T.photo - .06, .12))).toFixed(3);
     typ.style.transform = `scale(${(t > T.type ? .9 + .1 * M.spring(t - T.type, 2.4, .62) : .9).toFixed(4)})`;
     dots.forEach((d, i) => d.style.transform = `translateY(${(typing ? -3 * Math.max(0, Math.sin((t - T.type) * 9 - i * .9)) : 0).toFixed(2)}px)`);
-    photo.style.opacity = (M.enter(t, T.photo, .25) * (1 - gone)).toFixed(3);
+    // the photo dissolves into its dots as they lift, and is back in the thread once its receipt has landed
+    photo.style.opacity = (M.enter(t, T.photo, .25) * (1 - gone) * (1 - smooth((t - G.gone) / .3) * (1 - M.enter(t, G.back, .6)))).toFixed(3);
     photo.style.transform = `scale(${(t > T.photo ? .94 + .06 * M.spring(t - T.photo, 2.6, .5) : .94).toFixed(4)})`;
     who.style.opacity = (M.enter(t, T.photo + .25, .35) * (1 - gone)).toFixed(3);
     bub(b3, T.b3);
-    // the flight: a copy of the photo lifts and curves onto its charge, below the ledger's header, coming into the row
-    // from the left and shrinking steadily to the size of its slot just before it lands
-    const tb = tile.getBoundingClientRect(), pr = photo.getBoundingClientRect(), sr = slot.getBoundingClientRect();
-    const A = { x: pr.left - tb.left + pr.width / 2, y: pr.top - tb.top + pr.height / 2, w: photo.offsetWidth, h: PH };
-    const B = { x: sr.left - tb.left + sr.width / 2, y: sr.top - tb.top + sr.height / 2, w: slot.offsetWidth, h: slot.offsetHeight };
-    // slowed and made a moment (Ben, 2026-10-30): the photo lifts up out of the chat, swells as it is carried high over
-    // the seam between the panes with a deep shadow under it, then shrinks into its charge's slot over the last 40%
-    const fu = M.clamp((t - T.lift) / (T.land - T.lift)), fe = ease(fu), sz = ease(M.clamp((fu - .58) / .4)), lift = M.enter(t, T.lift - .15, .15);
-    if (t > T.lift - .15 && t < T.land) {
-      const cx = bez(A.x, A.x + (B.x - A.x) * .3, B.x - 140, B.x, fe), cy = bez(A.y, A.y - 150, B.y - 90, B.y, fe);
-      const swell = 1 + .18 * Math.sin(Math.PI * M.clamp(fu / .62)), w = (A.w + (B.w - A.w) * sz) * swell, h = (A.h + (B.h - A.h) * sz) * swell, air = Math.sin(Math.PI * fu);
-      fly.style.opacity = 1; fly.style.width = w.toFixed(1) + 'px'; fly.style.height = h.toFixed(1) + 'px';
-      fly.style.borderRadius = (14 - 4 * sz).toFixed(1) + 'px';
-      fly.style.boxShadow = `0 ${(8 + 26 * air).toFixed(1)}px ${(18 + 36 * air).toFixed(1)}px -8px rgba(14, 26, 21, ${(.18 + .22 * air).toFixed(3)})`;
-      fly.style.transform = `translate(${Math.max(cx - w / 2, 20 - tb.left).toFixed(1)}px, ${(cy - h / 2 - lift * 6 * (1 - fe)).toFixed(1)}px) rotate(${(Math.sin(fe * Math.PI) * -9).toFixed(2)}deg)`;
-    } else fly.style.opacity = 0;
-    // it lands with a slight overshoot and one soft mint ring on the row; at the reset the row's icon comes back
+    // the receipt lands with one soft mint ring on the row; at the reset the row's icon comes back
     const landed = t >= T.land, lu = t - T.land;
-    // the row's icon steps aside (shrinking, easing in) as the photo comes in, so the photo lands in an empty slot
+    // the row's icon steps aside (shrinking, easing in) as the dots come in, so the receipt lands in an empty slot
     // (the whole tile, its grey square too); at the reset it comes back only once the row has closed
     const io = M.exit(t, T.land - .42, .12), rz = M.exit(t, T.reset + .4, .2), sa = landed ? rz : 1 - io;
     thumb.style.opacity = landed ? (1 - rz).toFixed(3) : 0; ico.style.opacity = sa.toFixed(3);
@@ -2226,7 +2313,7 @@ window.SylphLoop = (() => {
     // the row opens by the tick line's height on a spring as the photo lands, and closes as the ticks leave
     tks.style.height = (TK * (landed ? M.spring(lu, 3.4, .7) * (1 - M.exit(t, T.reset + .05, .3)) : 0)).toFixed(2) + 'px';
     tks.style.overflow = t > T.reset ? 'hidden' : '';
-    slot.style.transform = `scale(${(landed ? 1 + .08 * (1 - M.spring(lu, 2.4, .5)) : 1 - .4 * io).toFixed(4)})`;
+    slot.style.transform = landed ? 'none' : `scale(${(1 - .4 * io).toFixed(4)})`;
     const ru = M.clamp(lu / .35);
     row.style.setProperty('--ro', (landed ? 6 * M.out(ru) : 0).toFixed(2)); row.style.setProperty('--ra', (landed ? .4 * (1 - M.out(ru)) : 0).toFixed(3));
     // the evidence: the fields that tie photo and charge tick on their own line, one after another, on springs
@@ -2247,6 +2334,7 @@ window.SylphLoop = (() => {
     ok.style.opacity = (gu > .6 ? M.clamp((gu - .6) / .25) * (1 - rz) : 0).toFixed(3);
     ok.style.transform = `scale(${(gu > .6 ? .9 + .1 * M.spring(gu - .6, 2.6, .4) : .9).toFixed(4)})`;
     chip.style.boxShadow = t > T.think && t < T.reset + .6 ? 'none' : '';
+    flight(t);
   };
   // the story starts when the chat card is half in view, so it plays on screen, not below the fold
   SylphLoop.mount($('c-receipts'), { at, rest: 8.5, watch: $('rcCh'), threshold: matchMedia('(max-width: 640px)').matches ? .1 : matchMedia('(max-width: 1000px)').matches ? .25 : Math.min(.82, (innerHeight * .7 - 24) / 452) });
@@ -2779,8 +2867,9 @@ window.SylphLoop = (() => {
 <script>
 (() => {
   const { reduce, once } = window.V6;
-  // the window around each dashboard: its rail (the panel's place among the four), the EXAMPLE pill, the KPI row and
-  // the floating chip. Figures are Hartmere's week, true to what each dashboard shows.
+  // the window around each dashboard: its tabs (the panel's place among the four), the EXAMPLE tag, the KPI row and
+  // the chip. Figures are Hartmere's week, true to what each dashboard shows.
+  const PLACES = ['Receipts', 'Checks', 'Policy', 'Month'];
   const W = [
     { sel: '#system .tile', at: 0, loop: true, k: [['CHARGES THIS WEEK', '4'], ['RECEIPTS ASKED FOR', '2'], ['FORMS FILLED', '0']], chip: ['', '✓', 'READ FROM THE PHOTO', '$84.20 · Sushi Kanda'] },
     { sel: '#how .tile', at: 1, loop: true, k: [['CHECKED', '5'], ['IN POLICY', '3'], ['OVER', '1', 'am'], ['BLOCKED', '1', 'bl']] },
@@ -2791,7 +2880,7 @@ window.SylphLoop = (() => {
   const bird = '<svg aria-hidden="true"><use href="#bird"/></svg>';
   W.forEach(w => {
     const t = document.querySelector(w.sel); if (!t) return;
-    t.insertAdjacentHTML('afterbegin', `<div class="rail" aria-hidden="true"><span class="rb">${bird}</span>${[0, 1, 2, 3].map(i => `<i class="${i === w.at ? 'on' : ''}"></i>`).join('')}</div><span class="xpill">EXAMPLE</span>`);
+    t.insertAdjacentHTML('afterbegin', `<div class="wtabs" aria-hidden="true"><span class="vb" style="--i:0">${bird}</span>${PLACES.map((p, i) => `<span class="t${i === w.at ? ' on' : ''}" style="--i:${i + 1}">${p}</span>`).join('')}</div><span class="xpill">EXAMPLE</span>`);
     const say = t.querySelector('.say');
     if (w.k && say) {
       const kp = `<div class="kpis${w.chart ? ' wide' : ''}">${w.k.map(([l, v, c]) => `<div><small>${l}</small><b class="${c || ''}" data-n="${v}">${v}</b></div>`).join('')}${w.chart ? `<div class="kchart"><small>CHECKED PER DAY · OCT 10–18</small><span class="kb">${w.chart.map((h, i) => `<i class="${i === w.flagDay ? 'fl' : ''}" style="--h:${h / 12 * 100}%;--d:${(i * .06).toFixed(2)}s"></i>`).join('')}</span></div>` : ''}</div>`;
@@ -2801,12 +2890,13 @@ window.SylphLoop = (() => {
       const [k, ic, l, v] = w.chip;
       t.insertAdjacentHTML('beforeend', `<div class="chipf ${k}" aria-hidden="true"><span class="ci">${ic}</span><span><small>${l}</small><b>${v}</b></span></div>`);
     }
-    // when the window comes into view: the figures count up, the chart grows, the chip rises in and then idles
+    // when the window comes into view: the tabs arrive, the figures count up, the chart grows, the chip rises in
     once(t, () => {
+      t.classList.add('arrived');
       if (!w.loop) t.querySelectorAll('.kpis b').forEach(b => { const n = +b.dataset.n; if (reduce || !n) return; const t0 = performance.now();
         (function f(now) { const u = Math.min(1, (now - t0) / 1100), e = 1 - Math.pow(2, -10 * u); b.textContent = Math.round(n * e); if (u < 1) requestAnimationFrame(f); else b.textContent = n; })(t0); });
       const ch = t.querySelector('.kchart'); if (ch) ch.classList.add('in');
-      const cf = t.querySelector('.chipf'); if (cf && !w.loop) setTimeout(() => { cf.classList.add('in'); setTimeout(() => cf.classList.add('idle'), 1300); }, reduce ? 0 : 600);
+      const cf = t.querySelector('.chipf'); if (cf && !w.loop) setTimeout(() => cf.classList.add('in'), reduce ? 0 : 600);
     });
   });
 })();
