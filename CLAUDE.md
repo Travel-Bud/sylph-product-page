@@ -51,7 +51,7 @@ All four gates (`typecheck`, `lint`, `test`, `build`) must exit 0 before a push.
 - `staging` is the working branch. Cut feature work from it and merge back into it.
 - `staging` into `main` is the deploy. Vercel builds `main` through its git integration; there is no workflow file in this repo.
 - Every other pushed branch gets a Vercel preview URL automatically.
-- The landing at `/` is the v8 page (2026-10-30): `public/landing/index.html`, served through a `beforeFiles` rewrite in `next.config.ts`. It is built outside this repo (studio run landing-ramp, `python3 tools/build_v6.py --prod`) and copied in whole; edit it there, not here. Removing the rewrite restores the 2026-10-05 redesign (`docs/plans/2026-10-05-landing-redesign.md`), which replaced Mock B ("Two sides, upgraded", 2026-09-25), which lives in git history.
+- The landing at `/` is the v8 page (2026-10-30): `public/landing/index.html`, served through a `beforeFiles` rewrite in `next.config.ts`. It is built outside this repo (studio run landing-ramp: since 2026-11-16 `python3 tools/build_v6.py --fresh --ship`, which writes `site/v11-prod.html`; before that `--prod`, version A) and copied in whole; edit it there, not here. Removing the rewrite restores the 2026-10-05 redesign (`docs/plans/2026-10-05-landing-redesign.md`), which replaced Mock B ("Two sides, upgraded", 2026-09-25), which lives in git history.
 
 ## Environment variables
 
